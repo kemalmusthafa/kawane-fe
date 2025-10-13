@@ -2,6 +2,9 @@
 const nextConfig = {
   // Force dynamic rendering untuk semua halaman
   trailingSlash: true,
+  
+  // Ensure static assets are properly served
+  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
   images: {
     // Use custom loader to normalize Google Drive share links to direct links
     loader: 'default',

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Search,
   ShoppingCart,
@@ -107,15 +108,21 @@ export function HomeNavigation() {
             className="flex items-center flex-shrink-0"
             aria-label="Kawane Home"
           >
-            <img
+            <Image
               src="/logo-hitam.png"
               alt="Kawane"
+              width={120}
+              height={20}
               className="block h-4 sm:h-5 w-auto object-contain dark:hidden"
+              priority
             />
-            <img
+            <Image
               src="/logo-putih.png"
               alt="Kawane"
+              width={120}
+              height={20}
               className="hidden dark:block h-4 sm:h-5 w-auto object-contain"
+              priority
             />
           </Link>
 
