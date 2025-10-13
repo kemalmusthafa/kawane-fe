@@ -115,7 +115,7 @@ export default function MidtransPayment({
 
       if (data.success && data.data.token) {
         // Open Midtrans payment popup
-        window.snap.pay(data.data.token, {
+        window.snap.pay(data.data.paymentToken, {
           onSuccess: (result: any) => {
             toast.success("Pembayaran berhasil!");
             if (onSuccess) {
