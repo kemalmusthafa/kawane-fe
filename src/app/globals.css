@@ -1,0 +1,1078 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Scrollbar Styles */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Pragmatica Extended Book font setup */
+@font-face {
+  font-family: 'PragmaticaExtended-Book';
+  src:
+    local('PragmaticaExtended-Book'),
+    url('/fonts/PragmaticaExtended-Book.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PragmaticaExtended-Bold';
+  src:
+    local('PragmaticaExtended-Bold'),
+    url('/fonts/PragmaticaExtended-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-pragmatica: 'PragmaticaExtended-Book', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+html,
+body {
+  font-family: var(--font-pragmatica);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+}
+
+/* Custom design tokens and layout rules (inspired by provided spec) */
+div {
+  display: block;
+  unicode-bidi: isolate;
+}
+
+/* Removed conflicting color rules that override Tailwind's dark mode */
+
+body {
+  zoom: 0.9;
+  text-rendering: optimizeSpeed;
+}
+
+@media screen and (min-width: 750px) {
+  body {
+    font-size: 1.6rem;
+  }
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-columns: 100%;
+  min-height: 100%;
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: 0.06rem;
+  line-height: calc(1 + 0.8 / var(--font-body-scale));
+  font-family: var(--font-body-family);
+  font-style: var(--font-body-style);
+  font-weight: var(--font-body-weight);
+}
+
+:root {
+  --swiper-navigation-size: 44px;
+  --swiper-theme-color: #007aff;
+
+  --duration-short: 0.1s;
+  --duration-default: 0.2s;
+  --duration-long: 0.5s;
+
+  /* Colors */
+  --color-icon: rgb(var(--color-base-text));
+  --color-card-hover: var(--color-base-text);
+
+  --color-badge-background: var(--color-background);
+  --color-badge-border: var(--color-foreground);
+  --alpha-badge-border: 0.1;
+
+  --color-button: var(--color-base-accent-1);
+  --color-button-text: var(--color-base-solid-button-labels);
+  --alpha-button-background: 1;
+  --alpha-button-border: 1;
+
+  --color-link: var(--color-base-outline-button-labels);
+  --alpha-link: 0.85;
+
+  --color-foreground: var(--color-base-text);
+  --color-background: var(--color-base-background-1);
+  --gradient-background: var(--gradient-base-background-1);
+
+  /* Typography */
+  --font-body-family: 'PragmaticaExtended-Book', var(--font-pragmatica), system-ui, sans-serif;
+  --font-body-style: normal;
+  --font-body-weight: 400;
+  --font-body-weight-bold: 700;
+  --font-heading-family: 'PragmaticaExtended-Bold', var(--font-pragmatica), system-ui, sans-serif;
+  --font-heading-style: normal;
+  --font-heading-weight: 400;
+  --font-body-scale: 1.0;
+  --font-heading-scale: 1.0;
+
+  /* Base color tokens - Updated for better dark mode support */
+  --color-base-text: 18, 18, 18;
+  --color-shadow: 18, 18, 18;
+  --color-base-background-1: 0, 0, 0, 0; /* rgba(0,0,0,0) */
+  --color-base-background-2: 243, 243, 243;
+  --color-base-solid-button-labels: 255, 255, 255;
+  --color-base-outline-button-labels: 18, 18, 18;
+  --color-base-accent-1: 18, 18, 18;
+  --color-base-accent-2: 51, 79, 180;
+  --payment-terms-background-color: rgba(0, 0, 0, 0);
+  --gradient-base-background-1: rgba(0, 0, 0, 0);
+  --gradient-base-background-2: #f3f3f3;
+  --gradient-base-accent-1: #121212;
+  --gradient-base-accent-2: #334fb4;
+
+  /* Layout tokens */
+  --media-padding: 0px;
+  --media-border-opacity: 0.0;
+  --media-border-width: 0px;
+  --media-radius: 0px;
+  --media-shadow-opacity: 0.0;
+  --media-shadow-horizontal-offset: 0px;
+  --media-shadow-vertical-offset: 4px;
+  --media-shadow-blur-radius: 5px;
+  --media-shadow-visible: 0;
+
+  --page-width: 160rem;
+  --page-width-margin: 0rem;
+
+  --product-card-image-padding: 0.0rem;
+  --product-card-corner-radius: 0.0rem;
+  --product-card-text-alignment: left;
+  --product-card-border-width: 0.0rem;
+  --product-card-border-opacity: 0.1;
+  --product-card-shadow-opacity: 0.0;
+  --product-card-shadow-visible: 0;
+  --product-card-shadow-horizontal-offset: 0.0rem;
+  --product-card-shadow-vertical-offset: 0.4rem;
+  --product-card-shadow-blur-radius: 0.5rem;
+
+  --collection-card-image-padding: 0.0rem;
+  --collection-card-corner-radius: 0.0rem;
+  --collection-card-text-alignment: left;
+  --collection-card-border-width: 0.0rem;
+  --collection-card-border-opacity: 0.1;
+  --collection-card-shadow-opacity: 0.0;
+  --collection-card-shadow-visible: 0;
+  --collection-card-shadow-horizontal-offset: 0.0rem;
+  --collection-card-shadow-vertical-offset: 0.4rem;
+  --collection-card-shadow-blur-radius: 0.5rem;
+
+  --blog-card-image-padding: 0.0rem;
+  --blog-card-corner-radius: 0.0rem;
+  --blog-card-text-alignment: left;
+  --blog-card-border-width: 0.0rem;
+  --blog-card-border-opacity: 0.1;
+  --blog-card-shadow-opacity: 0.0;
+  --blog-card-shadow-visible: 0;
+  --blog-card-shadow-horizontal-offset: 0.0rem;
+  --blog-card-shadow-vertical-offset: 0.4rem;
+  --blog-card-shadow-blur-radius: 0.5rem;
+
+  --badge-corner-radius: 4.0rem;
+
+  --popup-border-width: 1px;
+  --popup-border-opacity: 0.1;
+  --popup-corner-radius: 0px;
+  --popup-shadow-opacity: 0.0;
+  --popup-shadow-horizontal-offset: 0px;
+  --popup-shadow-vertical-offset: 4px;
+  --popup-shadow-blur-radius: 5px;
+
+  --drawer-border-width: 1px;
+  --drawer-border-opacity: 0.1;
+  --drawer-shadow-opacity: 0.0;
+  --drawer-shadow-horizontal-offset: 0px;
+  --drawer-shadow-vertical-offset: 4px;
+  --drawer-shadow-blur-radius: 5px;
+
+  --spacing-sections-desktop: 0px;
+  --spacing-sections-mobile: 0px;
+  --grid-desktop-vertical-spacing: 28px;
+  --grid-desktop-horizontal-spacing: 28px;
+  --grid-mobile-vertical-spacing: 14px;
+  --grid-mobile-horizontal-spacing: 14px;
+
+  --text-boxes-border-opacity: 0.1;
+  --text-boxes-border-width: 0px;
+  --text-boxes-radius: 0px;
+  --text-boxes-shadow-opacity: 0.0;
+  --text-boxes-shadow-visible: 0;
+  --text-boxes-shadow-horizontal-offset: 0px;
+  --text-boxes-shadow-vertical-offset: 0px;
+  --text-boxes-shadow-blur-radius: 5px;
+
+  --buttons-radius: 0px;
+  --buttons-radius-outset: 0px;
+  --buttons-border-width: 1px;
+  --buttons-border-opacity: 1.0;
+  --buttons-shadow-opacity: 0.0;
+  --buttons-shadow-visible: 0;
+  --buttons-shadow-horizontal-offset: 0px;
+  --buttons-shadow-vertical-offset: 4px;
+  --buttons-shadow-blur-radius: 5px;
+  --buttons-border-offset: 0px;
+
+  --inputs-radius: 0px;
+  --inputs-border-width: 1px;
+  --inputs-border-opacity: 1.0;
+  --inputs-shadow-opacity: 0.0;
+  --inputs-shadow-horizontal-offset: 0px;
+  --inputs-margin-offset: 0px;
+  --inputs-shadow-vertical-offset: 4px;
+  --inputs-shadow-blur-radius: 5px;
+  --inputs-radius-outset: 0px;
+
+  --variant-pills-radius: 0px;
+  --variant-pills-border-width: 1px;
+  --variant-pills-border-opacity: 0.55;
+  --variant-pills-shadow-opacity: 0.0;
+  --variant-pills-shadow-horizontal-offset: 0px;
+  --variant-pills-shadow-vertical-offset: 4px;
+  --variant-pills-shadow-blur-radius: 5px;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 98%;
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 98%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Enhanced dark mode with better color palette */
+    --background: 240 10% 4%;
+    --foreground: 0 0% 95%;
+    --card: 240 10% 6%;
+    --card-foreground: 0 0% 95%;
+    --popover: 240 10% 6%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 210 100% 70%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 3.7% 12%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 240 3.7% 10%;
+    --muted-foreground: 240 5% 70%;
+    --accent: 240 3.7% 12%;
+    --accent-foreground: 0 0% 90%;
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 12%;
+    --input: 240 3.7% 10%;
+    --ring: 210 100% 70%;
+    --success: 142 76% 50%;
+    --success-foreground: 0 0% 98%;
+    --warning: 38 92% 60%;
+    --warning-foreground: 0 0% 98%;
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 98%;
+
+    /* Enhanced dark mode variants for custom color tokens */
+    --color-base-text: 245, 245, 245;
+    --color-base-background-1: 8, 8, 8;
+    --color-base-background-2: 20, 20, 20;
+    --color-base-solid-button-labels: 8, 8, 8;
+    --color-base-outline-button-labels: 245, 245, 245;
+    --color-base-accent-1: 100, 200, 255;
+    --color-base-accent-2: 120, 180, 255;
+    --gradient-base-background-1: rgba(8, 8, 8, 1);
+    --gradient-base-background-2: #141414;
+    --gradient-base-accent-1: #64c8ff;
+    --gradient-base-accent-2: #78b4ff;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-pragmatica antialiased;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  
+  /* Ensure all text elements inherit proper colors */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-foreground;
+  }
+  
+  p, span, div, a {
+    @apply text-foreground;
+  }
+  
+  /* Dark mode specific adjustments */
+  .dark body {
+    @apply bg-background text-foreground;
+  }
+  
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    @apply text-foreground;
+  }
+  
+  .dark p, .dark span, .dark div, .dark a {
+    @apply text-foreground;
+  }
+}
+
+@layer components {
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .glass {
+    @apply bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border border-white/20 dark:border-zinc-800/20;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-2 focus:ring-primary/20 focus:ring-offset-2;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 focus:ring-2 focus:ring-secondary/20 focus:ring-offset-2;
+  }
+  
+  .btn-outline {
+    @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground focus:ring-2 focus:ring-primary/20 focus:ring-offset-2;
+  }
+  
+  .btn-ghost {
+    @apply hover:bg-accent hover:text-accent-foreground focus:ring-2 focus:ring-primary/20 focus:ring-offset-2;
+  }
+  
+  /* Dark mode utilities */
+  .text-inherit {
+    color: inherit;
+  }
+  
+  .bg-inherit {
+    background-color: inherit;
+  }
+  
+  /* Force text visibility in dark mode */
+  .dark .text-visible {
+    @apply text-foreground;
+  }
+  
+  /* Override any hardcoded colors */
+  .dark .text-black {
+    @apply text-foreground !important;
+  }
+  
+  .dark .text-gray-900 {
+    @apply text-foreground !important;
+  }
+  
+  /* Text stability classes */
+  .text-stable {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .text-stable h1, .text-stable h2, .text-stable h3, 
+  .text-stable h4, .text-stable h5, .text-stable h6 {
+    font-variant-ligatures: none;
+    text-rendering: optimizeLegibility;
+  }
+  
+  .text-stable p, .text-stable span, .text-stable div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .dark .text-gray-800 {
+    @apply text-foreground !important;
+  }
+  
+  .dark .text-gray-700 {
+    @apply text-muted-foreground !important;
+  }
+  
+  .dark .text-gray-600 {
+    @apply text-muted-foreground !important;
+  }
+  
+  .dark .text-gray-500 {
+    @apply text-muted-foreground !important;
+  }
+  
+  .dark .text-gray-400 {
+    @apply text-muted-foreground !important;
+  }
+  
+  /* Force visibility for any remaining hardcoded colors */
+  .dark [class*="text-gray-"] {
+    @apply text-foreground;
+  }
+  
+  .dark [class*="text-black"] {
+    @apply text-foreground;
+  }
+  
+  /* Ensure proper contrast in dark mode */
+  .dark .bg-white {
+    @apply bg-card;
+  }
+  
+  .dark .bg-gray-50 {
+    @apply bg-muted;
+  }
+  
+  .dark .bg-gray-100 {
+    @apply bg-muted;
+  }
+  
+  /* Fix any remaining visibility issues */
+  .dark * {
+    color: inherit;
+  }
+  
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    color: hsl(var(--foreground));
+  }
+  
+  .dark p, .dark span, .dark div, .dark a, .dark li, .dark td, .dark th {
+    color: hsl(var(--foreground));
+  }
+  
+  /* Enhanced dark mode utilities */
+  .dark-gradient {
+    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
+  }
+  
+  .dark-card-gradient {
+    background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--secondary)) 100%);
+  }
+  
+  .dark-accent-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+  }
+  
+  /* Subtle shadows for depth */
+  .dark-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  }
+  
+  .dark-shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Enhanced borders */
+  .dark-border-glow {
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 0 0 1px rgba(100, 200, 255, 0.1);
+  }
+  
+  /* Text variations */
+  .dark-text-primary {
+    color: hsl(var(--primary));
+  }
+  
+  .dark-text-accent {
+    color: hsl(var(--accent-foreground));
+  }
+  
+  .dark-text-muted {
+    color: hsl(var(--muted-foreground));
+  }
+  
+  /* Ensure top bar text is always visible */
+  .top-bar-text {
+    color: hsl(var(--primary-foreground)) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+  }
+  
+  .dark .top-bar-text {
+    color: hsl(var(--primary-foreground)) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: 500;
+  }
+  
+  /* Force visibility for any text in primary background */
+  .bg-primary * {
+    color: hsl(var(--primary-foreground)) !important;
+  }
+  
+  /* Exception for buttons with specific styling */
+  .bg-primary button.bg-white,
+  .bg-primary .bg-white {
+    color: #000000 !important;
+  }
+  
+  /* Exception for hover states */
+  .bg-primary button:hover.bg-white,
+  .bg-primary .bg-white:hover {
+    color: #000000 !important;
+  }
+  
+  /* Exception for outline buttons with white text */
+  .bg-primary button.bg-transparent,
+  .bg-primary .bg-transparent {
+    color: hsl(var(--primary-foreground)) !important;
+  }
+  
+  /* Exception for outline buttons hover state */
+  .bg-primary button.bg-transparent:hover,
+  .bg-primary .bg-transparent:hover,
+  .bg-primary button:hover.bg-transparent,
+  .bg-primary .hover\:bg-primary-foreground:hover {
+    color: #000000 !important;
+  }
+  
+  .dark .bg-primary * {
+    color: hsl(var(--primary-foreground)) !important;
+  }
+  
+  /* Exception for buttons with specific styling in dark mode */
+  .dark .bg-primary button.bg-white,
+  .dark .bg-primary .bg-white,
+  .dark .bg-primary button.text-black,
+  .dark .bg-primary .text-black,
+  .dark .bg-primary button[class*="bg-white"],
+  .dark .bg-primary button[class*="text-black"] {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
+  
+  /* Exception for hover states in dark mode */
+  .dark .bg-primary button:hover.bg-white,
+  .dark .bg-primary .bg-white:hover,
+  .dark .bg-primary button[class*="bg-white"]:hover,
+  .dark .bg-primary button[class*="text-black"]:hover {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
+  
+  /* Force Shop Now button visibility in dark mode */
+  .dark .bg-primary button:has-text("Shop Now"),
+  .dark .bg-primary button[class*="bg-white"][class*="text-black"],
+  .dark .bg-primary .shop-now-btn,
+  .dark .bg-primary button.shop-now-btn {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
+  
+  /* Force Shop Now button visibility in all modes */
+  .bg-primary .shop-now-btn,
+  .bg-primary button.shop-now-btn {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
+  
+  /* Ultra-specific override for Shop Now button */
+  .bg-primary button.shop-now-btn.bg-white.text-black,
+  .dark .bg-primary button.shop-now-btn.bg-white.text-black {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+  }
+  
+  /* Exception for outline buttons with white text in dark mode */
+  .dark .bg-primary button.bg-transparent,
+  .dark .bg-primary .bg-transparent {
+    color: hsl(var(--primary-foreground)) !important;
+  }
+  
+  /* Exception for outline buttons hover state in dark mode */
+  .dark .bg-primary button.bg-transparent:hover,
+  .dark .bg-primary .bg-transparent:hover,
+  .dark .bg-primary button:hover.bg-transparent,
+  .dark .bg-primary .hover\:bg-primary-foreground:hover {
+    color: #000000 !important;
+  }
+  
+  /* Enhanced dropdown styles */
+  .dropdown-enhanced {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .dark .dropdown-enhanced {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Dropdown item hover effects */
+  .dropdown-item {
+    transition: all 0.2s ease;
+    border-radius: 0.375rem;
+  }
+  
+  .dropdown-item:hover {
+    background: hsl(var(--accent) / 0.5);
+  }
+  
+  .dark .dropdown-item:hover {
+    background: hsl(var(--accent) / 0.3);
+  }
+  
+  /* Role badge styling */
+  .role-badge {
+    background: hsl(var(--primary) / 0.1);
+    color: hsl(var(--primary));
+    border: 1px solid hsl(var(--primary) / 0.2);
+  }
+  
+  .dark .role-badge {
+    background: hsl(var(--primary) / 0.2);
+    color: hsl(var(--primary));
+    border: 1px solid hsl(var(--primary) / 0.3);
+  }
+  
+  /* Dropdown positioning utilities */
+  .dropdown-positioned {
+    transform: translateX(0) translateY(0);
+  }
+  
+  /* Ensure dropdown appears above other elements */
+  .dropdown-enhanced {
+    z-index: 50;
+  }
+  
+  /* Admin header dropdown specific styling */
+  .admin-header-dropdown {
+    position: relative;
+    z-index: 40;
+  }
+  
+  .admin-header-dropdown .dropdown-enhanced {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    z-index: 40;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateX(0);
+  }
+  
+  .dark .admin-header-dropdown .dropdown-enhanced {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Notification dropdown positioning - precise alignment */
+  .notification-dropdown {
+    position: relative;
+    z-index: 40;
+  }
+
+  .notification-dropdown .dropdown-enhanced {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    z-index: 40;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-height: 400px;
+    overflow-y: auto;
+    transform: translateX(0);
+  }
+
+  .dark .notification-dropdown .dropdown-enhanced {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Ensure precise positioning */
+  .notification-dropdown [data-radix-popper-content-wrapper] {
+    transform: translateX(0) !important;
+    left: 0 !important;
+    right: auto !important;
+    top: 100% !important;
+  }
+
+  /* Force proper alignment with trigger button */
+  .notification-dropdown [data-radix-popper-content-wrapper] [data-radix-popper-content] {
+    transform: translateX(0) !important;
+  }
+
+  /* Notification dropdown font stability */
+  .notification-dropdown h4,
+  .notification-dropdown p,
+  .notification-dropdown span,
+  .notification-dropdown button {
+    font-family: var(--font-pragmatica) !important;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .notification-dropdown .text-base {
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .notification-dropdown .text-sm {
+    font-size: 0.875rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .notification-dropdown .font-semibold {
+    font-weight: 600 !important;
+  }
+
+  .notification-dropdown .font-medium {
+    font-weight: 500 !important;
+  }
+
+  /* Instagram Feed Dark Mode Styling */
+  .instagram-feed-container {
+    width: 100%;
+    min-height: 400px;
+    transition: all 0.3s ease;
+  }
+
+  /* Light mode styles for Instagram widget */
+  .instagram-feed-container:not(.dark) .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  /* Light mode specific styling for Instagram feed elements */
+  .instagram-feed-container:not(.dark) .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item {
+    background: hsl(var(--card)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .instagram-feed-container:not(.dark) .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item:hover {
+    background: hsl(var(--accent)) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  /* Light mode Instagram feed header styling */
+  .instagram-feed-container:not(.dark) .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-header {
+    background: hsl(var(--card)) !important;
+    color: hsl(var(--card-foreground)) !important;
+    border-bottom: 1px solid hsl(var(--border)) !important;
+  }
+
+  /* Light mode Instagram feed title */
+  .instagram-feed-container:not(.dark) .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-title {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  /* Light mode Instagram feed description */
+  .instagram-feed-container:not(.dark) .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-description {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* Light mode Instagram feed buttons */
+  .instagram-feed-container:not(.dark) .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-button {
+    background: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+    border: 1px solid hsl(var(--primary)) !important;
+  }
+
+  .instagram-feed-container:not(.dark) .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-button:hover {
+    background: hsl(var(--primary) / 0.9) !important;
+  }
+
+  /* Dark mode styles for Instagram widget */
+  .dark .instagram-feed-container,
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  /* Override Elfsight widget styles for dark mode */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 * {
+    background-color: hsl(var(--card)) !important;
+    color: hsl(var(--card-foreground)) !important;
+    border-color: hsl(var(--border)) !important;
+  }
+
+  /* Specific styling for Instagram feed elements */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item {
+    background: hsl(var(--card)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item:hover {
+    background: hsl(var(--accent)) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  /* Instagram feed header styling */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-header {
+    background: hsl(var(--card)) !important;
+    color: hsl(var(--card-foreground)) !important;
+    border-bottom: 1px solid hsl(var(--border)) !important;
+  }
+
+  /* Instagram feed title */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-title {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  /* Instagram feed description */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-description {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* Instagram feed buttons */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-button {
+    background: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+    border: 1px solid hsl(var(--primary)) !important;
+  }
+
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-button:hover {
+    background: hsl(var(--primary) / 0.9) !important;
+  }
+
+  /* Instagram feed loading state */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-loading {
+    background: hsl(var(--muted)) !important;
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* Instagram feed error state */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-error {
+    background: hsl(var(--destructive) / 0.1) !important;
+    color: hsl(var(--destructive)) !important;
+    border: 1px solid hsl(var(--destructive) / 0.2) !important;
+  }
+
+  /* Instagram feed grid container */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-grid {
+    background: transparent !important;
+  }
+
+  /* Instagram feed item content */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item-content {
+    background: hsl(var(--card)) !important;
+    color: hsl(var(--card-foreground)) !important;
+  }
+
+  /* Instagram feed item text */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item-text {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  /* Instagram feed item meta */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item-meta {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* Instagram feed item date */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item-date {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* Instagram feed item likes/comments */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item-stats {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* Instagram feed item link */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item-link {
+    color: hsl(var(--primary)) !important;
+  }
+
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item-link:hover {
+    color: hsl(var(--primary) / 0.8) !important;
+  }
+
+  /* Instagram feed responsive adjustments */
+  @media (max-width: 768px) {
+    .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item {
+      margin-bottom: 16px !important;
+    }
+  }
+
+  /* Instagram feed animation improvements */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item {
+    transition: all 0.3s ease !important;
+  }
+
+  /* Instagram feed focus states for accessibility */
+  .dark .elfsight-app-004a0706-8a45-408b-89ba-a23be841cbc6 .eif-item:focus {
+    outline: 2px solid hsl(var(--primary)) !important;
+    outline-offset: 2px !important;
+  }
+  
+  /* Transparent navigation text visibility */
+  .transparent-nav-text {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    color: hsl(var(--foreground));
+  }
+  
+  .dark .transparent-nav-text {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    color: hsl(var(--foreground));
+  }
+  
+  /* Enhanced text shadow for better visibility */
+  .text-shadow-strong {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+  
+  .dark .text-shadow-strong {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  }
+  
+  /* Scroll-based navigation transitions */
+  .nav-scroll-transition {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Smooth backdrop blur transition */
+  .backdrop-blur-transition {
+    backdrop-filter: blur(0px);
+    transition: backdrop-filter 0.3s ease;
+  }
+  
+  .backdrop-blur-transition.scrolled {
+    backdrop-filter: blur(8px);
+  }
+  
+  /* Full screen hero section */
+  .hero-fullscreen {
+    min-height: 100vh;
+    margin-top: -5rem; /* Compensate for navigation height */
+    padding-top: 5rem; /* Restore content positioning */
+  }
+  
+  /* Ensure hero content is properly positioned */
+  .hero-content {
+    position: relative;
+    z-index: 10;
+  }
+  
+  /* Navigation link hover underline effect */
+  .nav-link-underline {
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-link-underline::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: hsl(var(--primary));
+    transition: width 0.3s ease;
+  }
+  
+  .nav-link-underline:hover::after {
+    width: 100%;
+  }
+  
+  /* Dark mode support for underline */
+  .dark .nav-link-underline::after {
+    background-color: hsl(var(--primary));
+  }
+  
+  /* Mobile sidebar stability */
+  .mobile-sidebar {
+    background: hsl(var(--background));
+    border-left: 1px solid hsl(var(--border) / 0.5);
+  }
+  
+  .mobile-sidebar-header {
+    background: hsl(var(--card));
+    border-bottom: 1px solid hsl(var(--border) / 0.5);
+  }
+  
+  .mobile-sidebar-content {
+    background: hsl(var(--background));
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground)) transparent;
+  }
+  
+  .mobile-sidebar-content::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .mobile-sidebar-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .mobile-sidebar-content::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 3px;
+  }
+  
+  .mobile-sidebar-content::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+  
+  /* Mobile sidebar item hover effects */
+  .mobile-sidebar-item {
+    transition: all 0.2s ease;
+    border-radius: 0.5rem;
+  }
+  
+  .mobile-sidebar-item:hover {
+    background: hsl(var(--accent) / 0.5);
+  }
+  
+  .dark .mobile-sidebar-item:hover {
+    background: hsl(var(--accent) / 0.3);
+  }
+}
