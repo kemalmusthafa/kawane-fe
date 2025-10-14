@@ -1516,7 +1516,7 @@ class ApiClient {
     return this.request<{
       message: string;
     }>(`/orders/${orderId}/cancel`, {
-      method: "POST",
+      method: "PUT",
     });
   }
 
