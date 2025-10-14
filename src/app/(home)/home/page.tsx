@@ -1,6 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useAuth } from "@/components/providers/auth-provider";
+import { toast } from "sonner";
 import { HeroSection } from "@/components/home/hero-section";
 import { LookbookCarousel } from "@/components/home/lookbook-carousel";
 import { FeaturedCategories } from "@/components/home/featured-categories";
@@ -21,6 +25,55 @@ const sectionVariants = {
 };
 
 export default function HomePage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { googleLogin } = useAuth();
+  const [isProcessingOAuth, setIsProcessingOAuth] = useState(false);
+
+  // Handle OAuth callback
+  useEffect(() => {
+    const code = searchParams.get("code");
+    const scope = searchParams.get("scope");
+
+    if (code && scope && !isProcessingOAuth) {
+      handleOAuthCallback(code);
+    }
+  }, [searchParams, isProcessingOAuth]);
+
+  const handleOAuthCallback = async (code: string) => {
+    try {
+      setIsProcessingOAuth(true);
+      console.log(
+        "Processing OAuth callback with code:",
+        code.substring(0, 20) + "..."
+      );
+
+      const result = await googleLogin(code);
+
+      if (result.success) {
+        toast.success("Login berhasil! Selamat datang! ✅");
+
+        // Clean URL by removing OAuth parameters
+        const cleanUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
+
+        console.log("OAuth login successful, token stored in localStorage");
+      } else {
+        throw new Error(result.message || "Google login gagal");
+      }
+    } catch (error: any) {
+      console.error("OAuth callback error:", error);
+      toast.error(
+        error.message || "Terjadi kesalahan saat login dengan Google."
+      );
+
+      // Redirect to sign-in page on error
+      router.push("/auth/sign-in/");
+    } finally {
+      setIsProcessingOAuth(false);
+    }
+  };
+
   return (
     <motion.div
       className="min-h-screen bg-background"

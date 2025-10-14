@@ -36,10 +36,7 @@ export default function GoogleAuth({
 
   const handleGoogleLogin = useGoogleLogin({
     flow: "auth-code",
-    ux_mode: "redirect", // Use redirect mode instead of popup
-    redirect_uri:
-      process.env.NEXT_PUBLIC_REDIRECT_URI ||
-      "https://kawane-fe.vercel.app/home/", // Use environment variable for SSR safety
+    ux_mode: "popup", // Use popup mode for better UX
     onSuccess: async (response) => {
       setIsLoading(true);
       try {
