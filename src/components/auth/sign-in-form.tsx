@@ -171,7 +171,7 @@ export function SignInForm() {
             <GoogleAuth
               onSuccess={() => {
                 toast.success("Successfully logged in with Google!");
-                window.location.href = "/home";
+                window.location.href = "/home/";
               }}
               onError={(error) => {
                 toast.error("Google login failed");

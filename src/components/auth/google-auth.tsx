@@ -34,15 +34,12 @@ export default function GoogleAuth({
   const { googleLogin } = useAuth();
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
-  // Debug logging
-  console.log("Google Auth Debug:", {
-    googleClientId: googleClientId ? "SET" : "NOT SET",
-    clientIdLength: googleClientId?.length || 0,
-  });
-
   const handleGoogleLogin = useGoogleLogin({
     flow: "auth-code",
-    ux_mode: "popup", // Use popup mode to avoid COOP issues
+    ux_mode: "redirect", // Use redirect mode instead of popup
+    redirect_uri:
+      process.env.NEXT_PUBLIC_REDIRECT_URI ||
+      "https://kawane-fe.vercel.app/home/", // Use environment variable for SSR safety
     onSuccess: async (response) => {
       setIsLoading(true);
       try {
@@ -50,7 +47,12 @@ export default function GoogleAuth({
         if (result.success) {
           toast.success("Login berhasil! Selamat datang! ✅");
 
-          // Call success callback without page reload
+          // Redirect to home page after successful login
+          if (typeof window !== "undefined") {
+            window.location.href = "/home/";
+          }
+
+          // Call success callback
           if (onSuccess) {
             onSuccess();
           }
