@@ -40,7 +40,15 @@ export default function GoogleAuth({
     onSuccess: async (response) => {
       setIsLoading(true);
       try {
+        console.log(
+          "Google OAuth Success - Code received:",
+          response.code.substring(0, 20) + "..."
+        );
+        console.log("Sending code to backend...");
+
         const result = await googleLogin(response.code);
+        console.log("Backend response:", result);
+
         if (result.success) {
           toast.success("Login berhasil! Selamat datang! ✅");
 
@@ -58,6 +66,11 @@ export default function GoogleAuth({
         }
       } catch (error: any) {
         console.error("Google Login Error:", error);
+        console.error("Error details:", {
+          message: error.message,
+          stack: error.stack,
+          response: error.response?.data,
+        });
         toast.error(error.message || "Silakan coba lagi.");
         if (onError) {
           onError(error);
