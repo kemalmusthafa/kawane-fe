@@ -74,6 +74,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+
+  // Debug logging
+  console.log("Layout Google Client ID:", {
+    googleClientId: googleClientId ? "SET" : "NOT SET",
+    clientIdLength: googleClientId?.length || 0,
+  });
+
   return (
     <html lang="id" suppressHydrationWarning>
       <body className={`font-pragmatica`}>
@@ -83,9 +91,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <GoogleOAuthProvider
-            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}
-          >
+          <GoogleOAuthProvider clientId={googleClientId || ""}>
             <SWRProvider>
               <AuthProvider>
                 <CartProvider>

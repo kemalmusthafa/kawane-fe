@@ -5,6 +5,25 @@ const nextConfig = {
   
   // Ensure static assets are properly served
   assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
+  
+  // Headers untuk mengatasi Cross-Origin-Opener-Policy
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin-allow-popups',
+          },
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'unsafe-none',
+          },
+        ],
+      },
+    ];
+  },
   images: {
     // Use custom loader to normalize Google Drive share links to direct links
     loader: 'default',

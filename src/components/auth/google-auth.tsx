@@ -34,8 +34,15 @@ export default function GoogleAuth({
   const { googleLogin } = useAuth();
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
+  // Debug logging
+  console.log("Google Auth Debug:", {
+    googleClientId: googleClientId ? "SET" : "NOT SET",
+    clientIdLength: googleClientId?.length || 0,
+  });
+
   const handleGoogleLogin = useGoogleLogin({
     flow: "auth-code",
+    ux_mode: "popup", // Use popup mode to avoid COOP issues
     onSuccess: async (response) => {
       setIsLoading(true);
       try {
