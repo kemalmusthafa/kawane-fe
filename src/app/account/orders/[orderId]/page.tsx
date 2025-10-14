@@ -190,7 +190,10 @@ export default function OrderDetailPage() {
   };
 
   const canCancelOrder = (order: OrderDetail) => {
-    return order.status === "pending" || order.status === "processing";
+    const status = order.status?.toLowerCase();
+    return (
+      status === "pending" || status === "checkout" || status === "processing"
+    );
   };
 
   if (isLoading) {
@@ -464,6 +467,20 @@ export default function OrderDetailPage() {
 
                 {/* Action Buttons */}
                 <div className="space-y-2">
+                  {/* Payment Button - Show if payment is pending */}
+                  {order.paymentStatus?.toLowerCase() === "pending" && (
+                    <Button
+                      onClick={() => {
+                        // Redirect to payment page with order ID
+                        window.location.href = `/payment/${order.id}`;
+                      }}
+                      className="w-full bg-green-600 hover:bg-green-700"
+                    >
+                      <CreditCard className="h-4 w-4 mr-2" />
+                      Pay Now
+                    </Button>
+                  )}
+
                   {canCancelOrder(order) && (
                     <Button
                       variant="outline"
