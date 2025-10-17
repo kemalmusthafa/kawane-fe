@@ -143,7 +143,7 @@ Status: ${orderData.status}`;
       // WhatsApp will show image preview if the product page has proper Open Graph metadata
       if ((item.product as any).id) {
         message += `\n   🔗 Lihat produk: ${
-          process.env.NEXT_PUBLIC_APP_URL || "https://kawane-studio.com"
+          process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
         }/products/${(item.product as any).id}`;
       }
     });
@@ -202,7 +202,7 @@ export const createCheckoutMessage = (cartData: {
       // WhatsApp will show image preview if the product page has proper Open Graph metadata
       if ((item.product as any).id) {
         message += `\n   🔗 Lihat produk: ${
-          process.env.NEXT_PUBLIC_APP_URL || "https://kawane-studio.com"
+          process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
         }/products/${(item.product as any).id}`;
       }
     });

@@ -60,7 +60,10 @@ export function ImageUpload({
         formData.append("image", file);
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "https://kawane-be.vercel.app/api"}/deals/upload-image`,
+          `${
+            process.env.NEXT_PUBLIC_API_URL ||
+            "https://kawane-be.vercel.app/api"
+          }/deals/upload-image`,
           {
             method: "POST",
             headers: {
