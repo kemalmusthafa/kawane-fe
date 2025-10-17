@@ -393,7 +393,7 @@ export const UserProfile: React.FC = () => {
               {/* Addresses List */}
               <div className="space-y-4">
                 {addresses && addresses.length > 0 ? (
-                  addresses.map((address) => (
+                  addresses.map((address: any) => (
                     <Card key={address.id}>
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between">

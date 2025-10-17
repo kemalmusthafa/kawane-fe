@@ -35,6 +35,16 @@ export const ORDER_STATUS_COLORS = {
   CANCELLED:
     "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800",
 
+  // WhatsApp states
+  whatsapp_pending:
+    "bg-orange-100 dark:bg-orange-900/20 text-orange-800 dark:text-orange-300 border-orange-200 dark:border-orange-800",
+  WHATSAPP_PENDING:
+    "bg-orange-100 dark:bg-orange-900/20 text-orange-800 dark:text-orange-300 border-orange-200 dark:border-orange-800",
+  whatsapp_confirmed:
+    "bg-teal-100 dark:bg-teal-900/20 text-teal-800 dark:text-teal-300 border-teal-200 dark:border-teal-800",
+  WHATSAPP_CONFIRMED:
+    "bg-teal-100 dark:bg-teal-900/20 text-teal-800 dark:text-teal-300 border-teal-200 dark:border-teal-800",
+
   // Default/Unknown states
   default:
     "bg-gray-100 dark:bg-gray-800/20 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-700",
@@ -115,6 +125,10 @@ export const ORDER_STATUS_LABELS = {
   CHECKOUT: "Checkout",
   cancelled: "Cancelled",
   CANCELLED: "Cancelled",
+  whatsapp_pending: "WhatsApp Pending",
+  WHATSAPP_PENDING: "WhatsApp Pending",
+  whatsapp_confirmed: "WhatsApp Confirmed",
+  WHATSAPP_CONFIRMED: "WhatsApp Confirmed",
 } as const;
 
 export const PAYMENT_STATUS_LABELS = {

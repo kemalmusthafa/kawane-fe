@@ -6,6 +6,7 @@ export interface Product {
   sku?: string;
   stock: number;
   categoryId?: string;
+  size?: string; // Ukuran produk (XL, L, M, S, 32, 34, 36, etc.)
   createdAt: Date;
   updatedAt: Date;
 
@@ -33,6 +34,7 @@ export interface ProductCreatePayload {
   sku?: string;
   stock: number;
   categoryId?: string;
+  size?: string; // Ukuran produk (XL, L, M, S, 32, 34, 36, etc.)
   images?: string[]; // URLs
 }
 
@@ -43,6 +45,7 @@ export interface ProductUpdatePayload {
   sku?: string;
   stock?: number;
   categoryId?: string;
+  size?: string; // Ukuran produk (XL, L, M, S, 32, 34, 36, etc.)
 }
 
 export interface ProductFilter {

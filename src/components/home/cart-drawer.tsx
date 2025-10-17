@@ -93,10 +93,7 @@ export function CartDrawer() {
                 <p className="text-gray-600 mb-6">
                   Silakan login untuk melihat keranjang belanja Anda
                 </p>
-                <Link
-                  href="/home/auth/sign-in"
-                  onClick={() => setIsOpen(false)}
-                >
+                <Link href="/auth/sign-in" onClick={() => setIsOpen(false)}>
                   <Button>Login</Button>
                 </Link>
               </div>

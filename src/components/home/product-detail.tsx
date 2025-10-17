@@ -42,6 +42,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
   const actualProductId = productId || (params.id as string);
 
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState<string>("");
   const [showReviewForm, setShowReviewForm] = useState(false);
 
   const { isAuthenticated, user } = useAuth();
@@ -58,10 +59,16 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
   const handleBuyNow = async () => {
     if (!product) return;
 
+    // Check if product has sizes and size is selected
+    if (product.sizes && product.sizes.length > 0 && !selectedSize) {
+      toast.error("Pilih ukuran terlebih dahulu");
+      return;
+    }
+
     const buyNowAction = async () => {
       try {
-        // Add to cart first
-        await addItem(product.id, quantity);
+        // Add to cart first with size information
+        await addItem(product.id, quantity, selectedSize);
         toast.success("Produk ditambahkan ke keranjang");
 
         // Then redirect to checkout
@@ -217,6 +224,41 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
             </p>
           </div>
 
+          {product.sizes && product.sizes.length > 0 && (
+            <div>
+              <h3 className="text-sm sm:text-base font-semibold mb-2">
+                Pilih Ukuran
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+                {product.sizes.map((sizeItem) => (
+                  <button
+                    key={sizeItem.id}
+                    onClick={() => setSelectedSize(sizeItem.size)}
+                    className={`p-3 border rounded-lg text-center transition-colors ${
+                      selectedSize === sizeItem.size
+                        ? "border-blue-500 bg-blue-50 text-blue-700"
+                        : "border-gray-300 hover:border-gray-400"
+                    } ${
+                      sizeItem.stock === 0
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                    disabled={sizeItem.stock === 0}
+                  >
+                    <div className="text-xs sm:text-sm font-medium">
+                      {sizeItem.size}
+                    </div>
+                  </button>
+                ))}
+              </div>
+              {selectedSize && (
+                <p className="text-sm text-green-600 mb-2">
+                  ✓ Ukuran {selectedSize} dipilih
+                </p>
+              )}
+            </div>
+          )}
+
           {/* Quantity Selector */}
           <div className="flex items-center space-x-2 sm:space-x-4">
             <Label htmlFor="quantity" className="text-xs sm:text-sm">
@@ -261,6 +303,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
               <AddToCartButton
                 product={product}
                 quantity={quantity}
+                selectedSize={selectedSize}
                 variant="outline"
                 className="flex-1"
                 disabled={product.stock === 0}

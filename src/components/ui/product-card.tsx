@@ -10,11 +10,13 @@ import { AddToCartButton } from "@/components/ui/add-to-cart-button";
 import { AddToWishlistButton } from "@/components/ui/add-to-wishlist-button";
 import { ProductRating } from "@/components/ui/product-rating";
 import { DealBadge, DealTimeLeft } from "@/components/ui/deal-badge";
+import { useState } from "react";
 
 interface ProductCardProps {
   product: Product;
   showNewBadge?: boolean;
   salesCount?: number; // Add salesCount prop
+  hideAddToCart?: boolean; // Add prop to hide add to cart button
   onAddToCart?: (product: Product) => void;
   onToggleWishlist?: (product: Product) => void;
 }
@@ -23,9 +25,11 @@ export function ProductCard({
   product,
   showNewBadge = false,
   salesCount, // Add salesCount to destructuring
+  hideAddToCart = false, // Add hideAddToCart prop
   onAddToCart,
   onToggleWishlist,
 }: ProductCardProps) {
+  const [selectedSize, setSelectedSize] = useState<string>("");
   const images = product.images?.map((img) => img.url) || [];
 
   const handleAddToCart = async (product: Product) => {
@@ -33,6 +37,9 @@ export function ProductCard({
       onAddToCart(product);
     }
   };
+
+  const hasSizes = product.sizes && product.sizes.length > 0;
+  const availableSizes = product.sizes?.filter((size) => size.stock > 0) || [];
 
   return (
     <Card className="group hover:shadow-lg transition-all duration-300">
@@ -106,6 +113,42 @@ export function ProductCard({
             </h4>
           </Link>
 
+          {/* Size Information */}
+          {hasSizes && (
+            <div className="mb-3">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xs font-semibold text-gray-700">
+                  Pilih Ukuran:
+                </span>
+              </div>
+              <div className="grid grid-cols-3 gap-1">
+                {availableSizes.slice(0, 6).map((size) => (
+                  <button
+                    key={size.id}
+                    onClick={() => setSelectedSize(size.size)}
+                    className={`p-2 text-center rounded border transition-colors ${
+                      selectedSize === size.size
+                        ? "border-blue-500 bg-blue-50 text-blue-700"
+                        : "border-gray-300 hover:border-gray-400"
+                    }`}
+                  >
+                    <div className="text-xs font-medium">{size.size}</div>
+                  </button>
+                ))}
+              </div>
+              {availableSizes.length > 6 && (
+                <p className="text-xs text-gray-500 mt-1 text-center">
+                  +{availableSizes.length - 6} ukuran lainnya
+                </p>
+              )}
+              {selectedSize && (
+                <p className="text-xs text-green-600 mt-2 text-center">
+                  ✓ Ukuran {selectedSize} dipilih
+                </p>
+              )}
+            </div>
+          )}
+
           <div className="flex items-center space-x-2 mb-3 sm:mb-4">
             {product.deal ? (
               <div className="flex flex-col">
@@ -129,7 +172,14 @@ export function ProductCard({
           </div>
 
           <div className="flex space-x-2">
-            <AddToCartButton product={product} className="flex-1" size="sm" />
+            {!hideAddToCart && (
+              <AddToCartButton
+                product={product}
+                className="flex-1"
+                size="sm"
+                selectedSize={selectedSize}
+              />
+            )}
           </div>
         </div>
       </CardContent>

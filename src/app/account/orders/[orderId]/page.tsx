@@ -18,13 +18,14 @@ import {
   CheckCircle,
   Clock,
   XCircle,
+  MessageCircle,
   Truck,
   AlertCircle,
+  ShoppingBag,
 } from "lucide-react";
+import { getWhatsAppDesktopUrl, createOrderMessage } from "@/utils/whatsapp";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 import Link from "next/link";
-// Removed Next.js Image import to avoid blob issues
 
 interface OrderDetail {
   id: string;
@@ -42,6 +43,7 @@ interface OrderDetail {
     };
     quantity: number;
     price: number;
+    size?: string;
   }>;
   address: {
     detail: string;
@@ -49,6 +51,20 @@ interface OrderDetail {
     postalCode: string;
     province: string;
     label?: string;
+  };
+  shipment?: {
+    id: string;
+    courier?: string;
+    trackingNo?: string;
+    cost: number;
+    estimatedDays?: number;
+    createdAt: string;
+    address?: {
+      detail: string;
+      city: string;
+      postalCode: string;
+      province: string;
+    };
   };
   paymentMethod: string;
   notes?: string;
@@ -80,6 +96,18 @@ export default function OrderDetailPage() {
       setIsLoading(true);
       const orderData = await OrderService.getOrder(orderId);
       if (orderData) {
+        // Debug: Log order data to see if size is included
+        console.log("📦 Order data received:", orderData);
+        console.log(
+          "📦 Order items:",
+          orderData.items?.map((item: any) => ({
+            id: item.id,
+            productName: item.product?.name,
+            quantity: item.quantity,
+            size: item.size,
+          }))
+        );
+
         // Map the API response to match our OrderDetail interface
         const mappedOrder: OrderDetail = {
           ...orderData,
@@ -146,18 +174,40 @@ export default function OrderDetailPage() {
     switch (normalizedStatus) {
       case "checkout":
         return (
-          <Badge className="bg-orange-100 text-orange-800">Checkout</Badge>
+          <Badge className="bg-orange-100 text-orange-800 border-orange-200">
+            Checkout
+          </Badge>
         );
       case "pending":
-        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
+        return (
+          <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">
+            Pending
+          </Badge>
+        );
       case "paid":
-        return <Badge className="bg-green-100 text-green-800">Paid</Badge>;
+        return (
+          <Badge className="bg-green-100 text-green-800 border-green-200">
+            Paid
+          </Badge>
+        );
       case "shipped":
-        return <Badge className="bg-purple-100 text-purple-800">Shipped</Badge>;
+        return (
+          <Badge className="bg-purple-100 text-purple-800 border-purple-200">
+            Shipped
+          </Badge>
+        );
       case "completed":
-        return <Badge className="bg-green-100 text-green-800">Completed</Badge>;
+        return (
+          <Badge className="bg-green-100 text-green-800 border-green-200">
+            Completed
+          </Badge>
+        );
       case "cancelled":
-        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>;
+        return (
+          <Badge className="bg-red-100 text-red-800 border-red-200">
+            Cancelled
+          </Badge>
+        );
       default:
         return <Badge variant="secondary">{status || "Unknown"}</Badge>;
     }
@@ -167,13 +217,29 @@ export default function OrderDetailPage() {
     const normalizedStatus = status?.toLowerCase();
     switch (normalizedStatus) {
       case "pending":
-        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
+        return (
+          <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">
+            Pending
+          </Badge>
+        );
       case "succeeded":
-        return <Badge className="bg-green-100 text-green-800">Succeeded</Badge>;
+        return (
+          <Badge className="bg-green-100 text-green-800 border-green-200">
+            Succeeded
+          </Badge>
+        );
       case "cancelled":
-        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>;
+        return (
+          <Badge className="bg-red-100 text-red-800 border-red-200">
+            Cancelled
+          </Badge>
+        );
       case "expired":
-        return <Badge className="bg-gray-100 text-gray-800">Expired</Badge>;
+        return (
+          <Badge className="bg-gray-100 text-gray-800 border-gray-200">
+            Expired
+          </Badge>
+        );
       default:
         return <Badge variant="secondary">{status || "Unknown"}</Badge>;
     }
@@ -198,10 +264,9 @@ export default function OrderDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p>Loading order details...</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex justify-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-600" />
         </div>
       </div>
     );
@@ -209,307 +274,486 @@ export default function OrderDetailPage() {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="h-8 w-8 text-gray-400" />
+          </div>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
             Order Not Found
           </h2>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-600 mb-6">
             The order you're looking for doesn't exist.
           </p>
           <Link href="/account/orders">
-            <Button>Back to Orders</Button>
+            <Button className="bg-gray-900 hover:bg-gray-800 text-white">
+              Back to Orders
+            </Button>
           </Link>
         </div>
       </div>
     );
   }
 
-  const pageVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
-  const headerVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
-  const contentVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  };
-
   return (
-    <motion.div
-      variants={pageVariants}
-      initial="hidden"
-      animate="visible"
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
-      <motion.div
-        className="flex items-center justify-between mb-8"
-        variants={headerVariants}
-        transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-      >
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Order Details
-          </h1>
-          <p className="text-sm text-gray-600 break-all">
-            Order #{order.orderNumber}
-          </p>
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header Section */}
+        <div className="bg-white rounded-lg p-6 mb-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <Package className="h-5 w-5 text-gray-600" />
+              </div>
+              <div>
+                <h1 className="text-xl font-semibold text-gray-900">
+                  Order Details
+                </h1>
+                <p className="text-sm text-gray-600 font-mono bg-gray-50 px-3 py-1 rounded-lg inline-block mt-1">
+                  #{order.orderNumber}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Link href="/account/orders">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="hover:bg-gray-50"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Orders
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Link href="/account/orders">
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Orders
-            </Button>
-          </Link>
-        </div>
-      </motion.div>
 
-      <motion.div
-        variants={contentVariants}
-        transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Order Status */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
-                  {getStatusIcon(order.status)}
-                  Order Status
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">Status:</span>
-                      {getStatusBadge(order.status)}
+        <div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Main Content */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Order Status Card */}
+              <Card className="bg-white rounded-lg">
+                <CardHeader className="bg-gray-50">
+                  <CardTitle className="flex items-center gap-3 text-lg font-semibold">
+                    <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                      {getStatusIcon(order.status)}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Payment:</span>
+                    Order Status
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-semibold text-gray-700">
+                          Status:
+                        </span>
+                        {getStatusBadge(order.status)}
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-semibold text-gray-700">
+                          Payment:
+                        </span>
+                        {getPaymentStatusBadge(order.paymentStatus)}
+                      </div>
+                    </div>
+                    <div className="text-right bg-gray-50 p-4 rounded-lg">
+                      <p className="text-xs text-gray-600 font-medium">
+                        Order Date
+                      </p>
+                      <p className="text-sm font-medium text-gray-900 mt-1">
+                        {formatDate(order.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Order Items Card */}
+              <Card className="bg-white rounded-lg">
+                <CardHeader className="bg-gray-50">
+                  <CardTitle className="flex items-center gap-3 text-lg font-semibold">
+                    <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <Package className="h-4 w-4 text-gray-600" />
+                    </div>
+                    Order Items
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-4">
+                    {order.items.map((item, index) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg"
+                      >
+                        <div className="w-20 h-20 bg-white rounded-lg flex items-center justify-center relative">
+                          {item.product.images &&
+                          item.product.images.length > 0 ? (
+                            <>
+                              <img
+                                src={item.product.images[0].url}
+                                alt={item.product.name}
+                                className="w-full h-full rounded-lg object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                  const fallback = e.currentTarget
+                                    .nextElementSibling as HTMLElement;
+                                  if (fallback) {
+                                    fallback.classList.remove("hidden");
+                                  }
+                                }}
+                              />
+                              <div className="w-full h-full items-center justify-center hidden">
+                                <Package className="h-8 w-8 text-gray-400" />
+                              </div>
+                            </>
+                          ) : (
+                            <Package className="h-8 w-8 text-gray-400" />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                            {item.product.name}
+                          </h3>
+                          {item.size && (
+                            <p className="text-xs text-blue-600 font-medium mb-1">
+                              Ukuran: {item.size}
+                            </p>
+                          )}
+                          <p className="text-xs text-gray-600">
+                            Quantity:{" "}
+                            <span className="font-medium">{item.quantity}</span>
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-semibold text-gray-900">
+                            Rp {item.price.toLocaleString("id-ID")}
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            Total: Rp{" "}
+                            {(item.price * item.quantity).toLocaleString(
+                              "id-ID"
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Shipping Address Card */}
+              <Card className="bg-white rounded-lg">
+                <CardHeader className="bg-gray-50">
+                  <CardTitle className="flex items-center gap-3 text-lg font-semibold">
+                    <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <MapPin className="h-4 w-4 text-gray-600" />
+                    </div>
+                    Shipping Address
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  {order.address ? (
+                    <div className="space-y-3">
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <p className="text-sm font-semibold text-gray-900 mb-2">
+                          {order.address.detail}
+                        </p>
+                        <p className="text-sm text-gray-700">
+                          {order.address.city}, {order.address.postalCode}
+                        </p>
+                        <p className="text-sm text-gray-700">
+                          {order.address.province}
+                        </p>
+                        {order.address.label && (
+                          <p className="text-xs text-gray-600 mt-2 bg-gray-100 px-2 py-1 rounded-lg inline-block">
+                            {order.address.label}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <MapPin className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                      <p className="text-gray-500">
+                        No address information available
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Payment Information Card */}
+              <Card className="bg-white rounded-lg">
+                <CardHeader className="bg-gray-50">
+                  <CardTitle className="flex items-center gap-3 text-lg font-semibold">
+                    <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <CreditCard className="h-4 w-4 text-gray-600" />
+                    </div>
+                    Payment Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
+                      <span className="text-sm font-medium text-gray-700">
+                        Payment Method:
+                      </span>
+                      <span className="text-sm font-medium text-gray-900">
+                        {order.paymentMethod}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-700">
+                        Status:
+                      </span>
                       {getPaymentStatusBadge(order.paymentStatus)}
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs text-gray-600">Order Date</p>
-                    <p className="text-sm font-medium break-words">
-                      {formatDate(order.createdAt)}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Order Items */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <Package className="h-4 w-4" />
-                  Order Items
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {order.items.map((item) => (
-                    <motion.div
-                      key={item.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-4 p-4 border rounded-lg"
-                    >
-                      <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center relative">
-                        {item.product.images &&
-                        item.product.images.length > 0 ? (
-                          <>
-                            <img
-                              src={item.product.images[0].url}
-                              alt={item.product.name}
-                              className="w-full h-full rounded-lg object-cover"
-                              onError={(e) => {
-                                e.currentTarget.style.display = "none";
-                                const fallback = e.currentTarget
-                                  .nextElementSibling as HTMLElement;
-                                if (fallback) {
-                                  fallback.classList.remove("hidden");
-                                }
-                              }}
-                            />
-                            <div className="w-full h-full items-center justify-center hidden">
-                              <Package className="h-8 w-8 text-gray-400" />
-                            </div>
-                          </>
-                        ) : (
-                          <Package className="h-8 w-8 text-gray-400" />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-sm font-medium break-words">
-                          {item.product.name}
-                        </h3>
-                        <p className="text-xs text-gray-600">
-                          Quantity: {item.quantity}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium">
-                          Rp {item.price.toLocaleString("id-ID")}
-                        </p>
-                        <p className="text-xs text-gray-600">
-                          Total: Rp{" "}
-                          {(item.price * item.quantity).toLocaleString("id-ID")}
-                        </p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Shipping Address */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <MapPin className="h-4 w-4" />
-                  Shipping Address
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {order.address ? (
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium break-words">
-                      {order.address.detail}
-                    </p>
-                    <p className="text-sm break-words">
-                      {order.address.city}, {order.address.postalCode}
-                    </p>
-                    <p className="text-sm break-words">
-                      {order.address.province}
-                    </p>
-                    {order.address.label && (
-                      <p className="text-xs text-gray-600 break-words">
-                        Label: {order.address.label}
-                      </p>
-                    )}
-                  </div>
-                ) : (
-                  <p className="text-gray-500">
-                    No address information available
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Payment Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <CreditCard className="h-4 w-4" />
-                  Payment Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <p className="text-sm font-medium break-words">
-                    Payment Method: {order.paymentMethod}
-                  </p>
-                  <div className="text-xs text-gray-600">
-                    Status: {getPaymentStatusBadge(order.paymentStatus)}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Order Notes */}
-            {order.notes && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Order Notes</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-700 break-words">
-                    {order.notes}
-                  </p>
                 </CardContent>
               </Card>
-            )}
-          </div>
 
-          {/* Order Summary */}
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Order Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs">
-                    <span>Subtotal</span>
-                    <span>Rp {order.totalAmount.toLocaleString("id-ID")}</span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span>Shipping</span>
-                    <span className="text-green-600">Free</span>
-                  </div>
-                  <Separator />
-                  <div className="flex justify-between text-base font-bold">
-                    <span>Total</span>
-                    <span>Rp {order.totalAmount.toLocaleString("id-ID")}</span>
-                  </div>
-                </div>
+              {/* Shipment Tracking Card */}
+              {order.shipment && (
+                <Card className="bg-white rounded-lg">
+                  <CardHeader className="bg-gray-50">
+                    <CardTitle className="flex items-center gap-3 text-lg font-semibold">
+                      <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <Truck className="h-4 w-4 text-gray-600" />
+                      </div>
+                      Shipment Tracking
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      {/* Courier Information */}
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <span className="text-sm font-medium text-gray-700">
+                              Courier:
+                            </span>
+                            <p className="text-sm font-semibold text-gray-900">
+                              {order.shipment.courier || "Not specified"}
+                            </p>
+                          </div>
+                          <div>
+                            <span className="text-sm font-medium text-gray-700">
+                              Shipping Cost:
+                            </span>
+                            <p className="text-sm font-semibold text-gray-900">
+                              Rp {order.shipment.cost.toLocaleString("id-ID")}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
 
-                {/* Action Buttons */}
-                <div className="space-y-2">
-                  {/* Payment Button - Show if payment is pending */}
-                  {order.paymentStatus?.toLowerCase() === "pending" && (
-                    <Button
-                      onClick={() => {
-                        // Redirect to payment page with order ID
-                        window.location.href = `/payment/${order.id}`;
-                      }}
-                      className="w-full bg-green-600 hover:bg-green-700"
-                    >
-                      <CreditCard className="h-4 w-4 mr-2" />
-                      Pay Now
-                    </Button>
-                  )}
-
-                  {canCancelOrder(order) && (
-                    <Button
-                      variant="outline"
-                      onClick={handleCancelOrder}
-                      disabled={isCancelling}
-                      className="w-full"
-                    >
-                      {isCancelling ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Cancelling...
-                        </>
-                      ) : (
-                        "Cancel Order"
+                      {/* Tracking Number */}
+                      {order.shipment.trackingNo && (
+                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <span className="text-sm font-medium text-blue-700">
+                                Tracking Number:
+                              </span>
+                              <p className="text-sm font-mono font-semibold text-blue-900">
+                                {order.shipment.trackingNo}
+                              </p>
+                            </div>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                // Copy tracking number to clipboard
+                                if (order.shipment?.trackingNo) {
+                                  navigator.clipboard.writeText(
+                                    order.shipment.trackingNo
+                                  );
+                                  toast.success(
+                                    "Tracking number copied to clipboard"
+                                  );
+                                }
+                              }}
+                            >
+                              Copy
+                            </Button>
+                          </div>
+                        </div>
                       )}
-                    </Button>
-                  )}
 
-                  <Link href="/account/orders" className="block">
-                    <Button variant="outline" className="w-full">
-                      Back to Orders
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+                      {/* Estimated Delivery */}
+                      {order.shipment.estimatedDays && (
+                        <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4 text-green-600" />
+                            <span className="text-sm font-medium text-green-700">
+                              Estimated Delivery:
+                            </span>
+                            <span className="text-sm font-semibold text-green-900">
+                              {order.shipment.estimatedDays} days
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Shipment Date */}
+                      <div className="text-sm text-gray-600">
+                        <span className="font-medium">Shipment Created:</span>{" "}
+                        {new Date(order.shipment.createdAt).toLocaleDateString(
+                          "id-ID",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </div>
+
+                      {/* Track Package Button */}
+                      {order.shipment.trackingNo && (
+                        <div className="pt-2">
+                          <Button
+                            variant="outline"
+                            className="w-full"
+                            onClick={() => {
+                              // Open tracking in new tab (you can customize this URL based on courier)
+                              if (
+                                order.shipment?.trackingNo &&
+                                order.shipment?.courier
+                              ) {
+                                const trackingUrl = `https://www.google.com/search?q=${order.shipment.courier}+tracking+${order.shipment.trackingNo}`;
+                                window.open(trackingUrl, "_blank");
+                              }
+                            }}
+                          >
+                            <Truck className="h-4 w-4 mr-2" />
+                            Track Package
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Order Notes */}
+              {order.notes && (
+                <Card className="bg-white rounded-lg">
+                  <CardHeader className="bg-gray-50">
+                    <CardTitle className="text-lg font-semibold">
+                      Order Notes
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        {order.notes}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+
+            {/* Order Summary Sidebar */}
+            <div className="space-y-6">
+              <Card className="bg-white rounded-lg sticky top-8">
+                <CardHeader className="bg-gray-50">
+                  <CardTitle className="text-lg font-semibold">
+                    Order Summary
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6 space-y-6">
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-sm text-gray-600">Subtotal</span>
+                      <span className="text-sm font-medium">
+                        Rp {order.totalAmount.toLocaleString("id-ID")}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-sm text-gray-600">Shipping</span>
+                      <span className="text-sm text-gray-600 font-medium">
+                        Free
+                      </span>
+                    </div>
+                    <Separator className="my-4" />
+                    <div className="flex justify-between text-base font-bold">
+                      <span className="text-base">Total</span>
+                      <span className="text-base text-gray-900">
+                        Rp {order.totalAmount.toLocaleString("id-ID")}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="space-y-3">
+                    {/* WhatsApp Payment Button */}
+                    {order.paymentStatus?.toLowerCase() === "pending" &&
+                      order.status?.toLowerCase() !== "cancelled" && (
+                        <Button
+                          onClick={() => {
+                            const message = createOrderMessage({
+                              orderNumber: order.orderNumber,
+                              totalAmount: order.totalAmount,
+                              status: order.status,
+                              createdAt: order.createdAt,
+                              address: order.address,
+                              items: order.items,
+                            });
+
+                            const whatsappUrl = getWhatsAppDesktopUrl(message);
+                            window.open(whatsappUrl, "_blank");
+                          }}
+                          className="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3 rounded-lg"
+                        >
+                          <MessageCircle className="h-5 w-5 mr-2" />
+                          Bayar via WhatsApp
+                        </Button>
+                      )}
+
+                    {/* Back to Shopping Button */}
+                    {order.status?.toLowerCase() === "cancelled" && (
+                      <Link href="/products" className="block">
+                        <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3 rounded-lg">
+                          <ShoppingBag className="h-5 w-5 mr-2" />
+                          Back to Shopping
+                        </Button>
+                      </Link>
+                    )}
+
+                    {/* Cancel Order Button */}
+                    {canCancelOrder(order) && (
+                      <Button
+                        onClick={handleCancelOrder}
+                        disabled={isCancelling}
+                        variant="outline"
+                        className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold py-3 rounded-lg"
+                      >
+                        {isCancelling ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Cancelling...
+                          </>
+                        ) : (
+                          <>
+                            <XCircle className="h-4 w-4 mr-2" />
+                            Cancel Order
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }

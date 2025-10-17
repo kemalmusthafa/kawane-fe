@@ -23,6 +23,7 @@ export interface CreateOrderData {
   items: Array<{
     productId: string;
     quantity: number;
+    size?: string;
   }>;
   totalAmount?: number; // Add total amount field
   shippingAddress: string;
@@ -49,6 +50,32 @@ export interface PaymentMethod {
 }
 
 export class OrderService {
+  /**
+   * Create new address
+   */
+  static async createAddress(data: {
+    label?: string;
+    detail: string;
+    city: string;
+    province: string;
+    postalCode: string;
+  }) {
+    try {
+      const addressData = {
+        detail: data.detail,
+        city: data.city,
+        province: data.province,
+        postalCode: data.postalCode,
+        isDefault: false,
+      };
+      const response = await apiClient.createAddress(addressData);
+      return response.data || null;
+    } catch (error: any) {
+      console.error("OrderService.createAddress - Error:", error);
+      throw new Error(error.message || "Failed to create address");
+    }
+  }
+
   /**
    * Create new order
    */

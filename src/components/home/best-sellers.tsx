@@ -164,6 +164,7 @@ export function BestSellers() {
                       : undefined,
                   }}
                   salesCount={product.totalSold}
+                  hideAddToCart={true}
                   onAddToCart={handleAddToCartWrapper}
                   onToggleWishlist={handleToggleWishlistWrapper}
                 />

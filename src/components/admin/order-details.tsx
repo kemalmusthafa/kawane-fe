@@ -84,18 +84,30 @@ export function OrderDetails({
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "COMPLETED":
-        return <Badge className="bg-green-100 text-green-800">Completed</Badge>;
-      case "PENDING":
-        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
-      case "SHIPPED":
-        return <Badge className="bg-purple-100 text-purple-800">Shipped</Badge>;
-      case "CANCELLED":
-        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>;
       case "CHECKOUT":
         return <Badge className="bg-blue-100 text-blue-800">Checkout</Badge>;
       case "PAID":
         return <Badge className="bg-green-100 text-green-800">Paid</Badge>;
+      case "PENDING":
+        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
+      case "SHIPPED":
+        return <Badge className="bg-purple-100 text-purple-800">Shipped</Badge>;
+      case "COMPLETED":
+        return <Badge className="bg-green-100 text-green-800">Completed</Badge>;
+      case "CANCELLED":
+        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>;
+      case "WHATSAPP_PENDING":
+        return (
+          <Badge className="bg-orange-100 text-orange-800">
+            WhatsApp Pending
+          </Badge>
+        );
+      case "WHATSAPP_CONFIRMED":
+        return (
+          <Badge className="bg-teal-100 text-teal-800">
+            WhatsApp Confirmed
+          </Badge>
+        );
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -248,10 +260,18 @@ export function OrderDetails({
                     <SelectValue placeholder="Update order status" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="CHECKOUT">Checkout</SelectItem>
+                    <SelectItem value="PAID">Paid</SelectItem>
                     <SelectItem value="PENDING">Pending</SelectItem>
                     <SelectItem value="SHIPPED">Shipped</SelectItem>
                     <SelectItem value="COMPLETED">Completed</SelectItem>
                     <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                    <SelectItem value="WHATSAPP_PENDING">
+                      WhatsApp Pending
+                    </SelectItem>
+                    <SelectItem value="WHATSAPP_CONFIRMED">
+                      WhatsApp Confirmed
+                    </SelectItem>
                   </SelectContent>
                 </Select>
                 <Button

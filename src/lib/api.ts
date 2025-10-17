@@ -103,6 +103,15 @@ export interface ProductDeal {
   endDate: string;
 }
 
+export interface ProductSize {
+  id: string;
+  size: string;
+  stock: number;
+  productId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -111,6 +120,7 @@ export interface Product {
   stock: number;
   categoryId?: string;
   sku?: string;
+  sizes?: ProductSize[];
   images?: ProductImage[];
   category?: Category;
   rating?: number;
@@ -256,57 +266,6 @@ export interface Notification {
   target: "ALL" | "ADMIN" | "CUSTOMER";
   createdAt: string;
   readAt?: string;
-}
-
-export interface SystemSettings {
-  // General Settings
-  siteName: string;
-  siteDescription: string;
-  siteUrl: string;
-  adminEmail: string;
-  timezone: string;
-  language: string;
-  currency: string;
-
-  // Email Settings
-  smtpHost: string;
-  smtpPort: string;
-  smtpUsername: string;
-  smtpPassword: string;
-  emailFrom: string;
-
-  // Security Settings
-  sessionTimeout: number;
-  maxLoginAttempts: number;
-  passwordMinLength: number;
-  twoFactorAuth: boolean;
-  ipWhitelist: string;
-  userLoginRateLimit: number;
-
-  // Notification Settings
-  emailNotifications: boolean;
-  smsNotifications: boolean;
-  pushNotifications: boolean;
-  lowStockAlert: boolean;
-  newOrderAlert: boolean;
-  paymentAlert: boolean;
-
-  // Payment Settings
-  stripeEnabled: boolean;
-  paypalEnabled: boolean;
-  bankTransferEnabled: boolean;
-  codEnabled: boolean;
-
-  // Shipping Settings
-  freeShippingThreshold: number;
-  defaultShippingCost: number;
-  shippingZones: string;
-
-  // Appearance Settings
-  primaryColor: string;
-  secondaryColor: string;
-  logoUrl: string;
-  faviconUrl: string;
 }
 
 export interface Payment {
@@ -644,6 +603,11 @@ class ApiClient {
     categoryId?: string;
     stock: number;
     sku?: string;
+    sizes?: Array<{
+      size: string;
+      stock: number;
+    }>;
+    images?: string[];
   }) {
     return this.request<Product>("/products", {
       method: "POST",
@@ -721,7 +685,7 @@ class ApiClient {
     city: string;
     province: string;
     postalCode: string;
-    isDefault: boolean;
+    isDefault?: boolean; // Made optional for now
   }) {
     return this.request<Address>("/addresses", {
       method: "POST",
@@ -734,7 +698,9 @@ class ApiClient {
     if (params?.page) queryParams.append("page", params.page.toString());
     if (params?.limit) queryParams.append("limit", params.limit.toString());
 
-    return this.request<Address[]>(`/addresses?${queryParams.toString()}`);
+    return this.request<{ addresses: Address[]; pagination: any }>(
+      `/addresses?${queryParams.toString()}`
+    );
   }
 
   async updateAddress(id: string, addressData: Partial<Address>) {
@@ -784,6 +750,24 @@ class ApiClient {
     return this.request<Payment>(`/payments/${paymentId}/status`, {
       method: "PUT",
       body: JSON.stringify({ status }),
+    });
+  }
+
+  async updatePaymentStatusManual(
+    orderId: string,
+    status: string,
+    adminNotes?: string
+  ) {
+    return this.request<{
+      payment: Payment;
+      order: {
+        id: string;
+        status: string;
+        paymentStatus: string;
+      };
+    }>("/payments/update-payment-status", {
+      method: "POST",
+      body: JSON.stringify({ orderId, status, adminNotes }),
     });
   }
 
@@ -1323,20 +1307,24 @@ class ApiClient {
   }
 
   // Cart Methods
-  async addToCart(productId: string, quantity: number) {
+  async addToCart(productId: string, quantity: number, size?: string) {
+    const requestBody = { productId, quantity, size };
+
+    // Debug: Log what we're sending
     return this.request<{
       cartItem: {
         id: string;
         cartId: string;
         productId: string;
         quantity: number;
+        size?: string;
         product: Product;
         createdAt: string;
         updatedAt: string;
       };
     }>("/cart/add", {
       method: "POST",
-      body: JSON.stringify({ productId, quantity }),
+      body: JSON.stringify(requestBody),
     });
   }
 
@@ -1375,6 +1363,7 @@ class ApiClient {
           cartId: string;
           productId: string;
           quantity: number;
+          size?: string;
           product: Product;
           createdAt: string;
           updatedAt: string;
@@ -1425,6 +1414,7 @@ class ApiClient {
     items: Array<{
       productId: string;
       quantity: number;
+      size?: string;
     }>;
     totalAmount?: number;
     shippingAddress: string;
@@ -1641,13 +1631,23 @@ class ApiClient {
     orderId: string;
     trackingNo?: string;
     courier: string;
+    method: string;
     cost?: number;
     estimatedDays?: number;
     addressId?: string;
   }) {
+    // ✅ FIXED: Map frontend fields to backend fields
+    const backendData = {
+      orderId: shipmentData.orderId,
+      trackingNumber: shipmentData.trackingNo, // Map trackingNo to trackingNumber
+      carrier: shipmentData.courier, // Map courier to carrier
+      method: shipmentData.method,
+      cost: shipmentData.cost,
+    };
+
     return this.request<{ shipment: Shipment }>("/shipments", {
       method: "POST",
-      body: JSON.stringify(shipmentData),
+      body: JSON.stringify(backendData),
     });
   }
 
@@ -1664,6 +1664,12 @@ class ApiClient {
     return this.request<{ shipment: Shipment }>(`/shipments/${shipmentId}`, {
       method: "PUT",
       body: JSON.stringify(updateData),
+    });
+  }
+
+  async completeDelivery(shipmentId: string) {
+    return this.request<{ order: any }>(`/shipments/${shipmentId}/complete`, {
+      method: "POST",
     });
   }
 
@@ -1872,18 +1878,6 @@ class ApiClient {
         method: "DELETE",
       }
     );
-  }
-
-  // Settings
-  async getSettings() {
-    return this.request<SystemSettings>("/admin/settings");
-  }
-
-  async updateSettings(settings: Partial<SystemSettings>) {
-    return this.request<SystemSettings>("/admin/settings", {
-      method: "PUT",
-      body: JSON.stringify(settings),
-    });
   }
 
   // Lookbook Photos

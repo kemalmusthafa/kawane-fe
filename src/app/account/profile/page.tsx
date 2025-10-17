@@ -59,7 +59,7 @@ export default function ProfilePage() {
           <p className="text-gray-600 mb-4">
             Silakan login untuk melihat profil Anda
           </p>
-          <Link href="/home/auth/sign-in">
+          <Link href="/auth/sign-in">
             <Button>Login</Button>
           </Link>
         </div>

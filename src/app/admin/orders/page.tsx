@@ -47,6 +47,7 @@ import {
   getOrderStatusLabel,
   getPaymentStatusLabel,
 } from "@/lib/status-colors";
+import { apiClient } from "@/lib/api";
 
 export default function AdminOrders() {
   const { hasAccess } = useAdminAccess();
@@ -98,25 +99,47 @@ export default function AdminOrders() {
 
   const handleUpdateOrderStatus = async (orderId: string, status: string) => {
     try {
-      // Implement update order status logic here
-      // This would typically call an API endpoint
-      console.log(`Updating order ${orderId} status to ${status}`);
-      return { success: true };
-    } catch (error) {
+      const response = await apiClient.updateOrderStatus(orderId, status);
+      if (response.success) {
+        toast.success("Order status updated successfully");
+        refetch(); // Refresh the orders list
+        return { success: true };
+      } else {
+        toast.error("Failed to update order status");
+        return { success: false, error: "Failed to update order status" };
+      }
+    } catch (error: any) {
       console.error("Error updating order status:", error);
-      return { success: false, error: "Failed to update order status" };
+      toast.error(error.message || "Failed to update order status");
+      return {
+        success: false,
+        error: error.message || "Failed to update order status",
+      };
     }
   };
 
   const handleUpdatePaymentStatus = async (orderId: string, status: string) => {
     try {
-      // Implement update payment status logic here
-      // This would typically call an API endpoint
-      console.log(`Updating order ${orderId} payment status to ${status}`);
-      return { success: true };
-    } catch (error) {
+      // For manual WhatsApp payments, use the manual payment status update API
+      const response = await apiClient.updatePaymentStatusManual(
+        orderId,
+        status
+      );
+      if (response.success) {
+        toast.success("Payment status updated successfully");
+        refetch(); // Refresh the orders list
+        return { success: true };
+      } else {
+        toast.error("Failed to update payment status");
+        return { success: false, error: "Failed to update payment status" };
+      }
+    } catch (error: any) {
       console.error("Error updating payment status:", error);
-      return { success: false, error: "Failed to update payment status" };
+      toast.error(error.message || "Failed to update payment status");
+      return {
+        success: false,
+        error: error.message || "Failed to update payment status",
+      };
     }
   };
 

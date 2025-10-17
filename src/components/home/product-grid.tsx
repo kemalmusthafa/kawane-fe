@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, ChevronLeft, ChevronRight, Package } from "lucide-react";
+import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useProducts } from "@/hooks/useApi";
 import { useAuth } from "@/components/providers/auth-provider";
@@ -12,10 +12,7 @@ import { useWishlist } from "@/hooks/useApi";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { toast } from "sonner";
 import Link from "next/link";
-import { AddToCartButton } from "@/components/ui/add-to-cart-button";
-import { AddToWishlistButton } from "@/components/ui/add-to-wishlist-button";
-import { ProductRating } from "@/components/ui/product-rating";
-import { DealBadge, DealTimeLeft } from "@/components/ui/deal-badge";
+import { ProductCard } from "@/components/ui/product-card";
 
 interface ProductGridProps {
   categoryId?: string;
@@ -139,108 +136,7 @@ export function ProductGrid({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
           >
-            <Card className="group hover:shadow-lg transition-all duration-300">
-              <CardContent className="p-0">
-                <div className="relative overflow-hidden rounded-t-lg">
-                  <Link href={`/products/${product.id}`}>
-                    <div className="w-full h-80 bg-muted group-hover:scale-105 transition-transform duration-300 relative overflow-hidden">
-                      {product.images && product.images.length > 0 ? (
-                        <img
-                          src={product.images[0].url}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.style.display = "none";
-                            const fallback = e.currentTarget
-                              .nextElementSibling as HTMLElement;
-                            if (fallback) {
-                              fallback.classList.remove("hidden");
-                            }
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                          <Package className="w-12 h-12 text-gray-400" />
-                        </div>
-                      )}
-                      {product.images && product.images.length > 0 && (
-                        <div className="w-full h-full items-center justify-center text-muted-foreground hidden">
-                          <Package className="w-12 h-12 text-gray-400" />
-                        </div>
-                      )}
-                    </div>
-                  </Link>
-
-                  {/* Deal Badge */}
-                  {product.deal && (
-                    <div className="absolute top-4 left-4">
-                      <DealBadge deal={product.deal} size="sm" />
-                    </div>
-                  )}
-
-                  {/* Wishlist Button */}
-                  <div className="absolute top-4 right-4">
-                    <AddToWishlistButton
-                      product={product}
-                      variant="ghost"
-                      size="icon"
-                      className="bg-white/80 hover:bg-white"
-                    />
-                  </div>
-                </div>
-
-                <div className="p-8">
-                  {/* Rating */}
-                  <div className="mb-3">
-                    <ProductRating
-                      rating={product.rating || 0}
-                      reviewCount={product._count?.reviews || 0}
-                      size="md"
-                      showCount={true}
-                    />
-                  </div>
-
-                  {/* Product Name */}
-                  <Link href={`/products/${product.id}`}>
-                    <h4 className="text-base font-semibold mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-                      {product.name}
-                    </h4>
-                  </Link>
-
-                  {/* Price */}
-                  <div className="flex items-center space-x-2 mb-4">
-                    {product.deal ? (
-                      <div className="flex flex-col">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-xl font-bold text-primary">
-                            {formatPrice(product.deal.discountedPrice)}
-                          </span>
-                          <span className="text-sm text-muted-foreground line-through">
-                            {formatPrice(product.deal.originalPrice)}
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <DealTimeLeft endDate={product.deal.endDate} />
-                        </div>
-                      </div>
-                    ) : (
-                      <span className="text-xl font-bold text-primary">
-                        {formatPrice(product.price)}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Add to Cart Button */}
-                  <div className="flex space-x-2">
-                    <AddToCartButton
-                      product={product}
-                      className="flex-1"
-                      size="lg"
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <ProductCard product={product} />
           </motion.div>
         ))}
       </div>

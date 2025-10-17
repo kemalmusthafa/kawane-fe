@@ -37,7 +37,7 @@ export default function ShipmentStats({
     };
 
     fetchStats();
-  }, [startDate, endDate, getShipmentStats]);
+  }, [startDate, endDate]); // Remove getShipmentStats from dependencies to prevent infinite loop
 
   if (isLoading) {
     return (

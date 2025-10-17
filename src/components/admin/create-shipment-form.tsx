@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAdminShipments, useOrders } from "@/hooks/useApi";
+import { useAdminShipments, useAdminOrders } from "@/hooks/useApi";
 import { toast } from "sonner";
 import { Loader2, Package, Truck } from "lucide-react";
 import { Order } from "@/types/order";
@@ -28,11 +28,12 @@ export default function CreateShipmentForm({
   onCancel,
 }: CreateShipmentFormProps) {
   const { createShipment } = useAdminShipments();
-  const { orders } = useOrders();
+  const { orders } = useAdminOrders();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     orderId: "",
     courier: "",
+    method: "STANDARD",
     trackingNo: "",
     cost: "",
     estimatedDays: "",
@@ -49,8 +50,8 @@ export default function CreateShipmentForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.orderId || !formData.courier) {
-      toast.error("Order ID and Courier are required");
+    if (!formData.orderId || !formData.courier || !formData.method) {
+      toast.error("Order ID, Courier, and Method are required");
       return;
     }
 
@@ -59,6 +60,7 @@ export default function CreateShipmentForm({
       const response = await createShipment({
         orderId: formData.orderId,
         courier: formData.courier,
+        method: formData.method,
         trackingNo: formData.trackingNo || undefined,
         cost: formData.cost ? parseFloat(formData.cost) : 0,
         estimatedDays: formData.estimatedDays
@@ -71,6 +73,7 @@ export default function CreateShipmentForm({
         setFormData({
           orderId: "",
           courier: "",
+          method: "STANDARD",
           trackingNo: "",
           cost: "",
           estimatedDays: "",
@@ -87,11 +90,36 @@ export default function CreateShipmentForm({
     }
   };
 
-  // Filter orders that are ready for shipment (PAID status)
+  // Filter orders that are ready for shipment (PAID status and no existing shipment)
   const availableOrders =
-    orders?.filter(
-      (order: Order) => order.status === "PAID" && !order.shipment
-    ) || [];
+    orders?.filter((order: Order) => {
+      // ✅ FIXED: More flexible filtering with proper enum values
+      const isReadyForShipment =
+        order.status === "PAID" ||
+        order.status === "COMPLETED" ||
+        order.status === "SHIPPED" ||
+        (order.status === "PENDING" &&
+          ((order as any).paymentStatus === "SUCCEEDED" ||
+            (order as any).paymentStatus === "PAID"));
+
+      const hasNoShipment = !order.shipment;
+
+      console.log("🔍 Order filtering:", {
+        orderId: order.id,
+        status: order.status,
+        paymentStatus: (order as any).paymentStatus,
+        hasShipment: !!order.shipment,
+        isReadyForShipment,
+        hasNoShipment,
+        willInclude: isReadyForShipment && hasNoShipment,
+      });
+
+      return isReadyForShipment && hasNoShipment;
+    }) || [];
+
+  // ✅ DEBUG: Log orders for debugging
+  console.log("All orders:", orders);
+  console.log("Available orders for shipment:", availableOrders);
 
   return (
     <Card>
@@ -148,6 +176,27 @@ export default function CreateShipmentForm({
                   <SelectItem value="SiCepat">SiCepat</SelectItem>
                   <SelectItem value="AnterAja">AnterAja</SelectItem>
                   <SelectItem value="GrabExpress">GrabExpress</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="method">Shipping Method *</Label>
+              <Select
+                value={formData.method}
+                onValueChange={(value) => handleInputChange("method", value)}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select shipping method" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="STANDARD">Standard (3-5 days)</SelectItem>
+                  <SelectItem value="EXPRESS">Express (1-2 days)</SelectItem>
+                  <SelectItem value="OVERNIGHT">Overnight (1 day)</SelectItem>
+                  <SelectItem value="SAME_DAY">Same Day</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -215,7 +264,12 @@ export default function CreateShipmentForm({
             </Button>
             <Button
               type="submit"
-              disabled={isSubmitting || !formData.orderId || !formData.courier}
+              disabled={
+                isSubmitting ||
+                !formData.orderId ||
+                !formData.courier ||
+                !formData.method
+              }
             >
               {isSubmitting ? (
                 <>

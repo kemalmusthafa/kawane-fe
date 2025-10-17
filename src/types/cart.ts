@@ -6,6 +6,7 @@ export interface BackendCartItem {
   cartId: string;
   productId: string;
   quantity: number;
+  size?: string;
   createdAt: string;
   updatedAt: string;
   product: Product; // Full product details
@@ -25,6 +26,7 @@ export interface CartItemState {
   id: string; // cartItemId
   product: Product;
   quantity: number;
+  size?: string;
 }
 
 // Frontend Cart State

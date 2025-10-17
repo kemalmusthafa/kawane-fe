@@ -8,11 +8,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Plus, Edit, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 
 export default function AddressesPage() {
   const { isAuthenticated } = useAuth();
-  const { addresses, isLoading, error } = useAddresses();
+  const {
+    addresses,
+    isLoading,
+    error,
+    createAddress,
+    updateAddress,
+    deleteAddress,
+  } = useAddresses();
+  const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
     if (error) {
@@ -20,9 +27,70 @@ export default function AddressesPage() {
     }
   }, [error]);
 
+  const handleAddAddress = async () => {
+    try {
+      setIsCreating(true);
+      // For now, create a sample address
+      // In a real app, this would open a modal or navigate to a form
+      const sampleAddress = {
+        detail: "Sample Address Detail",
+        city: "Jakarta",
+        province: "DKI Jakarta",
+        postalCode: "12345",
+        // isDefault: addresses.length === 0, // Will be available after migration
+      };
+
+      await createAddress(sampleAddress);
+      toast.success("Address berhasil ditambahkan");
+    } catch (error: any) {
+      toast.error(error.message || "Gagal menambahkan alamat");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleEditAddress = async (addressId: string) => {
+    try {
+      // Find the address to edit
+      const addressToEdit = addresses.find(
+        (addr: any) => addr.id === addressId
+      );
+      if (!addressToEdit) {
+        toast.error("Address not found");
+        return;
+      }
+
+      // For now, update with sample data
+      // In a real app, this would open a modal or navigate to a form
+      const updatedData = {
+        detail: `${addressToEdit.detail} (Updated)`,
+        city: addressToEdit.city,
+        province: addressToEdit.province,
+        postalCode: addressToEdit.postalCode,
+        // isDefault: addressToEdit.isDefault, // Will be available after migration
+      };
+
+      await updateAddress(addressId, updatedData);
+      toast.success("Address berhasil diupdate");
+    } catch (error: any) {
+      toast.error(error.message || "Gagal mengedit alamat");
+    }
+  };
+
+  const handleDeleteAddress = async (addressId: string) => {
+    try {
+      if (confirm("Apakah Anda yakin ingin menghapus alamat ini?")) {
+        await deleteAddress(addressId);
+        toast.success("Address berhasil dihapus");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Gagal menghapus alamat");
+    }
+  };
+
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <MapPin className="w-24 h-24 text-gray-300 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -36,55 +104,41 @@ export default function AddressesPage() {
     );
   }
 
-  const pageVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
-  const headerVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
-  const contentVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  };
-
   return (
-    <motion.div
-      variants={pageVariants}
-      initial="hidden"
-      animate="visible"
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
-      <motion.div
-        className="flex items-center justify-between mb-8"
-        variants={headerVariants}
-        transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-      >
+    <div>
+      <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Addresses</h1>
           <p className="text-sm text-gray-600">
             Manage your shipping addresses
           </p>
         </div>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Address
+        <Button
+          onClick={handleAddAddress}
+          disabled={isCreating}
+          className="bg-gray-900 hover:bg-gray-800 text-white"
+        >
+          {isCreating ? (
+            <>
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              Adding...
+            </>
+          ) : (
+            <>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Address
+            </>
+          )}
         </Button>
-      </motion.div>
+      </div>
 
-      <motion.div
-        variants={contentVariants}
-        transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-      >
+      <div>
         {isLoading ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="h-8 w-8 animate-spin" />
+            <Loader2 className="h-8 w-8 animate-spin text-gray-600" />
           </div>
         ) : addresses.length === 0 ? (
-          <Card>
+          <Card className="border border-gray-200 bg-white rounded-lg">
             <CardContent className="text-center py-12">
               <MapPin className="w-12 h-12 text-gray-300 mx-auto mb-4" />
               <h3 className="text-base font-medium text-gray-900 mb-2">
@@ -93,79 +147,103 @@ export default function AddressesPage() {
               <p className="text-sm text-gray-600 mb-4">
                 You haven't added any addresses yet.
               </p>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Your First Address
+              <Button
+                onClick={handleAddAddress}
+                disabled={isCreating}
+                className="bg-gray-900 hover:bg-gray-800 text-white"
+              >
+                {isCreating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Adding...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Your First Address
+                  </>
+                )}
               </Button>
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="space-y-4">
             {Array.isArray(addresses)
               ? addresses.map((address: any, index: number) => (
-                  <motion.div
-                    key={address.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
+                  <div key={address.id}>
                     <Card className="hover:shadow-lg transition-shadow">
-                      <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <CardTitle className="text-base break-words">
-                            {address.label || "Address"}
-                          </CardTitle>
-                          {address.isDefault && (
-                            <Badge className="bg-green-100 text-green-800">
-                              Default
-                            </Badge>
-                          )}
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          <p className="font-medium break-words">
-                            {address.detail ||
-                              address.street ||
-                              "No address detail"}
-                          </p>
-                          <p className="break-words">
-                            {address.city || "Unknown City"},{" "}
-                            {address.postalCode || "00000"}
-                          </p>
-                          <p className="break-words">
-                            {address.province ||
-                              address.country ||
-                              "Unknown Province"}
-                          </p>
-                          {address.phone && (
-                            <p className="text-sm text-gray-600 break-words">
-                              Phone: {address.phone}
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex gap-2 mt-4">
-                          <Button variant="outline" size="sm">
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                          </Button>
+                      <CardContent className="p-6">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-4 mb-2">
+                              <h3 className="text-base font-semibold break-all">
+                                {address.label || "Address"}
+                              </h3>
+                              <div className="flex items-center gap-2">
+                                {/* Default badge will be available after migration */}
+                                {/* {address.isDefault && (
+                                  <Badge className="bg-gray-100 text-gray-800">
+                                    Default
+                                  </Badge>
+                                )} */}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-6 text-sm text-gray-600 mb-3">
+                              <div className="flex items-center gap-2">
+                                <MapPin className="h-4 w-4" />
+                                {address.city || "Unknown City"}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-gray-500">•</span>
+                                {address.postalCode || "00000"}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-gray-500">•</span>
+                                {address.province || "Unknown Province"}
+                              </div>
+                            </div>
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                              <p className="font-medium break-words text-gray-900">
+                                {address.detail ||
+                                  address.street ||
+                                  "No address detail"}
+                              </p>
+                              {address.phone && (
+                                <p className="text-sm text-gray-600 break-words mt-1">
+                                  Phone: {address.phone}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              onClick={() => handleEditAddress(address.id)}
+                              variant="outline"
+                              size="sm"
+                              className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                            >
+                              <Edit className="h-4 w-4 mr-2" />
+                              Edit
+                            </Button>
+                            <Button
+                              onClick={() => handleDeleteAddress(address.id)}
+                              variant="outline"
+                              size="sm"
+                              className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete
+                            </Button>
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
-                  </motion.div>
+                  </div>
                 ))
               : null}
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }

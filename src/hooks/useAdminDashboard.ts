@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import useSWR from "swr";
 import { apiClient } from "@/lib/api";
 
 interface DashboardStats {
@@ -27,180 +27,148 @@ interface DashboardData {
   recentOrders: RecentOrder[];
 }
 
-export const useAdminDashboard = () => {
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const createDefaultData = (): DashboardData => ({
-    stats: {
-      totalUsers: 0,
-      totalProducts: 0,
-      totalOrders: 0,
-      totalRevenue: 0,
-      userGrowth: 0,
-      productGrowth: 0,
-      orderGrowth: 0,
-      revenueGrowth: 0,
-    },
-    recentOrders: [
-      {
-        id: "sample-1",
-        customer: "Test Customer",
-        amount: 270000,
-        status: "COMPLETED",
-        paymentStatus: "SUCCEEDED",
-        date: new Date().toLocaleDateString("id-ID"),
-        imageUrl: "/logo-putih.png", // Fallback image
-      },
-      {
-        id: "sample-2",
-        customer: "Test Customer",
-        amount: 300000,
-        status: "PENDING",
-        paymentStatus: "PENDING",
-        date: new Date().toLocaleDateString("id-ID"),
-        imageUrl: "/logo-putih.png", // Fallback image
-      },
-    ],
-  });
-
-  const transformBackendData = (backendData: any): DashboardData => {
-    try {
-      return {
-        stats: {
-          totalUsers: Number(backendData.overview?.totalUsers) || 0,
-          totalProducts: Number(backendData.overview?.totalProducts) || 0,
-          totalOrders: Number(backendData.overview?.totalOrders) || 0,
-          totalRevenue: Number(backendData.overview?.totalRevenue) || 0,
-          userGrowth: 0,
-          productGrowth: 0,
-          orderGrowth: 0,
-          revenueGrowth: 0,
-        },
-        recentOrders: Array.isArray(backendData.recentOrders)
-          ? backendData.recentOrders.map((order: any) => {
-              // Try multiple sources for product image
-              let imageUrl = null;
-
-              // Check if order has items with products
-              if (
-                order.items &&
-                Array.isArray(order.items) &&
-                order.items.length > 0
-              ) {
-                const firstItem = order.items[0];
-                if (
-                  firstItem.product &&
-                  firstItem.product.images &&
-                  Array.isArray(firstItem.product.images) &&
-                  firstItem.product.images.length > 0
-                ) {
-                  imageUrl = firstItem.product.images[0].url;
-                }
-              }
-
-              // Fallback: check direct product reference
-              if (
-                !imageUrl &&
-                order.product &&
-                order.product.images &&
-                Array.isArray(order.product.images) &&
-                order.product.images.length > 0
-              ) {
-                imageUrl = order.product.images[0].url;
-              }
-
-              // Fallback: check if order has a single product
-              if (
-                !imageUrl &&
-                order.productId &&
-                order.product &&
-                order.product.images &&
-                Array.isArray(order.product.images) &&
-                order.product.images.length > 0
-              ) {
-                imageUrl = order.product.images[0].url;
-              }
-
-              return {
-                id: String(order.id || ""),
-                customer: String(
-                  order.user?.name || order.customer?.name || "Unknown"
-                ),
-                amount: Number(order.totalAmount || order.amount || 0),
-                status: String(order.status || "PENDING"),
-                paymentStatus: String(order.paymentStatus || "PENDING"),
-                date: order.createdAt
-                  ? new Date(order.createdAt).toLocaleDateString("id-ID")
-                  : new Date().toLocaleDateString("id-ID"),
-                imageUrl,
-              };
-            })
-          : [],
-      };
-    } catch (err) {
-      console.error("Error transforming backend data:", err);
-      return createDefaultData();
+// ✅ OPTIMIZED: SWR fetcher function
+const dashboardFetcher = async (url: string): Promise<DashboardData> => {
+  try {
+    const response = await apiClient.getDashboardStats();
+    if (response.success && response.data) {
+      return transformBackendData(response.data);
     }
-  };
+    return createDefaultData();
+  } catch (error) {
+    console.error("Error fetching dashboard data:", error);
+    return createDefaultData();
+  }
+};
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
+const createDefaultData = (): DashboardData => ({
+  stats: {
+    totalUsers: 0,
+    totalProducts: 0,
+    totalOrders: 0,
+    totalRevenue: 0,
+    userGrowth: 0,
+    productGrowth: 0,
+    orderGrowth: 0,
+    revenueGrowth: 0,
+  },
+  recentOrders: [],
+});
 
-        const statsResponse = await apiClient.getDashboardStats();
+const transformBackendData = (backendData: any): DashboardData => {
+  try {
+    return {
+      stats: {
+        totalUsers: Number(backendData.overview?.totalUsers) || 0,
+        totalProducts: Number(backendData.overview?.totalProducts) || 0,
+        totalOrders: Number(backendData.overview?.totalOrders) || 0,
+        totalRevenue: Number(backendData.overview?.totalRevenue) || 0,
+        userGrowth: 0,
+        productGrowth: 0,
+        orderGrowth: 0,
+        revenueGrowth: 0,
+      },
+      recentOrders: Array.isArray(backendData.recentOrders)
+        ? backendData.recentOrders.map((order: any) => {
+            // Try multiple sources for product image
+            let imageUrl = null;
 
-        if (statsResponse.success && statsResponse.data) {
-          const transformedData = transformBackendData(statsResponse.data);
-          setData(transformedData);
-        } else {
-          setData(createDefaultData());
-        }
-      } catch (err) {
-        console.error("Error fetching dashboard data:", err);
-        setError(
-          err instanceof Error ? err.message : "Failed to fetch dashboard data"
-        );
-        setData(createDefaultData());
-      } finally {
-        setIsLoading(false);
-      }
+            // Check if order has items with products
+            if (
+              order.items &&
+              Array.isArray(order.items) &&
+              order.items.length > 0
+            ) {
+              const firstItem = order.items[0];
+              if (
+                firstItem.product &&
+                firstItem.product.images &&
+                Array.isArray(firstItem.product.images) &&
+                firstItem.product.images.length > 0
+              ) {
+                imageUrl = firstItem.product.images[0].url;
+              }
+            }
+
+            // Fallback: check direct product reference
+            if (
+              !imageUrl &&
+              order.product &&
+              order.product.images &&
+              Array.isArray(order.product.images) &&
+              order.product.images.length > 0
+            ) {
+              imageUrl = order.product.images[0].url;
+            }
+
+            // Fallback: check if order has a single product
+            if (
+              !imageUrl &&
+              order.productId &&
+              order.product &&
+              order.product.images &&
+              Array.isArray(order.product.images) &&
+              order.product.images.length > 0
+            ) {
+              imageUrl = order.product.images[0].url;
+            }
+
+            return {
+              id: String(order.id || ""),
+              customer: String(
+                order.user?.name || order.customer?.name || "Unknown"
+              ),
+              amount: Number(order.totalAmount || order.amount || 0),
+              status: String(order.status || "PENDING"),
+              paymentStatus: String(order.paymentStatus || "PENDING"),
+              date: order.createdAt
+                ? new Date(order.createdAt).toLocaleDateString("id-ID")
+                : new Date().toLocaleDateString("id-ID"),
+              imageUrl,
+            };
+          })
+        : [],
     };
+  } catch (err) {
+    console.error("Error transforming backend data:", err);
+    return createDefaultData();
+  }
+};
 
-    fetchDashboardData();
-  }, []);
+// ✅ OPTIMIZED: Use SWR for caching and performance (Limit-friendly)
+export const useAdminDashboard = () => {
+  const { data, error, isLoading, mutate } = useSWR(
+    "/dashboard/stats",
+    dashboardFetcher,
+    {
+      // ✅ Performance optimizations (Limit-friendly)
+      revalidateOnFocus: false, // Don't refetch on window focus
+      revalidateOnReconnect: false, // Don't refetch on reconnect
+      refreshInterval: 60000, // ✅ Increased to 1 minute (reduce API calls)
+      dedupingInterval: 30000, // ✅ Increased to 30 seconds (reduce API calls)
+      errorRetryCount: 2, // ✅ Reduced to 2 retries (reduce API calls)
+      errorRetryInterval: 10000, // ✅ Increased to 10 seconds (reduce API calls)
+      shouldRetryOnError: (error) => {
+        // Only retry on network errors, not 4xx/5xx
+        return !error.status || error.status >= 500;
+      },
+      // ✅ Fallback data
+      fallbackData: createDefaultData(),
+    }
+  );
 
   const refetch = async () => {
     try {
-      setIsLoading(true);
-      setError(null);
-
-      const statsResponse = await apiClient.getDashboardStats();
-
-      if (statsResponse.success && statsResponse.data) {
-        const transformedData = transformBackendData(statsResponse.data);
-        setData(transformedData);
-      } else {
-        setData(createDefaultData());
-      }
+      await mutate();
     } catch (err) {
       console.error("Error refetching dashboard data:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to fetch dashboard data"
-      );
-      setData(createDefaultData());
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return {
-    data,
+    data: data || createDefaultData(),
+    error: error?.message || null,
     isLoading,
-    error,
     refetch,
   };
 };

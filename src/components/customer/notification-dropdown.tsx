@@ -31,7 +31,9 @@ interface Notification {
   url?: string;
 }
 
-export function NotificationDropdown({ className }: NotificationDropdownProps) {
+export function CustomerNotificationDropdown({
+  className,
+}: NotificationDropdownProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [recentNotifications, setRecentNotifications] = useState<
@@ -47,33 +49,27 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
       const token = localStorage.getItem("token");
 
       // Fetch unread count
-      const countResponse = await fetch(
-        "/api/admin/notifications/unread-count",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const countResponse = await fetch("/api/notifications/unread-count", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (countResponse.ok) {
         const countData = await countResponse.json();
-        setUnreadCount(countData.data.unreadCount || 0);
+        setUnreadCount(countData.data.unreadCount);
       }
 
       // Fetch recent notifications
-      const notificationsResponse = await fetch(
-        "/api/admin/notifications?limit=5",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const notificationsResponse = await fetch("/api/notifications?limit=5", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (notificationsResponse.ok) {
         const notificationsData = await notificationsResponse.json();
-        setRecentNotifications(notificationsData.data.notifications || []);
+        setRecentNotifications(notificationsData.data.notifications);
       }
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -90,11 +86,11 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
     }
   }, [isDropdownOpen]);
 
-  // Fetch notifications periodically (reduced frequency to prevent looping)
+  // Fetch notifications periodically
   useEffect(() => {
     const interval = setInterval(() => {
       fetchNotifications();
-    }, 60000); // Every 60 seconds instead of 10 seconds
+    }, 30000); // Every 30 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -102,7 +98,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
   const markAsRead = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
-      await fetch("/api/admin/notifications/mark-read", {
+      await fetch("/api/notifications/mark-read", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -126,7 +122,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
   const markAllAsRead = async () => {
     try {
       const token = localStorage.getItem("token");
-      await fetch("/api/admin/notifications/mark-read", {
+      await fetch("/api/notifications/mark-read", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -149,14 +145,18 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
-      case "SUCCESS":
-        return "✅";
-      case "WARNING":
-        return "⚠️";
-      case "ERROR":
-        return "❌";
-      case "INFO":
-        return "ℹ️";
+      case "ORDER_UPDATE":
+        return "📦";
+      case "PAYMENT_UPDATE":
+        return "💳";
+      case "SHIPMENT_UPDATE":
+        return "🚚";
+      case "PRODUCT_LAUNCH":
+        return "🆕";
+      case "FLASH_SALE":
+        return "⚡";
+      case "WISHLIST_UPDATE":
+        return "❤️";
       default:
         return "🔔";
     }
@@ -164,14 +164,18 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
 
   const getNotificationColor = (type: string) => {
     switch (type) {
-      case "SUCCESS":
-        return "text-green-600";
-      case "WARNING":
-        return "text-yellow-600";
-      case "ERROR":
-        return "text-red-600";
-      case "INFO":
+      case "ORDER_UPDATE":
         return "text-blue-600";
+      case "PAYMENT_UPDATE":
+        return "text-green-600";
+      case "SHIPMENT_UPDATE":
+        return "text-purple-600";
+      case "PRODUCT_LAUNCH":
+        return "text-orange-600";
+      case "FLASH_SALE":
+        return "text-red-600";
+      case "WISHLIST_UPDATE":
+        return "text-pink-600";
       default:
         return "text-gray-600";
     }
@@ -244,34 +248,32 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
           sideOffset={4}
           forceMount
         >
-          <div className="p-3">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-semibold text-foreground">
+          <div className="flex items-center justify-between p-2">
+            <div className="flex items-center space-x-2">
+              <h4 className="text-base font-semibold text-foreground">
                 Notifications
               </h4>
               {unreadCount > 0 && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleMarkAllAsRead}
-                  className="h-6 px-2 text-xs font-medium"
-                >
-                  <CheckCheck className="h-3 w-3 mr-1" />
-                  Mark all read
-                </Button>
+                <Badge variant="secondary" className="text-xs">
+                  {unreadCount} unread
+                </Badge>
               )}
             </div>
             {unreadCount > 0 && (
-              <div className="flex justify-start">
-                <Badge variant="secondary" className="text-xs px-2 py-0.5">
-                  {unreadCount} unread
-                </Badge>
-              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleMarkAllAsRead}
+                className="h-7 px-3 text-sm font-medium"
+              >
+                <CheckCheck className="h-3 w-3 mr-1" />
+                Mark all read
+              </Button>
             )}
           </div>
           <DropdownMenuSeparator />
 
-          <ScrollArea className="h-72">
+          <ScrollArea className="h-80">
             {isLoading ? (
               <div className="flex items-center justify-center py-6">
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -280,74 +282,76 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                 </span>
               </div>
             ) : recentNotifications.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-8 text-center">
-                <Bell className="h-8 w-8 text-muted-foreground mb-3 opacity-50" />
-                <p className="text-sm font-semibold text-foreground mb-1">
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <Bell className="h-12 w-12 text-muted-foreground mb-4 opacity-50" />
+                <p className="text-base font-semibold text-foreground mb-2">
                   No notifications
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   You're all caught up!
                 </p>
               </div>
             ) : (
-              <div className="space-y-0.5">
+              <div className="space-y-1">
                 {recentNotifications.map((notification) => (
                   <DropdownMenuItem
                     key={notification.id}
                     asChild
-                    className={`p-2.5 cursor-pointer hover:bg-gray-50 transition-colors ${
+                    className={`p-3 cursor-pointer ${
                       !notification.isRead
                         ? "bg-blue-50 border-l-2 border-l-blue-500"
-                        : "hover:bg-gray-50"
+                        : ""
                     }`}
                   >
                     <Link
-                      href={notification.url || "/admin/notifications"}
+                      href={notification.url || "/account/notifications"}
                       onClick={() =>
                         handleNotificationClick(
                           notification.id,
                           notification.isRead
                         )
                       }
-                      className="flex items-start space-x-2.5 w-full"
+                      className="flex items-start space-x-3 w-full"
                     >
                       <div
                         className={`flex-shrink-0 mt-0.5 ${getNotificationColor(
                           notification.type
                         )}`}
                       >
-                        <span className="text-xs">
+                        <span className="text-sm">
                           {getNotificationIcon(notification.type)}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between mb-1">
+                        <div className="flex items-start justify-between">
                           <p
-                            className={`text-xs font-medium truncate ${
+                            className={`text-sm font-medium truncate ${
                               !notification.isRead ? "font-semibold" : ""
                             }`}
                           >
                             {notification.title}
                           </p>
                           {!notification.isRead && (
-                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full flex-shrink-0 mt-1" />
+                            <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1.5" />
                           )}
                         </div>
-                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                        <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
                           {notification.description}
                         </p>
-                        <div className="flex items-center justify-between mt-1.5">
+                        <div className="flex items-center justify-between mt-2">
                           <span className="text-xs text-muted-foreground">
                             {formatTimeAgo(notification.createdAt)}
                           </span>
-                          <Badge
-                            variant="outline"
-                            className={`text-xs px-1.5 py-0.5 ${getPriorityColor(
-                              notification.priority
-                            )}`}
-                          >
-                            {notification.priority}
-                          </Badge>
+                          <div className="flex items-center space-x-1">
+                            <Badge
+                              variant="outline"
+                              className={`text-xs ${getPriorityColor(
+                                notification.priority
+                              )}`}
+                            >
+                              {notification.priority}
+                            </Badge>
+                          </div>
                         </div>
                       </div>
                     </Link>
@@ -362,8 +366,8 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link
-                  href="/admin/notifications"
-                  className="flex items-center justify-center w-full py-2.5 text-xs font-semibold text-foreground hover:text-primary transition-colors"
+                  href="/account/notifications"
+                  className="flex items-center justify-center w-full py-3 text-sm font-semibold text-foreground hover:text-primary"
                 >
                   View all notifications
                 </Link>
@@ -375,3 +379,10 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
     </div>
   );
 }
+
+
+
+
+
+
+

@@ -16,7 +16,6 @@ import {
   ShoppingCart,
   Truck,
   BarChart3,
-  Settings,
   X,
   Bell,
   FileText,
@@ -43,7 +42,6 @@ const navigation = [
   { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
   { name: "Reports", href: "/admin/reports", icon: FileText },
   { name: "Notifications", href: "/admin/notifications", icon: Bell },
-  { name: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
 export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {

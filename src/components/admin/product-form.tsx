@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { Product } from "@/lib/api";
 import { toast } from "sonner";
-import { Loader2, RefreshCw } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { ImageUpload } from "@/components/ui/image-upload";
 
 interface ProductFormProps {
@@ -38,7 +38,10 @@ interface ProductFormProps {
     price: number;
     categoryId?: string;
     stock: number;
-    sku?: string;
+    sizes?: Array<{
+      size: string;
+      stock: number;
+    }>;
     images?: string[];
   }) => Promise<{ success: boolean; error?: string }>;
 }
@@ -57,11 +60,19 @@ export function ProductForm({
     name: "",
     description: "",
     price: "",
-    sku: "",
     stock: "",
     categoryId: "none",
   });
+  const [sizes, setSizes] = useState<Array<{ size: string; stock: number }>>(
+    []
+  );
   const [images, setImages] = useState<string[]>([]);
+  const [customSizeInput, setCustomSizeInput] = useState("");
+
+  // Calculate total stock from sizes
+  const calculateTotalStock = () => {
+    return sizes.reduce((total, sizeItem) => total + sizeItem.stock, 0);
+  };
 
   useEffect(() => {
     if (product) {
@@ -69,23 +80,36 @@ export function ProductForm({
         name: product.name || "",
         description: product.description || "",
         price: product.price?.toString() || "",
-        sku: product.sku || "",
         stock: product.stock?.toString() || "",
         categoryId: product.categoryId || "none",
       });
+      setSizes(
+        product.sizes?.map((s) => ({ size: s.size, stock: s.stock })) || []
+      );
       setImages(product.images?.map((img) => img.url) || []);
     } else {
       setFormData({
         name: "",
         description: "",
         price: "",
-        sku: "",
         stock: "",
         categoryId: "none",
       });
+      setSizes([]);
       setImages([]);
     }
   }, [product, isOpen]);
+
+  // Update stock quantity when sizes change
+  useEffect(() => {
+    const totalStock = calculateTotalStock();
+    if (sizes.length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        stock: totalStock.toString(),
+      }));
+    }
+  }, [sizes]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,7 +136,7 @@ export function ProductForm({
         name: formData.name.trim(),
         description: formData.description.trim(),
         price: parseFloat(formData.price),
-        sku: formData.sku.trim() || undefined,
+        sizes: sizes.length > 0 ? sizes : undefined,
         stock: parseInt(formData.stock),
         categoryId:
           formData.categoryId === "none" || !formData.categoryId
@@ -148,40 +172,51 @@ export function ProductForm({
     }));
   };
 
-  const generateSKU = () => {
-    if (!formData.categoryId) {
-      toast.error("Pilih kategori terlebih dahulu untuk generate SKU");
-      return;
+  const sizeOptions = [
+    { value: "XS", label: "XS" },
+    { value: "SM", label: "SM" },
+    { value: "M", label: "M" },
+    { value: "L", label: "L" },
+    { value: "XL", label: "XL" },
+    { value: "XXL", label: "XXL" },
+  ];
+
+  const addSize = () => {
+    if (customSizeInput.trim()) {
+      // Add custom size
+      setSizes([
+        ...sizes,
+        { size: customSizeInput.trim().toUpperCase(), stock: 0 },
+      ]);
+      setCustomSizeInput("");
+    } else {
+      // Add empty size for dropdown selection
+      setSizes([...sizes, { size: "", stock: 0 }]);
     }
-
-    const selectedCategory = categories?.find(
-      (cat: any) => cat.id === formData.categoryId
-    );
-    if (!selectedCategory) {
-      toast.error("Kategori tidak ditemukan");
-      return;
-    }
-
-    const existingSKUs = existingProducts
-      .map((p) => p.sku)
-      .filter(Boolean) as string[];
-    // Simple SKU generation without external utility
-    const categoryCode = selectedCategory.name.substring(0, 3).toUpperCase();
-    const timestamp = Date.now().toString().slice(-6);
-    const generatedSKU = `KWN-${categoryCode}-${timestamp}`;
-
-    setFormData((prev) => ({
-      ...prev,
-      sku: generatedSKU,
-    }));
-
-    toast.success(`SKU berhasil di-generate: ${generatedSKU}`);
   };
 
-  const validateSKU = (sku: string) => {
-    if (!sku) return true; // SKU is optional
-    // Simple SKU validation
-    return /^[A-Z0-9-]+$/.test(sku);
+  const removeSize = (index: number) => {
+    setSizes(sizes.filter((_, i) => i !== index));
+  };
+
+  const updateSize = (
+    index: number,
+    field: "size" | "stock",
+    value: string | number
+  ) => {
+    const newSizes = [...sizes];
+    newSizes[index] = { ...newSizes[index], [field]: value };
+    setSizes(newSizes);
+  };
+
+  const addCustomSize = () => {
+    if (customSizeInput.trim()) {
+      setSizes([
+        ...sizes,
+        { size: customSizeInput.trim().toUpperCase(), stock: 0 },
+      ]);
+      setCustomSizeInput("");
+    }
   };
 
   return (
@@ -212,33 +247,104 @@ export function ProductForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="sku">SKU</Label>
-              <div className="flex gap-2">
+              <div className="flex items-center justify-between">
+                <Label>Sizes & Stock</Label>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addSize}
+                  >
+                    + Add Size
+                  </Button>
+                </div>
+              </div>
+
+              {/* Custom Size Input */}
+              <div className="flex gap-2 items-center">
                 <Input
-                  id="sku"
-                  value={formData.sku}
-                  onChange={(e) => handleInputChange("sku", e.target.value)}
-                  placeholder="KWN-TSH-001"
-                  className="uppercase"
+                  placeholder="Enter custom size (e.g., 28, 30, S, M, L)"
+                  value={customSizeInput}
+                  onChange={(e) => setCustomSizeInput(e.target.value)}
+                  className="flex-1"
                 />
                 <Button
                   type="button"
                   variant="outline"
-                  size="icon"
-                  onClick={generateSKU}
-                  disabled={!formData.categoryId}
-                  title="Generate SKU otomatis"
+                  size="sm"
+                  onClick={addCustomSize}
+                  disabled={!customSizeInput.trim()}
                 >
-                  <RefreshCw className="h-4 w-4" />
+                  Add Custom
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Format: KWN-KATEGORI-001 (contoh: KWN-TSH-001)
-              </p>
-              {formData.sku && !validateSKU(formData.sku) && (
-                <p className="text-xs text-red-500">
-                  Format SKU tidak valid. Gunakan format: KWN-KATEGORI-001
-                </p>
+
+              {sizes.length === 0 ? (
+                <p className="text-sm text-gray-500">No sizes added yet</p>
+              ) : (
+                <div className="space-y-2">
+                  {sizes.map((sizeItem, index) => (
+                    <div key={index} className="flex gap-2 items-center">
+                      <div className="flex gap-1">
+                        <Select
+                          value={sizeItem.size}
+                          onValueChange={(value) =>
+                            updateSize(index, "size", value)
+                          }
+                        >
+                          <SelectTrigger className="w-24">
+                            <SelectValue placeholder="Size" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {sizeOptions.map((option) => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <Input
+                          placeholder="Custom"
+                          value={sizeItem.size}
+                          onChange={(e) =>
+                            updateSize(
+                              index,
+                              "size",
+                              e.target.value.toUpperCase()
+                            )
+                          }
+                          className="w-20"
+                        />
+                      </div>
+                      <Input
+                        type="number"
+                        placeholder="Stock"
+                        value={sizeItem.stock}
+                        onChange={(e) =>
+                          updateSize(
+                            index,
+                            "stock",
+                            parseInt(e.target.value) || 0
+                          )
+                        }
+                        className="w-20"
+                        min="0"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeSize(index)}
+                      >
+                        ×
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           </div>
@@ -279,7 +385,14 @@ export function ProductForm({
                 onChange={(e) => handleInputChange("stock", e.target.value)}
                 placeholder="0"
                 required
+                disabled={sizes.length > 0}
+                className={sizes.length > 0 ? "bg-gray-100" : ""}
               />
+              {sizes.length > 0 && (
+                <p className="text-xs text-gray-500">
+                  Stock quantity automatically calculated from sizes
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">

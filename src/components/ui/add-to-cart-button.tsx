@@ -10,6 +10,7 @@ import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 interface AddToCartButtonProps {
   product: Product;
   quantity?: number;
+  selectedSize?: string;
   variant?:
     | "default"
     | "outline"
@@ -25,6 +26,7 @@ interface AddToCartButtonProps {
 export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   product,
   quantity = 1,
+  selectedSize,
   variant = "default",
   size = "default",
   className,
@@ -37,10 +39,26 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   const handleAddToCart = async () => {
     if (disabled || isLoading || isAdding) return;
 
+    // Check if product has sizes and size is selected
+    if (product.sizes && product.sizes.length > 0 && !selectedSize) {
+      toast.error("Pilih ukuran terlebih dahulu");
+      return;
+    }
+
     const addToCartAction = async () => {
       try {
         setIsAdding(true);
-        await addItem(product.id, quantity);
+
+        // Debug: Log what we're sending to backend
+        console.log("🛒 Adding to cart:", {
+          productId: product.id,
+          productName: product.name,
+          quantity: quantity,
+          selectedSize: selectedSize,
+          hasSizes: product.sizes && product.sizes.length > 0,
+        });
+
+        await addItem(product.id, quantity, selectedSize);
         toast.success("Produk ditambahkan ke keranjang");
       } catch (error) {
         console.error("Error adding to cart:", error);

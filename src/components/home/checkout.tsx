@@ -4,8 +4,9 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/hooks/useCart";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useAddresses, useOrders, usePayments } from "@/hooks/useApi";
+import { OrderService } from "@/services/order.service";
 import { toast } from "sonner";
-import MidtransPayment from "@/components/payment/midtrans-payment";
+import { WhatsAppCheckout } from "@/components/checkout/whatsapp-checkout";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,6 +32,7 @@ import {
   ArrowLeft,
   CheckCircle,
   Plus,
+  MessageCircle,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -42,7 +44,7 @@ interface CheckoutFormData {
     postalCode: string;
     isDefault: boolean;
   };
-  paymentMethod: "MIDTRANS" | "MANUAL";
+  paymentMethod: "WHATSAPP_MANUAL" | "BANK_TRANSFER" | "CASH_ON_DELIVERY";
   notes?: string;
 }
 
@@ -62,12 +64,13 @@ export const Checkout: React.FC = () => {
       postalCode: "",
       isDefault: false,
     },
-    paymentMethod: "MIDTRANS",
+    paymentMethod: "WHATSAPP_MANUAL",
     notes: "",
   });
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [useExistingAddress, setUseExistingAddress] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showWhatsAppCheckout, setShowWhatsAppCheckout] = useState(false);
 
   if (!isAuthenticated) {
     return (
@@ -148,7 +151,8 @@ export const Checkout: React.FC = () => {
           case "gopay":
           case "shopeepay":
           case "credit_card":
-            return "MIDTRANS";
+          case "midtrans":
+            return "WHATSAPP_MANUAL"; // Use WHATSAPP_MANUAL for Midtrans payments
           case "bca":
           case "bni":
           case "mandiri":
@@ -157,7 +161,7 @@ export const Checkout: React.FC = () => {
           case "indomaret":
             return "CASH_ON_DELIVERY";
           default:
-            return "MIDTRANS";
+            return "WHATSAPP_MANUAL"; // Default to WHATSAPP_MANUAL
         }
       };
 
@@ -168,6 +172,25 @@ export const Checkout: React.FC = () => {
         return;
       }
 
+      // First, create the address if it's a new address
+      let addressId = useExistingAddress ? selectedAddressId : null;
+
+      if (!addressId) {
+        // Create new address
+        const addressData = {
+          detail: formData.shippingAddress.detail,
+          city: formData.shippingAddress.city,
+          province: "Indonesia",
+          postalCode: formData.shippingAddress.postalCode,
+        };
+
+        const newAddress = await OrderService.createAddress(addressData);
+        if (!newAddress) {
+          throw new Error("Failed to create address");
+        }
+        addressId = newAddress.id;
+      }
+
       const orderData = {
         items: items.map((item) => ({
           productId: item.product.id,
@@ -176,11 +199,11 @@ export const Checkout: React.FC = () => {
         totalAmount: totalAmount,
         shippingAddress:
           useExistingAddress && selectedAddressId
-            ? addresses?.find((addr) => addr.id === selectedAddressId)
+            ? addresses?.find((addr: any) => addr.id === selectedAddressId)
                 ?.detail || ""
             : `${formData.shippingAddress.detail}, ${formData.shippingAddress.city}, ${formData.shippingAddress.postalCode}, Indonesia`,
         paymentMethod: mapPaymentMethod(formData.paymentMethod),
-        addressId: useExistingAddress ? selectedAddressId : null,
+        addressId: addressId,
         notes: formData.notes,
       };
 
@@ -189,33 +212,12 @@ export const Checkout: React.FC = () => {
       if (orderResponse.success) {
         const order = orderResponse.data;
         if (order) {
-          const paymentResponse = await createPayment({
-            orderId: order.orderId,
-            amount: totalAmount,
-            paymentMethod: formData.paymentMethod,
-            customerDetails: {
-              name: user?.name || "",
-              email: user?.email || "",
-              phone: user?.phone || "",
-            },
-            shippingAddress: {
-              street:
-                useExistingAddress && selectedAddressId
-                  ? addresses?.find((addr) => addr.id === selectedAddressId)
-                      ?.detail || ""
-                  : formData.shippingAddress.detail,
-              city: formData.shippingAddress.city,
-              postalCode: formData.shippingAddress.postalCode,
-              country: "Indonesia",
-              phone: "",
-            },
-          });
-
-          if (paymentResponse.success) {
-            clearCart();
-            toast.success("Order created successfully!");
-            router.push("/account/orders");
-          }
+          // For WhatsApp manual payment, no separate payment creation needed
+          clearCart();
+          toast.success(
+            "Order created successfully! Please contact WhatsApp for payment confirmation."
+          );
+          router.push("/account/orders");
         }
       } else {
         toast.error("Failed to create order. Please try again.");
@@ -271,7 +273,7 @@ export const Checkout: React.FC = () => {
                       value={selectedAddressId}
                       onValueChange={setSelectedAddressId}
                     >
-                      {addresses.map((address) => (
+                      {addresses.map((address: any) => (
                         <div
                           key={address.id}
                           className="flex items-center space-x-2 p-3 border rounded-lg"
@@ -382,32 +384,32 @@ export const Checkout: React.FC = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <CreditCard className="w-5 h-5 mr-2" />
+                <MessageCircle className="w-5 h-5 mr-2" />
                 Payment Method
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <MidtransPayment
-                orderId={`ORDER-${Date.now()}`}
-                amount={totalAmount}
-                customerDetails={{
-                  first_name: user?.name?.split(" ")[0] || "",
-                  last_name: user?.name?.split(" ").slice(1).join(" ") || "",
-                  email: user?.email || "",
-                  phone: user?.phone || "",
-                }}
-                onSuccess={(result) => {
-                  toast.success("Payment successful!");
-                  clearCart();
-                  router.push("/profile/orders");
-                }}
-                onError={(error) => {
-                  toast.error("Payment failed");
-                }}
-                onPending={(result) => {
-                  toast.info("Payment is being processed");
-                }}
-              />
+              <div className="space-y-4">
+                <div className="p-4 border border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-800 rounded-lg">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <MessageCircle className="w-5 h-5 text-green-600" />
+                    <h3 className="font-semibold text-green-800 dark:text-green-200">
+                      WhatsApp Checkout
+                    </h3>
+                  </div>
+                  <p className="text-sm text-green-700 dark:text-green-300 mb-4">
+                    Complete your order by sending a message to our WhatsApp.
+                    We'll confirm your order and provide payment instructions.
+                  </p>
+                  <Button
+                    onClick={() => setShowWhatsAppCheckout(true)}
+                    className="w-full bg-green-600 hover:bg-green-700"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Checkout via WhatsApp
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
@@ -513,14 +515,10 @@ export const Checkout: React.FC = () => {
               </div>
 
               <Button
-                onClick={handleCheckout}
+                onClick={() => setShowWhatsAppCheckout(true)}
                 className="w-full"
                 size="lg"
-                disabled={
-                  isSubmitting ||
-                  (!useExistingAddress && !selectedAddressId) ||
-                  (useExistingAddress && !selectedAddressId)
-                }
+                disabled={isSubmitting}
               >
                 {isSubmitting ? (
                   <>
@@ -529,8 +527,8 @@ export const Checkout: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Place Order
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Checkout via WhatsApp
                   </>
                 )}
               </Button>
@@ -538,6 +536,22 @@ export const Checkout: React.FC = () => {
           </Card>
         </div>
       </div>
+
+      {/* WhatsApp Checkout Modal */}
+      {showWhatsAppCheckout && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <WhatsAppCheckout
+              onSuccess={(orderData) => {
+                setShowWhatsAppCheckout(false);
+                toast.success("Order created! Check your WhatsApp.");
+                router.push("/account/orders");
+              }}
+              onCancel={() => setShowWhatsAppCheckout(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

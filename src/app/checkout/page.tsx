@@ -75,10 +75,11 @@ export default function CheckoutPage() {
     // Map payment method to backend expected values
     const mapPaymentMethod = (method: string) => {
       switch (method) {
+        case "midtrans":
         case "gopay":
         case "shopeepay":
         case "credit_card":
-          return "MIDTRANS";
+          return "WHATSAPP_MANUAL"; // Use valid enum value
         case "bca":
         case "bni":
         case "mandiri":
@@ -87,15 +88,27 @@ export default function CheckoutPage() {
         case "indomaret":
           return "CASH_ON_DELIVERY";
         default:
-          return "MIDTRANS";
+          return "WHATSAPP_MANUAL"; // Use valid enum value
       }
     };
+
+    // Debug: Log cart items before creating order
+    console.log(
+      "🛒 Cart items before order creation:",
+      cartItems.map((item) => ({
+        productId: item.product.id,
+        productName: item.product.name,
+        quantity: item.quantity,
+        size: (item as any).size,
+      }))
+    );
 
     const orderData = {
       // Backend expects these fields at root level
       items: cartItems.map((item) => ({
         productId: item.product.id,
         quantity: item.quantity,
+        ...((item as any).size && { size: (item as any).size }), // Include size information if available
       })),
       totalAmount: total, // Total amount from cart (this is what Midtrans will use)
 
@@ -301,10 +314,7 @@ export default function CheckoutPage() {
                 {/* Order Items */}
                 <div className="space-y-3">
                   {cartItems.map((item) => (
-                    <div
-                      key={item.product.id}
-                      className="flex items-center gap-3"
-                    >
+                    <div key={item.id} className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
                         {item.product.images &&
                         item.product.images.length > 0 ? (
@@ -330,6 +340,11 @@ export default function CheckoutPage() {
                         <p className="text-xs font-medium break-words">
                           {item.product.name}
                         </p>
+                        {(item as any).size && (
+                          <p className="text-xs text-blue-600 font-medium">
+                            Ukuran: {(item as any).size}
+                          </p>
+                        )}
                         <p className="text-xs text-gray-500">
                           Qty: {item.quantity}
                         </p>

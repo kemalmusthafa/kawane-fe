@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font Stability and Rendering Improvements */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  font-family: var(--font-pragmatica);
+}
+
+body {
+  font-smooth: antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* PragmaticaExtended Font Classes */
+.font-pragmatica {
+  font-family: var(--font-pragmatica);
+}
+
+.font-pragmatica-book {
+  font-family: 'PragmaticaExtended-Book', var(--font-pragmatica);
+  font-weight: 400;
+}
+
+.font-pragmatica-bold {
+  font-family: 'PragmaticaExtended-Bold', var(--font-pragmatica);
+  font-weight: 700;
+}
+
 /* Custom Scrollbar Styles */
 .scrollbar-thin {
   scrollbar-width: thin;

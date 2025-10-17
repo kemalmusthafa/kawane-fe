@@ -35,13 +35,13 @@ import {
   Search,
   Filter,
   Eye,
-  Edit,
   TrendingUp,
   TrendingDown,
   AlertTriangle,
   CheckCircle,
   BarChart3,
   Loader2,
+  X,
 } from "lucide-react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
@@ -53,6 +53,8 @@ export default function AdminInventoryPage() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const { inventory, total, isLoading, error, updateStock, mutate } =
     useAdminInventory({
@@ -90,6 +92,11 @@ export default function AdminInventoryPage() {
     if (currentStock <= minStock)
       return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
     return <CheckCircle className="h-4 w-4 text-green-500" />;
+  };
+
+  const handleViewDetails = (item: any) => {
+    setSelectedProduct(item);
+    setIsDetailsOpen(true);
   };
 
   // Calculate summary statistics
@@ -288,7 +295,7 @@ export default function AdminInventoryPage() {
                     <TableRow>
                       <TableHead className="text-sm">Product</TableHead>
                       <TableHead className="text-sm hidden sm:table-cell">
-                        SKU
+                        Size
                       </TableHead>
                       <TableHead className="text-sm hidden lg:table-cell">
                         Category
@@ -360,22 +367,15 @@ export default function AdminInventoryPage() {
                           </span>
                         </TableCell>
                         <TableCell className="text-right">
-                          <div className="flex items-center justify-end space-x-1">
+                          <div className="flex items-center justify-end">
                             <Button
                               variant="outline"
                               size="sm"
                               title="View Details"
                               className="text-xs"
+                              onClick={() => handleViewDetails(item)}
                             >
                               <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              title="Adjust Stock"
-                              className="text-xs"
-                            >
-                              <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
                             </Button>
                           </div>
                         </TableCell>
@@ -398,6 +398,179 @@ export default function AdminInventoryPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Product Details Dialog */}
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-between">
+              <span>Product Details</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsDetailsOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </DialogTitle>
+            <DialogDescription>
+              Detailed information about the selected product
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedProduct && (
+            <div className="space-y-6">
+              {/* Product Basic Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">
+                    Product Information
+                  </h3>
+                  <div className="space-y-2">
+                    <div>
+                      <span className="text-sm font-medium text-gray-600">
+                        Product Name:
+                      </span>
+                      <p className="text-sm">{selectedProduct.productName}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium text-gray-600">
+                        Size:
+                      </span>
+                      <p className="text-sm">{selectedProduct.size}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium text-gray-600">
+                        Category:
+                      </span>
+                      <p className="text-sm">{selectedProduct.category}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium text-gray-600">
+                        Product ID:
+                      </span>
+                      <p className="text-xs font-mono">
+                        {selectedProduct.productId}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">
+                    Stock Information
+                  </h3>
+                  <div className="space-y-2">
+                    <div>
+                      <span className="text-sm font-medium text-gray-600">
+                        Current Stock:
+                      </span>
+                      <p className="text-sm font-semibold">
+                        {selectedProduct.currentStock} units
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium text-gray-600">
+                        Min Stock:
+                      </span>
+                      <p className="text-sm">
+                        {selectedProduct.minStock} units
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium text-gray-600">
+                        Max Stock:
+                      </span>
+                      <p className="text-sm">
+                        {selectedProduct.maxStock} units
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium text-gray-600">
+                        Status:
+                      </span>
+                      <div className="mt-1">
+                        {getStatusBadge(selectedProduct.status)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stock Trend */}
+              <div>
+                <h3 className="font-semibold text-lg mb-2">Stock Status</h3>
+                <div className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg">
+                  {getStockTrend(
+                    selectedProduct.currentStock,
+                    selectedProduct.minStock
+                  )}
+                  <span className="text-sm">
+                    {selectedProduct.currentStock === 0
+                      ? "Out of Stock - Immediate restocking required"
+                      : selectedProduct.currentStock <= selectedProduct.minStock
+                      ? "Low Stock - Consider restocking soon"
+                      : "Stock Level Normal"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Activity Information */}
+              <div>
+                <h3 className="font-semibold text-lg mb-2">Recent Activity</h3>
+                <div className="space-y-2">
+                  <div>
+                    <span className="text-sm font-medium text-gray-600">
+                      Last Restock:
+                    </span>
+                    <p className="text-sm">
+                      {format(
+                        new Date(selectedProduct.lastRestock),
+                        "dd MMMM yyyy",
+                        {
+                          locale: id,
+                        }
+                      )}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-gray-600">
+                      Last Activity:
+                    </span>
+                    <p className="text-sm">
+                      {format(
+                        new Date(selectedProduct.lastActivity),
+                        "dd MMMM yyyy",
+                        {
+                          locale: id,
+                        }
+                      )}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-gray-600">
+                      Activity Note:
+                    </span>
+                    <p className="text-sm">
+                      {selectedProduct.lastActivityNote}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex justify-end space-x-2 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsDetailsOpen(false)}
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

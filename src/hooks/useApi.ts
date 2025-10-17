@@ -1,4 +1,5 @@
 import useSWR, { mutate } from "swr";
+import { useCallback } from "react";
 import {
   apiClient,
   type ApiResponse,
@@ -13,7 +14,6 @@ import {
   type InventoryItem,
   type AnalyticsData,
   type Report,
-  type SystemSettings,
 } from "@/lib/api";
 import { useAuth } from "@/components/providers/auth-provider";
 
@@ -28,7 +28,7 @@ export const useUser = (userId?: string) => {
     error,
     isLoading,
     mutate: mutateUser,
-  } = useSWR(userId ? `/api/users/${userId}` : null);
+  } = useSWR(userId ? `/users/${userId}` : null);
 
   const updateUser = async (userData: Partial<User>) => {
     if (!userId) throw new Error("User ID is required");
@@ -84,7 +84,7 @@ export const useUsers = (params?: {
     error,
     isLoading,
     mutate: mutateUsers,
-  } = useSWR(`/api/users?${queryString.toString()}`);
+  } = useSWR(`/users?${queryString.toString()}`);
 
   const createUser = async (userData: {
     name: string;
@@ -168,7 +168,7 @@ export const useProducts = (params?: {
     error,
     isLoading,
     mutate: mutateProducts,
-  } = useSWR(`/api/products?${queryString.toString()}`, () =>
+  } = useSWR(`/products?${queryString.toString()}`, () =>
     apiClient.getProducts(params)
   );
 
@@ -179,6 +179,10 @@ export const useProducts = (params?: {
     categoryId?: string;
     stock: number;
     sku?: string;
+    sizes?: Array<{
+      size: string;
+      stock: number;
+    }>;
     images?: string[];
   }) => {
     try {
@@ -186,9 +190,7 @@ export const useProducts = (params?: {
       if (response.success) {
         mutateProducts();
         // Also invalidate all products cache
-        mutate(
-          (key) => typeof key === "string" && key.startsWith("/api/products")
-        );
+        mutate((key) => typeof key === "string" && key.startsWith("/products"));
       }
       return response;
     } catch (error) {
@@ -202,9 +204,7 @@ export const useProducts = (params?: {
       if (response.success) {
         mutateProducts();
         // Also invalidate all products cache
-        mutate(
-          (key) => typeof key === "string" && key.startsWith("/api/products")
-        );
+        mutate((key) => typeof key === "string" && key.startsWith("/products"));
       }
       return response;
     } catch (error) {
@@ -218,9 +218,7 @@ export const useProducts = (params?: {
       if (response.success) {
         mutateProducts();
         // Also invalidate all products cache
-        mutate(
-          (key) => typeof key === "string" && key.startsWith("/api/products")
-        );
+        mutate((key) => typeof key === "string" && key.startsWith("/products"));
       }
       return response;
     } catch (error) {
@@ -248,7 +246,7 @@ export const useProduct = (productId: string) => {
     error,
     isLoading,
     mutate: mutateProduct,
-  } = useSWR(productId ? `/api/products/${productId}` : null, () =>
+  } = useSWR(productId ? `/products/${productId}` : null, () =>
     apiClient.getProduct(productId)
   );
 
@@ -291,7 +289,7 @@ export const useOrders = (params?: {
     error,
     isLoading,
     mutate: mutateOrders,
-  } = useSWR(isAuthenticated ? `/api/orders?${queryString.toString()}` : null);
+  } = useSWR(isAuthenticated ? `/orders?${queryString.toString()}` : null);
 
   const createOrder = async (orderData: {
     items: { productId: string; quantity: number }[];
@@ -335,6 +333,69 @@ export const useOrders = (params?: {
   };
 };
 
+// Admin Orders Hook
+export const useAdminOrders = (params?: {
+  status?: string;
+  page?: number;
+  limit?: number;
+  search?: string;
+}) => {
+  const { isAuthenticated, user } = useAuth();
+
+  console.log("🔍 useAdminOrders auth check:", {
+    isAuthenticated,
+    user: user?.email,
+  });
+
+  const queryString = new URLSearchParams();
+  if (params?.status) queryString.append("status", params.status);
+  if (params?.page) queryString.append("page", params.page.toString());
+  if (params?.limit) queryString.append("limit", params.limit.toString());
+  if (params?.search) queryString.append("search", params.search);
+
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: mutateOrders,
+  } = useSWR(
+    isAuthenticated ? `/orders/admin?${queryString.toString()}` : null,
+    async (url: string) => {
+      try {
+        console.log("🔍 useAdminOrders fetching URL:", url);
+        const response = await apiClient.request(url);
+        console.log("📦 useAdminOrders response:", response);
+        return response;
+      } catch (error) {
+        console.error("Error fetching admin orders:", error);
+        throw error;
+      }
+    },
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshInterval: 120000, // Refresh every 2 minutes (reduce API calls)
+      dedupingInterval: 60000, // Dedupe requests within 1 minute (reduce API calls)
+      errorRetryCount: 1, // Reduce retries (reduce API calls)
+      errorRetryInterval: 15000, // Increase retry interval (reduce API calls)
+      focusThrottleInterval: 120000, // Throttle focus revalidation
+      loadingTimeout: 15000, // Timeout after 15 seconds
+      keepPreviousData: true, // Keep previous data while loading
+      suspense: false, // Disable suspense mode
+    }
+  );
+
+  return {
+    orders: Array.isArray((data as any)?.data?.orders)
+      ? (data as any).data.orders
+      : [],
+    pagination: (data as any)?.data?.pagination,
+    error,
+    isLoading,
+    mutateOrders,
+  };
+};
+
 // Address Hooks
 export const useAddresses = (params?: { page?: number; limit?: number }) => {
   const queryString = new URLSearchParams();
@@ -355,7 +416,7 @@ export const useAddresses = (params?: { page?: number; limit?: number }) => {
     city: string;
     province: string;
     postalCode: string;
-    isDefault: boolean;
+    isDefault?: boolean; // Made optional for now
   }) => {
     try {
       const response = await apiClient.createAddress(addressData);
@@ -393,7 +454,8 @@ export const useAddresses = (params?: { page?: number; limit?: number }) => {
   };
 
   return {
-    addresses: Array.isArray(data?.data) ? data.data : [],
+    addresses: Array.isArray(data?.data?.addresses) ? data.data.addresses : [],
+    pagination: data?.data?.pagination,
     error,
     isLoading,
     createAddress,
@@ -809,12 +871,16 @@ export const useCartApi = () => {
     isAuthenticated ? () => apiClient.getCart() : null
   );
 
-  const addToCart = async (productId: string, quantity: number) => {
+  const addToCart = async (
+    productId: string,
+    quantity: number,
+    size?: string
+  ) => {
     if (!isAuthenticated) {
       throw new Error("Login required to add items to cart");
     }
     try {
-      const response = await apiClient.addToCart(productId, quantity);
+      const response = await apiClient.addToCart(productId, quantity, size);
       if (response.success) {
         mutate();
       }
@@ -899,6 +965,31 @@ export const useCartApi = () => {
       throw error;
     }
   };
+
+  // Debug: Log cart data to see if size is included
+  if (cart?.data?.cart?.items) {
+    console.log(
+      "🛒 Raw cart API response:",
+      cart.data.cart.items.map((item) => ({
+        id: item.id,
+        productId: item.productId,
+        size: (item as any).size,
+        quantity: item.quantity,
+      }))
+    );
+
+    // Check if any item has size
+    const itemsWithSize = cart.data.cart.items.filter(
+      (item) => (item as any).size
+    );
+    console.log("🛒 Items with size:", itemsWithSize.length);
+    itemsWithSize.forEach((item) => {
+      console.log("🛒 Item with size:", {
+        id: item.id,
+        size: (item as any).size,
+      });
+    });
+  }
 
   return {
     cart: cart?.data?.cart,
@@ -1229,107 +1320,161 @@ export const useAdminShipments = (params?: {
   startDate?: string;
   endDate?: string;
 }) => {
+  const { isAuthenticated, user } = useAuth();
+
+  console.log("🔍 useAdminShipments auth check:", {
+    isAuthenticated,
+    user: user?.email,
+  });
+
   const { data, error, isLoading, mutate } = useSWR(
-    `/api/shipments?${new URLSearchParams(
-      Object.entries(params || {}).map(([key, value]) => [key, String(value)])
-    ).toString()}`,
-    () => apiClient.getShipments(params)
+    isAuthenticated
+      ? `/shipments?${new URLSearchParams(
+          Object.entries(params || {}).map(([key, value]) => [
+            key,
+            String(value),
+          ])
+        ).toString()}`
+      : null,
+    async () => {
+      console.log("🔍 useAdminShipments fetching with params:", params);
+      const response = await apiClient.getShipments(params);
+      console.log("📦 useAdminShipments response:", response);
+      return response;
+    },
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshInterval: 120000, // Refresh every 2 minutes
+      dedupingInterval: 60000, // Dedupe requests within 1 minute
+      errorRetryCount: 1,
+      errorRetryInterval: 15000,
+      keepPreviousData: true,
+    }
   );
 
-  const createShipment = async (shipmentData: {
-    orderId: string;
-    trackingNo?: string;
-    courier: string;
-    cost?: number;
-    estimatedDays?: number;
-    addressId?: string;
-  }) => {
-    try {
-      const response = await apiClient.createShipment(shipmentData);
-      if (response.success) {
-        mutate();
-      }
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const updateShipment = async (
-    shipmentId: string,
-    updateData: {
-      courier?: string;
+  const createShipment = useCallback(
+    async (shipmentData: {
+      orderId: string;
       trackingNo?: string;
+      courier: string;
+      method: string;
       cost?: number;
       estimatedDays?: number;
       addressId?: string;
-    }
-  ) => {
-    try {
-      const response = await apiClient.updateShipment(shipmentId, updateData);
-      if (response.success) {
-        mutate();
+    }) => {
+      try {
+        const response = await apiClient.createShipment(shipmentData);
+        if (response.success) {
+          mutate();
+        }
+        return response;
+      } catch (error) {
+        throw error;
       }
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  };
+    },
+    [mutate]
+  );
 
-  const deleteShipment = async (shipmentId: string) => {
-    try {
-      const response = await apiClient.deleteShipment(shipmentId);
-      if (response.success) {
-        mutate();
+  const updateShipment = useCallback(
+    async (
+      shipmentId: string,
+      updateData: {
+        courier?: string;
+        trackingNo?: string;
+        cost?: number;
+        estimatedDays?: number;
+        addressId?: string;
       }
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  };
+    ) => {
+      try {
+        const response = await apiClient.updateShipment(shipmentId, updateData);
+        if (response.success) {
+          mutate();
+        }
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    },
+    [mutate]
+  );
 
-  const getShipmentById = async (shipmentId: string) => {
+  const completeDelivery = useCallback(
+    async (shipmentId: string) => {
+      try {
+        const response = await apiClient.completeDelivery(shipmentId);
+        if (response.success) {
+          mutate();
+        }
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    },
+    [mutate]
+  );
+
+  const deleteShipment = useCallback(
+    async (shipmentId: string) => {
+      try {
+        const response = await apiClient.deleteShipment(shipmentId);
+        if (response.success) {
+          mutate();
+        }
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    },
+    [mutate]
+  );
+
+  const getShipmentById = useCallback(async (shipmentId: string) => {
     try {
       const response = await apiClient.getShipmentById(shipmentId);
       return response;
     } catch (error) {
       throw error;
     }
-  };
+  }, []);
 
-  const getShipmentByTracking = async (trackingNumber: string) => {
+  const getShipmentByTracking = useCallback(async (trackingNumber: string) => {
     try {
       const response = await apiClient.getShipmentByTracking(trackingNumber);
       return response;
     } catch (error) {
       throw error;
     }
-  };
+  }, []);
 
-  const getShipmentStats = async (statsParams?: {
-    startDate?: string;
-    endDate?: string;
-  }) => {
-    try {
-      const response = await apiClient.getShipmentStats(statsParams);
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  };
+  const getShipmentStats = useCallback(
+    async (statsParams?: { startDate?: string; endDate?: string }) => {
+      try {
+        const response = await apiClient.getShipmentStats(statsParams);
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    },
+    []
+  );
+
+  // useAdminShipments returning data logged
 
   return {
     shipments: data?.data?.shipments || [],
-    total: data?.data?.total || 0,
-    page: data?.data?.page || 1,
-    limit: data?.data?.limit || 10,
-    totalPages: data?.data?.totalPages || 0,
-    hasNextPage: data?.data?.hasNextPage || false,
-    hasPrevPage: data?.data?.hasPrevPage || false,
+    total: (data as any)?.data?.pagination?.total || 0,
+    page: (data as any)?.data?.pagination?.page || 1,
+    limit: (data as any)?.data?.pagination?.limit || 10,
+    totalPages: (data as any)?.data?.pagination?.totalPages || 0,
+    hasNextPage: (data as any)?.data?.pagination?.hasNextPage || false,
+    hasPrevPage: (data as any)?.data?.pagination?.hasPrevPage || false,
     isLoading,
     error,
     createShipment,
     updateShipment,
+    completeDelivery,
     deleteShipment,
     getShipmentById,
     getShipmentByTracking,
@@ -1536,33 +1681,6 @@ export const useAdminNotifications = (params?: {
     sendNotification,
     markAsRead,
     deleteNotification,
-    mutate,
-  };
-};
-
-// Admin Settings Hook
-export const useAdminSettings = () => {
-  const { data, error, isLoading, mutate } = useSWR("/api/admin/settings", () =>
-    apiClient.getSettings()
-  );
-
-  const updateSettings = async (settings: Partial<SystemSettings>) => {
-    try {
-      const response = await apiClient.updateSettings(settings);
-      if (response.success) {
-        mutate();
-      }
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  return {
-    settings: data?.data,
-    isLoading,
-    error,
-    updateSettings,
     mutate,
   };
 };

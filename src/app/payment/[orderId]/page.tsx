@@ -7,11 +7,26 @@ import { OrderService } from "@/services/order.service";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Loader2, CreditCard } from "lucide-react";
+import {
+  ArrowLeft,
+  Loader2,
+  MessageCircle,
+  Phone,
+  Mail,
+  CreditCard,
+  XCircle,
+  ShoppingBag,
+  Package,
+  MapPin,
+} from "lucide-react";
+import {
+  getWhatsAppNumber,
+  getWhatsAppDesktopUrl,
+  createOrderMessage,
+} from "@/utils/whatsapp";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import MidtransPayment from "@/components/payment/midtrans-payment";
 
 interface OrderDetail {
   id: string;
@@ -39,6 +54,7 @@ interface OrderDetail {
   };
   paymentMethod: string;
   notes?: string;
+  createdAt: string;
   updatedAt: string;
 }
 
@@ -84,12 +100,29 @@ export default function OrderPaymentPage() {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("id-ID", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p>Loading order details...</p>
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <Loader2 className="h-8 w-8 text-white animate-spin" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            Loading Payment Details
+          </h2>
+          <p className="text-gray-600">
+            Please wait while we fetch your order information...
+          </p>
         </div>
       </div>
     );
@@ -97,118 +130,387 @@ export default function OrderPaymentPage() {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <p>Order not found</p>
+          <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <XCircle className="h-8 w-8 text-white" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            Order Not Found
+          </h2>
+          <p className="text-gray-600 mb-6">
+            The order you're looking for doesn't exist.
+          </p>
           <Link href="/account/orders">
-            <Button className="mt-4">Back to Orders</Button>
+            <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
+              Back to Orders
+            </Button>
           </Link>
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+  // Check if order is cancelled
+  if (order.status?.toLowerCase() === "cancelled") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-md mx-auto px-6"
         >
-          {/* Header */}
-          <div className="mb-6">
+          <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <XCircle className="h-10 w-10 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Order Cancelled
+          </h2>
+          <p className="text-gray-600 mb-8 leading-relaxed">
+            This order has been cancelled and cannot be paid.
+          </p>
+          <div className="space-y-3">
             <Link href={`/account/orders/${orderId}`}>
-              <Button variant="outline" className="mb-4">
-                <ArrowLeft className="h-4 w-4 mr-2" />
+              <Button variant="outline" className="w-full">
                 Back to Order Details
               </Button>
             </Link>
-            <h1 className="text-3xl font-bold text-gray-900">Payment</h1>
-            <p className="text-gray-600 mt-2">
-              Complete payment for Order #{order.orderNumber}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Order Summary */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <CreditCard className="h-5 w-5 mr-2" />
-                  Order Summary
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {/* Order Items */}
-                  <div>
-                    <h3 className="font-medium mb-2">Items</h3>
-                    <div className="space-y-2">
-                      {order.items.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex justify-between items-center py-2 border-b border-gray-100"
-                        >
-                          <div>
-                            <p className="font-medium">{item.product.name}</p>
-                            <p className="text-sm text-gray-600">
-                              Qty: {item.quantity}
-                            </p>
-                          </div>
-                          <p className="font-medium">
-                            Rp {item.price.toLocaleString("id-ID")}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <Separator />
-
-                  {/* Total */}
-                  <div className="flex justify-between items-center text-lg font-bold">
-                    <span>Total</span>
-                    <span>Rp {order.totalAmount.toLocaleString("id-ID")}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Payment */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Payment Method</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {user && (
-                  <MidtransPayment
-                    orderId={order.id}
-                    amount={order.totalAmount}
-                    customerDetails={{
-                      first_name: user.name?.split(" ")[0] || "",
-                      last_name: user.name?.split(" ").slice(1).join(" ") || "",
-                      email: user.email || "",
-                      phone: user.phone || "",
-                    }}
-                    onSuccess={(result) => {
-                      toast.success("Payment successful!");
-                      router.push(`/account/orders/${orderId}`);
-                    }}
-                    onError={(error) => {
-                      toast.error("Payment failed");
-                    }}
-                    onPending={(result) => {
-                      toast.info("Payment is being processed");
-                      router.push(`/account/orders/${orderId}`);
-                    }}
-                  />
-                )}
-              </CardContent>
-            </Card>
+            <Link href="/products">
+              <Button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700">
+                <ShoppingBag className="h-5 w-5 mr-2" />
+                Back to Shopping
+              </Button>
+            </Link>
           </div>
         </motion.div>
       </div>
+    );
+  }
+
+  const pageVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const headerVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const contentVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <motion.div
+        variants={pageVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+      >
+        {/* Header Section */}
+        <motion.div
+          className="bg-white rounded-2xl shadow-lg p-6 mb-8"
+          variants={headerVariants}
+          transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                <CreditCard className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Payment Details
+                </h1>
+                <p className="text-sm text-gray-600 font-mono bg-gray-100 px-3 py-1 rounded-lg inline-block mt-1">
+                  #{order.orderNumber}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Link href={`/account/orders/${orderId}`}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="hover:bg-gray-50"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Order
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          variants={contentVariants}
+          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Order Summary */}
+            <div className="space-y-6">
+              <Card className="border-0 shadow-lg bg-white rounded-2xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b">
+                  <CardTitle className="flex items-center gap-3 text-lg">
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                      <Package className="h-4 w-4 text-white" />
+                    </div>
+                    Order Summary
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-4">
+                    {order.items.map((item, index) => (
+                      <motion.div
+                        key={item.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl"
+                      >
+                        <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center relative shadow-sm border">
+                          {item.product.images &&
+                          item.product.images.length > 0 ? (
+                            <>
+                              <img
+                                src={item.product.images[0].url}
+                                alt={item.product.name}
+                                className="w-full h-full rounded-xl object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                  const fallback = e.currentTarget
+                                    .nextElementSibling as HTMLElement;
+                                  if (fallback) {
+                                    fallback.classList.remove("hidden");
+                                  }
+                                }}
+                              />
+                              <div className="w-full h-full items-center justify-center hidden">
+                                <Package className="h-6 w-6 text-gray-400" />
+                              </div>
+                            </>
+                          ) : (
+                            <Package className="h-6 w-6 text-gray-400" />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-sm font-semibold text-gray-900">
+                            {item.product.name}
+                          </h3>
+                          <p className="text-xs text-gray-600">
+                            Quantity: {item.quantity}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-semibold text-gray-900">
+                            Rp {item.price.toLocaleString("id-ID")}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <Separator className="my-6" />
+
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Subtotal</span>
+                      <span className="font-medium">
+                        Rp {order.totalAmount.toLocaleString("id-ID")}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Shipping</span>
+                      <span className="text-green-600 font-medium">Free</span>
+                    </div>
+                    <Separator />
+                    <div className="flex justify-between text-lg font-bold">
+                      <span>Total</span>
+                      <span className="text-indigo-600">
+                        Rp {order.totalAmount.toLocaleString("id-ID")}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Shipping Address */}
+              <Card className="border-0 shadow-lg bg-white rounded-2xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50 border-b">
+                  <CardTitle className="flex items-center gap-3 text-lg">
+                    <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
+                      <MapPin className="h-4 w-4 text-white" />
+                    </div>
+                    Shipping Address
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  {order.address ? (
+                    <div className="bg-gray-50 p-4 rounded-xl">
+                      <p className="text-sm font-semibold text-gray-900 mb-2">
+                        {order.address.detail}
+                      </p>
+                      <p className="text-sm text-gray-700">
+                        {order.address.city}, {order.address.postalCode}
+                      </p>
+                      <p className="text-sm text-gray-700">
+                        {order.address.province}
+                      </p>
+                      {order.address.label && (
+                        <p className="text-xs text-gray-600 mt-2 bg-blue-100 px-2 py-1 rounded-lg inline-block">
+                          {order.address.label}
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <MapPin className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                      <p className="text-gray-500">
+                        No address information available
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Payment Information */}
+            <div className="space-y-6">
+              <Card className="border-0 shadow-lg bg-white rounded-2xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 border-b">
+                  <CardTitle className="flex items-center gap-3 text-lg">
+                    <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                      <MessageCircle className="h-4 w-4 text-white" />
+                    </div>
+                    WhatsApp Payment
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="text-center space-y-6">
+                    <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto">
+                      <MessageCircle className="h-10 w-10 text-white" />
+                    </div>
+
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        Complete Your Payment
+                      </h3>
+                      <p className="text-gray-600 leading-relaxed">
+                        Click the button below to contact us via WhatsApp and
+                        complete your payment. Our team will assist you with the
+                        payment process.
+                      </p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <Button
+                        onClick={() => {
+                          const message = createOrderMessage({
+                            orderNumber: order.orderNumber,
+                            totalAmount: order.totalAmount,
+                            status: order.status,
+                            createdAt: order.createdAt,
+                            address: order.address,
+                            items: order.items,
+                          });
+
+                          const whatsappUrl = getWhatsAppDesktopUrl(message);
+                          window.open(whatsappUrl, "_blank");
+                        }}
+                        className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                        size="lg"
+                      >
+                        <MessageCircle className="h-5 w-5 mr-2" />
+                        Chat WhatsApp
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Contact Information */}
+              <Card className="border-0 shadow-lg bg-white rounded-2xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 border-b">
+                  <CardTitle className="text-lg">Contact Information</CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                      <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                        <Phone className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          WhatsApp
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          +{getWhatsAppNumber()}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <Mail className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          Email
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          info@kawane-studio.com
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Payment Instructions */}
+              <Card className="border-0 shadow-lg bg-white rounded-2xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-yellow-50 to-amber-50 border-b">
+                  <CardTitle className="text-lg">
+                    Payment Instructions
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-3 text-sm text-gray-700">
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5">
+                        1
+                      </div>
+                      <p>Click "Chat WhatsApp" button above</p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5">
+                        2
+                      </div>
+                      <p>Send the pre-filled message to our WhatsApp</p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5">
+                        3
+                      </div>
+                      <p>Our team will provide payment instructions</p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold mt-0.5">
+                        4
+                      </div>
+                      <p>Complete payment and confirm with our team</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

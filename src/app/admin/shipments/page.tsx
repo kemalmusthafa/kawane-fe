@@ -37,17 +37,20 @@ import {
   Filter,
   Eye,
   Edit,
+  Trash2,
   Package,
   MapPin,
   Calendar,
   Clock,
   Loader2,
+  RefreshCw,
 } from "lucide-react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { useAdminShipments } from "@/hooks/useApi";
 import ShipmentStats from "@/components/admin/shipment-stats";
 import CreateShipmentForm from "@/components/admin/create-shipment-form";
+import EditShipmentForm from "@/components/admin/edit-shipment-form";
 
 export default function AdminShipmentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -56,6 +59,10 @@ export default function AdminShipmentsPage() {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedShipment, setSelectedShipment] = useState<any>(null);
 
   // Use API hook
   const {
@@ -74,6 +81,12 @@ export default function AdminShipmentsPage() {
     status: statusFilter !== "all" ? statusFilter : undefined,
     carrier: carrierFilter !== "all" ? carrierFilter : undefined,
   });
+
+  // Force refresh function to sync with backend
+  const forceRefresh = () => {
+    console.log("🔄 Force refreshing shipments data...");
+    mutate();
+  };
 
   const getStatusBadge = (orderStatus: string) => {
     switch (orderStatus) {
@@ -133,9 +146,46 @@ export default function AdminShipmentsPage() {
   const handleDeleteShipment = async (shipmentId: string) => {
     try {
       await deleteShipment(shipmentId);
-    } catch (error) {
+      setIsDeleteDialogOpen(false);
+      setSelectedShipment(null);
+      // Refresh data after successful deletion
+      mutate();
+    } catch (error: any) {
       console.error("Failed to delete shipment:", error);
+
+      // Handle specific error cases
+      if (
+        error.message?.includes("not found") ||
+        error.message?.includes("404")
+      ) {
+        // Shipment not found - refresh data to sync with backend
+        console.log("🔄 Shipment not found, refreshing data...");
+        mutate();
+        setIsDeleteDialogOpen(false);
+        setSelectedShipment(null);
+      } else {
+        // Other errors - show user-friendly message
+        alert(`Failed to delete shipment: ${error.message || "Unknown error"}`);
+      }
     }
+  };
+
+  // Handle view shipment
+  const handleViewShipment = (shipment: any) => {
+    setSelectedShipment(shipment);
+    setIsViewDialogOpen(true);
+  };
+
+  // Handle edit shipment
+  const handleEditShipment = (shipment: any) => {
+    setSelectedShipment(shipment);
+    setIsEditDialogOpen(true);
+  };
+
+  // Handle delete confirmation
+  const handleDeleteConfirm = (shipment: any) => {
+    setSelectedShipment(shipment);
+    setIsDeleteDialogOpen(true);
   };
 
   const pageVariants = {
@@ -177,32 +227,45 @@ export default function AdminShipmentsPage() {
               Manage shipments and order tracking
             </p>
           </div>
-          <Dialog
-            open={isCreateDialogOpen}
-            onOpenChange={setIsCreateDialogOpen}
-          >
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Shipment
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Add New Shipment</DialogTitle>
-                <DialogDescription>
-                  Create a new shipment record for an order.
-                </DialogDescription>
-              </DialogHeader>
-              <CreateShipmentForm
-                onSuccess={() => {
-                  setIsCreateDialogOpen(false);
-                  mutate();
-                }}
-                onCancel={() => setIsCreateDialogOpen(false)}
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="outline"
+              onClick={forceRefresh}
+              disabled={isLoading}
+              title="Refresh data"
+            >
+              <RefreshCw
+                className={`w-4 h-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
               />
-            </DialogContent>
-          </Dialog>
+              Refresh
+            </Button>
+            <Dialog
+              open={isCreateDialogOpen}
+              onOpenChange={setIsCreateDialogOpen}
+            >
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Shipment
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Add New Shipment</DialogTitle>
+                  <DialogDescription>
+                    Create a new shipment record for an order.
+                  </DialogDescription>
+                </DialogHeader>
+                <CreateShipmentForm
+                  onSuccess={() => {
+                    setIsCreateDialogOpen(false);
+                    mutate();
+                  }}
+                  onCancel={() => setIsCreateDialogOpen(false)}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </motion.div>
 
@@ -368,6 +431,7 @@ export default function AdminShipmentsPage() {
                             variant="outline"
                             size="sm"
                             title="View Details"
+                            onClick={() => handleViewShipment(shipment)}
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
@@ -375,8 +439,18 @@ export default function AdminShipmentsPage() {
                             variant="outline"
                             size="sm"
                             title="Edit Shipment"
+                            onClick={() => handleEditShipment(shipment)}
                           >
                             <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            title="Delete Shipment"
+                            onClick={() => handleDeleteConfirm(shipment)}
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          >
+                            <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
                       </TableCell>
@@ -398,6 +472,207 @@ export default function AdminShipmentsPage() {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* View Shipment Dialog */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Shipment Details</DialogTitle>
+            <DialogDescription>
+              View detailed information about this shipment.
+            </DialogDescription>
+          </DialogHeader>
+          {selectedShipment && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="font-semibold mb-3">Shipment Information</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Tracking Number:</span>
+                      <span className="font-mono">
+                        {selectedShipment.trackingNo}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Courier:</span>
+                      <span>{selectedShipment.courier}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Cost:</span>
+                      <span>
+                        Rp {selectedShipment.cost?.toLocaleString("id-ID") || 0}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Estimated Days:</span>
+                      <span>{selectedShipment.estimatedDays} days</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Created:</span>
+                      <span>
+                        {format(
+                          new Date(selectedShipment.createdAt),
+                          "dd MMM yyyy HH:mm",
+                          {
+                            locale: id,
+                          }
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-3">Order Information</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Order ID:</span>
+                      <span className="font-mono text-sm">
+                        {selectedShipment.orderId}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Customer:</span>
+                      <span>{selectedShipment.order?.user?.name || "N/A"}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Email:</span>
+                      <span className="text-sm">
+                        {selectedShipment.order?.user?.email || "N/A"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Status:</span>
+                      {getStatusBadge(
+                        selectedShipment.order?.status || "PENDING"
+                      )}
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Total Amount:</span>
+                      <span>
+                        Rp{" "}
+                        {selectedShipment.order?.totalAmount?.toLocaleString(
+                          "id-ID"
+                        ) || 0}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {selectedShipment.order?.items &&
+                selectedShipment.order.items.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold mb-3">Order Items</h3>
+                    <div className="space-y-2">
+                      {selectedShipment.order.items.map(
+                        (item: any, index: number) => (
+                          <div
+                            key={index}
+                            className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
+                          >
+                            <div>
+                              <div className="font-medium">
+                                {item.product?.name || "Unknown Product"}
+                              </div>
+                              <div className="text-sm text-gray-600">
+                                SKU: {item.product?.sku || "N/A"} | Qty:{" "}
+                                {item.quantity}
+                                {item.size && ` | Size: ${item.size}`}
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className="font-medium">
+                                Rp{" "}
+                                {(item.price * item.quantity).toLocaleString(
+                                  "id-ID"
+                                )}
+                              </div>
+                              <div className="text-sm text-gray-600">
+                                Rp {item.price.toLocaleString("id-ID")} each
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Shipment Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Shipment</DialogTitle>
+            <DialogDescription>Update shipment information.</DialogDescription>
+          </DialogHeader>
+          {selectedShipment && (
+            <EditShipmentForm
+              shipment={selectedShipment}
+              onSuccess={() => {
+                setIsEditDialogOpen(false);
+                setSelectedShipment(null);
+                mutate();
+              }}
+              onCancel={() => {
+                setIsEditDialogOpen(false);
+                setSelectedShipment(null);
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Shipment</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this shipment? This action cannot
+              be undone.
+            </DialogDescription>
+          </DialogHeader>
+          {selectedShipment && (
+            <div className="space-y-4">
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-center space-x-2">
+                  <Trash2 className="w-5 h-5 text-red-600" />
+                  <div>
+                    <div className="font-medium text-red-900">
+                      Tracking: {selectedShipment.trackingNo}
+                    </div>
+                    <div className="text-sm text-red-700">
+                      Order: {selectedShipment.orderId}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-end space-x-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsDeleteDialogOpen(false);
+                    setSelectedShipment(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => handleDeleteShipment(selectedShipment.id)}
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 }

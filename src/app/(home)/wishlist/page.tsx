@@ -51,7 +51,7 @@ export default function WishlistPage() {
           <p className="text-gray-600 mb-8">
             Silakan login untuk melihat wishlist Anda
           </p>
-          <Link href="/home/auth/sign-in">
+          <Link href="/auth/sign-in">
             <Button>Login</Button>
           </Link>
         </div>
@@ -151,7 +151,7 @@ export default function WishlistPage() {
                               }
                             }}
                           />
-                          <div className="w-full h-full flex items-center justify-center hidden">
+                          <div className="w-full h-full flex items-center justify-center absolute inset-0 bg-gray-100">
                             <Package className="w-12 h-12 text-gray-400" />
                           </div>
                         </>

@@ -18,8 +18,12 @@ export const useCart = () => {
   } = useCartApi();
 
   // Helper functions untuk kompatibilitas
-  const addItem = async (productId: string, quantity: number = 1) => {
-    return addToCart(productId, quantity);
+  const addItem = async (
+    productId: string,
+    quantity: number = 1,
+    size?: string
+  ) => {
+    return addToCart(productId, quantity, size);
   };
 
   const addDealItem = async (
@@ -31,6 +35,7 @@ export const useCart = () => {
   };
 
   const removeItem = async (cartItemId: string) => {
+    console.log("🗑️ Frontend removing cart item:", cartItemId);
     return removeFromCart(cartItemId);
   };
 

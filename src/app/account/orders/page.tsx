@@ -115,7 +115,7 @@ export default function OrdersPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Package className="w-24 h-24 text-gray-300 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -320,18 +320,68 @@ export default function OrdersPage() {
                           )}
                         </div>
                         {order.items && order.items.length > 0 && (
-                          <div className="mt-2 text-sm text-gray-500">
-                            <span className="font-medium">Items:</span>{" "}
-                            <span className="break-words">
-                              {order.items
-                                .map(
-                                  (item: any) =>
-                                    `${
-                                      item.product?.name || "Unknown Product"
-                                    } (${item.quantity || 0}x)`
-                                )
-                                .join(", ")}
+                          <div className="mt-3">
+                            <span className="text-sm font-medium text-gray-700 mb-2 block">
+                              Items:
                             </span>
+                            <div className="space-y-2">
+                              {order.items
+                                .slice(0, 3)
+                                .map((item: any, itemIndex: number) => (
+                                  <div
+                                    key={itemIndex}
+                                    className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg"
+                                  >
+                                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center relative border">
+                                      {item.product?.images &&
+                                      item.product.images.length > 0 ? (
+                                        <>
+                                          <img
+                                            src={item.product.images[0].url}
+                                            alt={item.product.name}
+                                            className="w-full h-full rounded-lg object-cover"
+                                            onError={(e) => {
+                                              e.currentTarget.style.display =
+                                                "none";
+                                              const fallback = e.currentTarget
+                                                .nextElementSibling as HTMLElement;
+                                              if (fallback) {
+                                                fallback.classList.remove(
+                                                  "hidden"
+                                                );
+                                              }
+                                            }}
+                                          />
+                                          <div className="w-full h-full items-center justify-center hidden">
+                                            <Package className="h-6 w-6 text-gray-400" />
+                                          </div>
+                                        </>
+                                      ) : (
+                                        <Package className="h-6 w-6 text-gray-400" />
+                                      )}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-sm font-medium text-gray-900 truncate">
+                                        {item.product?.name ||
+                                          "Unknown Product"}
+                                      </p>
+                                      {item.size && (
+                                        <p className="text-xs text-blue-600 font-medium">
+                                          Ukuran: {item.size}
+                                        </p>
+                                      )}
+                                      <p className="text-xs text-gray-500">
+                                        Qty: {item.quantity || 0}
+                                      </p>
+                                    </div>
+                                  </div>
+                                ))}
+                              {order.items.length > 3 && (
+                                <p className="text-xs text-gray-500 text-center">
+                                  +{order.items.length - 3} more items
+                                </p>
+                              )}
+                            </div>
                           </div>
                         )}
                       </div>

@@ -51,7 +51,7 @@ export const Cart: React.FC = () => {
           <p className="text-gray-600 mb-8">
             Please login to view your shopping cart
           </p>
-          <Link href="/home/auth/sign-in">
+          <Link href="/auth/sign-in">
             <Button>Login</Button>
           </Link>
         </div>
@@ -152,187 +152,188 @@ export const Cart: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
-          {items.map((item: CartItemState) => (
-            <Card key={item.id}>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  {/* Product Image */}
-                  <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 relative overflow-hidden">
-                    {/* Fallback icon - shown by default */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
-                      <Package className="w-8 h-8 text-gray-400" />
-                    </div>
-
-                    {/* Product image - hides fallback when loaded */}
-                    {item.product.images && item.product.images.length > 0 ? (
-                      <img
-                        src={item.product.images[0].url}
-                        alt={item.product.name}
-                        className="w-full h-full rounded-lg object-cover relative z-10"
-                        onLoad={(e) => {
-                          // Hide fallback icon when image loads successfully
-                          const fallback =
-                            e.currentTarget.parentElement?.querySelector(
-                              ".absolute"
-                            );
-                          if (fallback) {
-                            (fallback as HTMLElement).style.display = "none";
-                          }
-                          return;
-                        }}
-                        onError={(e) => {
-                          // Hide the failed image, show fallback
-                          e.currentTarget.style.display = "none";
-                          console.log(
-                            "Image failed to load:",
-                            item.product.images?.[0]?.url
-                          );
-                          return;
-                        }}
-                      />
-                    ) : (
-                      // Debug: Log when no images are available
-                      (() => {
-                        console.log(
-                          "No images available for product:",
-                          item.product.name,
-                          {
-                            images: item.product.images,
-                          }
-                        );
-                        return null;
-                      })()
-                    )}
-                  </div>
-
-                  {/* Product Info */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-semibold text-gray-900 break-words">
-                      {item.product.name}
-                    </h3>
-                    {item.product.deal && (
-                      <p className="text-xs text-orange-600 font-medium">
-                        {item.product.deal.title}
-                      </p>
-                    )}
-                    <p className="text-gray-600 text-xs break-words">
-                      {item.product.description}
-                    </p>
-                    <div className="flex items-center space-x-2 mt-2">
-                      <Badge
-                        variant={
-                          item.product.stock > 10
-                            ? "default"
-                            : item.product.stock > 0
-                            ? "secondary"
-                            : "destructive"
-                        }
-                      >
-                        {item.product.stock > 10
-                          ? "In Stock"
-                          : item.product.stock > 0
-                          ? "Low Stock"
-                          : "Out of Stock"}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  {/* Price and Quantity */}
+          {items.map((item: CartItemState) => {
+            console.log("🛒 Rendering cart item:", {
+              id: item.id,
+              productId: item.product.id,
+              productName: item.product.name,
+            });
+            return (
+              <Card key={item.id}>
+                <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
-                    <div className="text-right">
-                      {/* Show deal price if available, otherwise show original price */}
-                      {item.product.deal ? (
-                        <>
-                          <p className="text-sm font-semibold text-gray-900">
-                            Rp{" "}
-                            {item.product.deal.discountedPrice.toLocaleString(
-                              "id-ID"
-                            )}
-                          </p>
-                          <p className="text-xs text-gray-500 line-through">
-                            Rp{" "}
-                            {item.product.deal.originalPrice.toLocaleString(
-                              "id-ID"
-                            )}
-                          </p>
-                          <p className="text-xs text-green-600 font-medium">
-                            -{item.product.deal.discountPercentage}% OFF
-                          </p>
-                        </>
+                    {/* Product Image */}
+                    <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+                      {/* Fallback icon - shown by default */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
+                        <Package className="w-8 h-8 text-gray-400" />
+                      </div>
+
+                      {/* Product image - hides fallback when loaded */}
+                      {item.product.images && item.product.images.length > 0 ? (
+                        <img
+                          src={item.product.images[0].url}
+                          alt={item.product.name}
+                          className="w-full h-full rounded-lg object-cover relative z-10"
+                          onLoad={(e) => {
+                            // Hide fallback icon when image loads successfully
+                            const fallback =
+                              e.currentTarget.parentElement?.querySelector(
+                                ".absolute"
+                              );
+                            if (fallback) {
+                              (fallback as HTMLElement).style.display = "none";
+                            }
+                            return;
+                          }}
+                          onError={(e) => {
+                            // Hide the failed image, show fallback
+                            e.currentTarget.style.display = "none";
+                            return;
+                          }}
+                        />
                       ) : (
-                        <p className="text-sm font-semibold text-gray-900">
-                          Rp {item.product.price.toLocaleString("id-ID")}
+                        <div className="w-full h-48 bg-gray-100 flex items-center justify-center">
+                          <Package className="w-12 h-12 text-gray-400" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Product Info */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-semibold text-gray-900 break-words">
+                        {item.product.name}
+                      </h3>
+                      {item.size && (
+                        <p className="text-xs text-blue-600 font-medium">
+                          Ukuran: {item.size}
                         </p>
                       )}
-
-                      {/* Total for this item */}
-                      <p className="text-xs text-gray-600 mt-1">
-                        Total: Rp{" "}
-                        {item.product.deal
-                          ? (
-                              item.product.deal.discountedPrice * item.quantity
-                            ).toLocaleString("id-ID")
-                          : (item.product.price * item.quantity).toLocaleString(
-                              "id-ID"
-                            )}
+                      {item.product.deal && (
+                        <p className="text-xs text-orange-600 font-medium">
+                          {item.product.deal.title}
+                        </p>
+                      )}
+                      <p className="text-gray-600 text-xs break-words">
+                        {item.product.description}
                       </p>
+                      <div className="flex items-center space-x-2 mt-2">
+                        <Badge
+                          variant={
+                            item.product.stock > 10
+                              ? "default"
+                              : item.product.stock > 0
+                              ? "secondary"
+                              : "destructive"
+                          }
+                        >
+                          {item.product.stock > 10
+                            ? "In Stock"
+                            : item.product.stock > 0
+                            ? "Low Stock"
+                            : "Out of Stock"}
+                        </Badge>
+                      </div>
                     </div>
 
-                    {/* Quantity Controls */}
-                    <div className="flex items-center space-x-2">
+                    {/* Price and Quantity */}
+                    <div className="flex items-center space-x-4">
+                      <div className="text-right">
+                        {/* Show deal price if available, otherwise show original price */}
+                        {item.product.deal ? (
+                          <>
+                            <p className="text-sm font-semibold text-gray-900">
+                              Rp{" "}
+                              {item.product.deal.discountedPrice.toLocaleString(
+                                "id-ID"
+                              )}
+                            </p>
+                            <p className="text-xs text-gray-500 line-through">
+                              Rp{" "}
+                              {item.product.deal.originalPrice.toLocaleString(
+                                "id-ID"
+                              )}
+                            </p>
+                            <p className="text-xs text-green-600 font-medium">
+                              -{item.product.deal.discountPercentage}% OFF
+                            </p>
+                          </>
+                        ) : (
+                          <p className="text-sm font-semibold text-gray-900">
+                            Rp {item.product.price.toLocaleString("id-ID")}
+                          </p>
+                        )}
+
+                        {/* Total for this item */}
+                        <p className="text-xs text-gray-600 mt-1">
+                          Total: Rp{" "}
+                          {item.product.deal
+                            ? (
+                                item.product.deal.discountedPrice *
+                                item.quantity
+                              ).toLocaleString("id-ID")
+                            : (
+                                item.product.price * item.quantity
+                              ).toLocaleString("id-ID")}
+                        </p>
+                      </div>
+
+                      {/* Quantity Controls */}
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            handleQuantityChange(item.id, item.quantity - 1)
+                          }
+                          disabled={item.quantity <= 1 || isLoading}
+                        >
+                          <Minus className="w-4 h-4" />
+                        </Button>
+                        <Input
+                          type="number"
+                          value={item.quantity}
+                          onChange={(e) =>
+                            handleQuantityChange(
+                              item.id,
+                              parseInt(e.target.value) || 1
+                            )
+                          }
+                          className="w-16 text-center"
+                          min="1"
+                          max={item.product.stock}
+                          disabled={isLoading}
+                        />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            handleQuantityChange(item.id, item.quantity + 1)
+                          }
+                          disabled={
+                            item.quantity >= item.product.stock || isLoading
+                          }
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </div>
+
+                      {/* Remove Button */}
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() =>
-                          handleQuantityChange(item.id, item.quantity - 1)
-                        }
-                        disabled={item.quantity <= 1 || isLoading}
-                      >
-                        <Minus className="w-4 h-4" />
-                      </Button>
-                      <Input
-                        type="number"
-                        value={item.quantity}
-                        onChange={(e) =>
-                          handleQuantityChange(
-                            item.id,
-                            parseInt(e.target.value) || 1
-                          )
-                        }
-                        className="w-16 text-center"
-                        min="1"
-                        max={item.product.stock}
+                        onClick={() => removeItem(item.id)}
                         disabled={isLoading}
-                      />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          handleQuantityChange(item.id, item.quantity + 1)
-                        }
-                        disabled={
-                          item.quantity >= item.product.stock || isLoading
-                        }
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
                       >
-                        <Plus className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
-
-                    {/* Remove Button */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeItem(item.id)}
-                      disabled={isLoading}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            );
+          })}
 
           {/* Clear Cart Button */}
           <div className="flex justify-end">
