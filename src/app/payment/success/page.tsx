@@ -48,7 +48,7 @@ function PaymentSuccessContent() {
         // Call development webhook endpoint via ngrok
         const response = await fetch(
           `${
-            process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
+            process.env.NEXT_PUBLIC_API_URL || "https://kawane-be.vercel.app/api"
           }/payments/dev-webhook`,
           {
             method: "POST",

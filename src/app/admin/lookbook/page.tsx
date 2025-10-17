@@ -97,7 +97,6 @@ export default function LookbookManagement() {
     fetchPhotos();
   }, []);
 
-
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,9 +123,7 @@ export default function LookbookManagement() {
         }
       } else {
         // Create new photo
-        console.log("Creating lookbook photo with data:", formData);
         const response = await apiClient.post("/lookbook", formData);
-        console.log("Create response:", response);
 
         if (response.success) {
           toast.success("Lookbook photo successfully created");
@@ -355,14 +352,6 @@ export default function LookbookManagement() {
         </CardHeader>
         <CardContent>
           {(() => {
-            console.log(
-              "Render check - loading:",
-              loading,
-              "photos.length:",
-              photos.length,
-              "photos:",
-              photos
-            );
             return null;
           })()}
           {loading ? (
