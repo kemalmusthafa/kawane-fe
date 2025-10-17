@@ -153,10 +153,6 @@ export const Cart: React.FC = () => {
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
           {items.map((item: CartItemState) => {
-            console.log("🛒 Rendering cart item:", {
-              id: item.id,
-              productId: item.product.id,
-              productName: item.product.name,
             });
             return (
               <Card key={item.id}>

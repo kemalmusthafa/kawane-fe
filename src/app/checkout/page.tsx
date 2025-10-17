@@ -92,17 +92,6 @@ export default function CheckoutPage() {
       }
     };
 
-    // Debug: Log cart items before creating order
-    console.log(
-      "🛒 Cart items before order creation:",
-      cartItems.map((item) => ({
-        productId: item.product.id,
-        productName: item.product.name,
-        quantity: item.quantity,
-        size: (item as any).size,
-      }))
-    );
-
     const orderData = {
       // Backend expects these fields at root level
       items: cartItems.map((item) => ({

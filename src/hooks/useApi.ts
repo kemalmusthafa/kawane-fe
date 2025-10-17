@@ -966,31 +966,6 @@ export const useCartApi = () => {
     }
   };
 
-  // Debug: Log cart data to see if size is included
-  if (cart?.data?.cart?.items) {
-    console.log(
-      "🛒 Raw cart API response:",
-      cart.data.cart.items.map((item) => ({
-        id: item.id,
-        productId: item.productId,
-        size: (item as any).size,
-        quantity: item.quantity,
-      }))
-    );
-
-    // Check if any item has size
-    const itemsWithSize = cart.data.cart.items.filter(
-      (item) => (item as any).size
-    );
-    console.log("🛒 Items with size:", itemsWithSize.length);
-    itemsWithSize.forEach((item) => {
-      console.log("🛒 Item with size:", {
-        id: item.id,
-        size: (item as any).size,
-      });
-    });
-  }
-
   return {
     cart: cart?.data?.cart,
     items: cart?.data?.cart?.items || [],

@@ -35,7 +35,6 @@ export const useCart = () => {
   };
 
   const removeItem = async (cartItemId: string) => {
-    console.log("🗑️ Frontend removing cart item:", cartItemId);
     return removeFromCart(cartItemId);
   };
 

@@ -49,15 +49,6 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
       try {
         setIsAdding(true);
 
-        // Debug: Log what we're sending to backend
-        console.log("🛒 Adding to cart:", {
-          productId: product.id,
-          productName: product.name,
-          quantity: quantity,
-          selectedSize: selectedSize,
-          hasSizes: product.sizes && product.sizes.length > 0,
-        });
-
         await addItem(product.id, quantity, selectedSize);
         toast.success("Produk ditambahkan ke keranjang");
       } catch (error) {
