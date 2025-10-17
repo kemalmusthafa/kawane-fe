@@ -153,7 +153,6 @@ export const Cart: React.FC = () => {
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
           {items.map((item: CartItemState) => {
-            });
             return (
               <Card key={item.id}>
                 <CardContent className="p-6">
