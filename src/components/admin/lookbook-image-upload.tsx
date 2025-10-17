@@ -44,7 +44,7 @@ export function LookbookImageUpload({
       formData.append("image", file);
 
       const response = await fetch(
-        "http://localhost:8000/api/lookbook/upload-image",
+        `${process.env.NEXT_PUBLIC_API_URL || "https://kawane-be.vercel.app/api"}/lookbook/upload-image`,
         {
           method: "POST",
           headers: {

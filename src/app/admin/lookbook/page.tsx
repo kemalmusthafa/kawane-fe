@@ -97,10 +97,6 @@ export default function LookbookManagement() {
     fetchPhotos();
   }, []);
 
-  // Debug effect to track photos state changes
-  useEffect(() => {
-    console.log("Photos state changed:", photos);
-  }, [photos]);
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
