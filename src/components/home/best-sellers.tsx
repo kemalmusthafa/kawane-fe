@@ -140,8 +140,8 @@ export function BestSellers() {
             >
               <div className="relative">
                 {/* Best Seller Badge */}
-                <div className="absolute top-2 left-2 z-10">
-                  <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                <div className="absolute top-1 left-1 sm:top-2 sm:left-2 z-10">
+                  <span className="bg-orange-500 text-white text-[9px] sm:text-xs font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full">
                     #{index + 1} Best Seller
                   </span>
                 </div>

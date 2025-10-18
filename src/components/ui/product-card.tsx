@@ -80,8 +80,8 @@ export function ProductCard({
 
           {/* New Badge */}
           {showNewBadge && !product.deal && (
-            <div className="absolute top-4 left-4">
-              <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+            <div className="absolute top-2 left-2 sm:top-4 sm:left-4">
+              <span className="bg-red-500 text-white text-[10px] sm:text-xs font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full">
                 NEW
               </span>
             </div>
@@ -89,16 +89,16 @@ export function ProductCard({
 
           {/* Sales Count Badge - Bottom Left of Image */}
           {salesCount !== undefined && (
-            <div className="absolute bottom-4 left-4">
-              <div className="bg-black/80 text-white text-xs px-2 py-1 rounded-full">
+            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4">
+              <div className="bg-black/80 text-white text-[10px] sm:text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full">
                 {salesCount} terjual
               </div>
             </div>
           )}
         </div>
 
-        <div className="p-4 sm:p-6 lg:p-8">
-          <div className="mb-2 sm:mb-3">
+        <div className="p-3 sm:p-4 lg:p-6">
+          <div className="mb-1 sm:mb-2">
             <ProductRating
               rating={product.rating || 0}
               reviewCount={product._count?.reviews || 0}
@@ -108,16 +108,16 @@ export function ProductCard({
           </div>
 
           <Link href={`/products/${product.id}`}>
-            <h4 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3 line-clamp-2 hover:text-primary transition-colors">
+            <h4 className="text-xs sm:text-sm font-semibold mb-1 sm:mb-2 line-clamp-2 hover:text-primary transition-colors">
               {product.name}
             </h4>
           </Link>
 
           {/* Size Information */}
           {hasSizes && (
-            <div className="mb-3">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-semibold text-gray-700">
+            <div className="mb-2 sm:mb-3">
+              <div className="flex items-center gap-2 mb-1 sm:mb-2">
+                <span className="text-[10px] sm:text-xs font-semibold text-gray-700">
                   Pilih Ukuran:
                 </span>
               </div>
@@ -126,37 +126,37 @@ export function ProductCard({
                   <button
                     key={size.id}
                     onClick={() => setSelectedSize(size.size)}
-                    className={`p-2 text-center rounded border transition-colors ${
+                    className={`p-1 sm:p-2 text-center rounded border transition-colors ${
                       selectedSize === size.size
                         ? "border-blue-500 bg-blue-50 text-blue-700"
                         : "border-gray-300 hover:border-gray-400"
                     }`}
                   >
-                    <div className="text-xs font-medium">{size.size}</div>
+                    <div className="text-[10px] sm:text-xs font-medium">{size.size}</div>
                   </button>
                 ))}
               </div>
               {availableSizes.length > 6 && (
-                <p className="text-xs text-gray-500 mt-1 text-center">
+                <p className="text-[9px] sm:text-xs text-gray-500 mt-1 text-center">
                   +{availableSizes.length - 6} ukuran lainnya
                 </p>
               )}
               {selectedSize && (
-                <p className="text-xs text-green-600 mt-2 text-center">
+                <p className="text-[9px] sm:text-xs text-green-600 mt-1 sm:mt-2 text-center">
                   ✓ Ukuran {selectedSize} dipilih
                 </p>
               )}
             </div>
           )}
 
-          <div className="flex items-center space-x-2 mb-3 sm:mb-4">
+          <div className="flex items-center space-x-2 mb-2 sm:mb-3">
             {product.deal ? (
               <div className="flex flex-col">
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg sm:text-xl font-bold text-primary">
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <span className="text-sm sm:text-lg font-bold text-primary">
                     Rp {product.deal.discountedPrice.toLocaleString()}
                   </span>
-                  <span className="text-sm text-muted-foreground line-through">
+                  <span className="text-xs sm:text-sm text-muted-foreground line-through">
                     Rp {product.deal.originalPrice.toLocaleString()}
                   </span>
                 </div>
@@ -165,7 +165,7 @@ export function ProductCard({
                 </div>
               </div>
             ) : (
-              <span className="text-lg sm:text-xl font-bold text-primary">
+              <span className="text-sm sm:text-lg font-bold text-primary">
                 Rp {product.price.toLocaleString()}
               </span>
             )}

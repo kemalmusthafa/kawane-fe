@@ -23,17 +23,20 @@ export function LookbookCarousel() {
   const [imagesLoaded, setImagesLoaded] = useState<Set<string>>(new Set());
 
   // Preload images for smoother transitions
-  const preloadImages = useCallback((imageUrls: string[]) => {
-    imageUrls.forEach((url) => {
-      if (!imagesLoaded.has(url)) {
-        const img = new window.Image();
-        img.onload = () => {
-          setImagesLoaded(prev => new Set([...prev, url]));
-        };
-        img.src = url;
-      }
-    });
-  }, [imagesLoaded]);
+  const preloadImages = useCallback(
+    (imageUrls: string[]) => {
+      imageUrls.forEach((url) => {
+        if (!imagesLoaded.has(url)) {
+          const img = new window.Image();
+          img.onload = () => {
+            setImagesLoaded((prev) => new Set([...prev, url]));
+          };
+          img.src = url;
+        }
+      });
+    },
+    [imagesLoaded]
+  );
 
   // Fetch photos
   const fetchPhotos = async () => {
@@ -46,7 +49,9 @@ export function LookbookCarousel() {
         );
         setPhotos(activePhotos);
         // Preload all images
-        preloadImages(activePhotos.map((photo: LookbookPhoto) => photo.imageUrl));
+        preloadImages(
+          activePhotos.map((photo: LookbookPhoto) => photo.imageUrl)
+        );
       }
     } catch (error) {
       console.error("Error fetching lookbook photos:", error);
@@ -87,7 +92,7 @@ export function LookbookCarousel() {
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-    
+
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
@@ -96,7 +101,9 @@ export function LookbookCarousel() {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % photos.length);
     }
     if (isRightSwipe && photos.length > 1) {
-      setCurrentIndex((prevIndex) => (prevIndex - 1 + photos.length) % photos.length);
+      setCurrentIndex(
+        (prevIndex) => (prevIndex - 1 + photos.length) % photos.length
+      );
     }
   };
 
@@ -113,7 +120,7 @@ export function LookbookCarousel() {
   }
 
   return (
-    <div 
+    <div
       className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden group"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
@@ -128,10 +135,10 @@ export function LookbookCarousel() {
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ 
-              duration: 0.6, 
+            transition={{
+              duration: 0.6,
               ease: [0.25, 0.46, 0.45, 0.94], // Custom easing for smoother mobile
-              opacity: { duration: 0.4 }
+              opacity: { duration: 0.4 },
             }}
           >
             <Image
