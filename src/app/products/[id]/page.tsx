@@ -32,8 +32,7 @@ export async function generateMetadata({
     const baseUrl =
       process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app";
     const productUrl = `${baseUrl}/products/${params.id}`;
-    const productImage =
-      product.images?.[0]?.url || `${baseUrl}/og-image.jpg`;
+    const productImage = product.images?.[0]?.url || `${baseUrl}/og-image.jpg`;
 
     return {
       title: `${product.name} - Kawane Studio`,

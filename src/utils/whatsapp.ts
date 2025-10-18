@@ -103,10 +103,10 @@ export const createOrderMessage = (orderData: {
     size?: string; // ✅ Added size field
   }>;
 }): string => {
-  let message = `🛍️ *PEMBAYARAN ORDER KAWANE STUDIO* 🛍️
+  let message = ` *PEMBAYARAN ORDER KAWANE STUDIO* 
 
 📋 *Detail Order:*
-Order ID: ${orderData.orderNumber}
+Order ID: ${orderData.orderNumber} 
 Total: Rp ${orderData.totalAmount.toLocaleString("id-ID")}
 Status: ${orderData.status}`;
 
@@ -161,8 +161,8 @@ Status: ${orderData.status}`;
   }
 
   message += `\n\n💬 *Mohon bantuan untuk menyelesaikan pembayaran.*`;
-  message += `\n\n📞 *Kontak:* +${getWhatsAppNumber()}`;
   message += `\n🏪 *Kawane Studio* - Premium E-commerce`;
+  message += `\n\n📞 *Kontak:* +${getWhatsAppNumber()}`;
   message += `\n\nTerima kasih! 🙏`;
 
   return message;
