@@ -28,18 +28,18 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://kawane-studio.com"),
+  metadataBase: new URL("https://kawane-fe.vercel.app"),
   openGraph: {
     type: "website",
     locale: "id_ID",
-    url: "https://kawane-studio.com",
+    url: "https://kawane-fe.vercel.app",
     title: "Kawane Studio - Premium E-commerce Platform",
     description:
       "Discover premium products with exceptional quality and service at Kawane Studio.",
     siteName: "Kawane Studio",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/logo-hitam.png",
         width: 1200,
         height: 630,
         alt: "Kawane Studio",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     title: "Kawane Studio - Premium E-commerce Platform",
     description:
       "Discover premium products with exceptional quality and service at Kawane Studio.",
-    images: ["/og-image.jpg"],
+    images: ["/logo-hitam.png"],
   },
   robots: {
     index: true,

@@ -14,7 +14,7 @@ export async function generateMetadata({
   try {
     // Fetch product data for metadata
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/products/${params.id}`,
+      `${process.env.NEXT_PUBLIC_API_URL || "https://kawane-be.vercel.app/api"}/products/${params.id}`,
       {
         cache: "no-store", // Ensure fresh data for metadata
       }
@@ -24,10 +24,11 @@ export async function generateMetadata({
       throw new Error("Product not found");
     }
 
-    const product = await response.json();
+    const productData = await response.json();
+    const product = productData.data || productData; // Handle both response formats
 
     const baseUrl =
-      process.env.NEXT_PUBLIC_APP_URL || "https://kawane-studio.com";
+      process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app";
     const productUrl = `${baseUrl}/products/${params.id}`;
     const productImage =
       product.images?.[0]?.url || `${baseUrl}/logo-hitam.png`;
@@ -70,7 +71,7 @@ export async function generateMetadata({
   } catch (error) {
     // Fallback metadata if product fetch fails
     const baseUrl =
-      process.env.NEXT_PUBLIC_APP_URL || "https://kawane-studio.com";
+      process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app";
     return {
       title: "Product - Kawane Studio",
       description:
