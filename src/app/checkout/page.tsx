@@ -121,8 +121,26 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Validate each item in cart
-    cartItems.forEach((item, index) => {});
+    // Validate each item in cart for stock availability
+    for (const item of cartItems) {
+      if (item.size && item.product.sizes && item.product.sizes.length > 0) {
+        const sizeStock =
+          item.product.sizes.find((s) => s.size === item.size)?.stock || 0;
+        if (sizeStock < item.quantity) {
+          toast.error(
+            `Stok tidak mencukupi untuk ${item.product.name} ukuran ${item.size}. Tersedia: ${sizeStock}, Diminta: ${item.quantity}`
+          );
+          return;
+        }
+      } else {
+        if (item.product.stock < item.quantity) {
+          toast.error(
+            `Stok tidak mencukupi untuk ${item.product.name}. Tersedia: ${item.product.stock}, Diminta: ${item.quantity}`
+          );
+          return;
+        }
+      }
+    }
 
     // Additional validation
     if (cartItems.length === 0) {

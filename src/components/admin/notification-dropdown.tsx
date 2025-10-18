@@ -48,7 +48,9 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
 
       // Fetch unread count
       const countResponse = await fetch(
-        "/api/admin/notifications/unread-count",
+        `${
+          process.env.NEXT_PUBLIC_API_URL || "https://kawane-be.vercel.app/api"
+        }/admin/notifications/unread-count`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -63,7 +65,9 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
 
       // Fetch recent notifications
       const notificationsResponse = await fetch(
-        "/api/admin/notifications?limit=5",
+        `${
+          process.env.NEXT_PUBLIC_API_URL || "https://kawane-be.vercel.app/api"
+        }/admin/notifications?limit=5`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

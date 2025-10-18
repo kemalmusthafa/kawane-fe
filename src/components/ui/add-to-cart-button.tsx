@@ -64,7 +64,19 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
 
   const isInCartProduct = isInCart(product.id);
   const cartQuantity = getItemQuantity(product.id);
-  const isOutOfStock = product.stock <= 0;
+
+  // Check stock based on selected size
+  const getAvailableStock = () => {
+    if (selectedSize && product.sizes && product.sizes.length > 0) {
+      const sizeStock =
+        product.sizes.find((s) => s.size === selectedSize)?.stock || 0;
+      return sizeStock;
+    }
+    return product.stock;
+  };
+
+  const availableStock = getAvailableStock();
+  const isOutOfStock = availableStock <= 0;
   const isDisabled = disabled || isLoading || isAdding || isOutOfStock;
 
   if (isOutOfStock) {

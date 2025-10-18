@@ -296,7 +296,13 @@ export const Cart: React.FC = () => {
                           }
                           className="w-16 text-center"
                           min="1"
-                          max={item.product.stock}
+                          max={
+                            item.size && item.product.sizes
+                              ? item.product.sizes.find(
+                                  (s) => s.size === item.size
+                                )?.stock || item.product.stock
+                              : item.product.stock
+                          }
                           disabled={isLoading}
                         />
                         <Button
@@ -306,7 +312,12 @@ export const Cart: React.FC = () => {
                             handleQuantityChange(item.id, item.quantity + 1)
                           }
                           disabled={
-                            item.quantity >= item.product.stock || isLoading
+                            item.quantity >=
+                              (item.size && item.product.sizes
+                                ? item.product.sizes.find(
+                                    (s) => s.size === item.size
+                                  )?.stock || item.product.stock
+                                : item.product.stock) || isLoading
                           }
                         >
                           <Plus className="w-4 h-4" />
