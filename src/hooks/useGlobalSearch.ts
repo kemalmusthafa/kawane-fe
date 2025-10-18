@@ -113,7 +113,7 @@ export const useGlobalSearch = () => {
           productsResponse.value.success &&
           productsResponse.value.data
         ) {
-          const products = productsResponse.value.data.data?.products || [];
+          const products = productsResponse.value.data?.data?.products || [];
           products.forEach((product: any) => {
             results.push({
               id: product.id,
