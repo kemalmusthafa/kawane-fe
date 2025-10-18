@@ -66,7 +66,7 @@ export function LookbookCarousel() {
   }
 
   return (
-    <div className="relative w-full h-[600px] md:h-[700px] lg:h-[800px] xl:h-[900px] overflow-hidden group mb-0">
+    <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden group mb-8">
       {/* Main Carousel */}
       <div className="relative w-full h-full overflow-hidden">
         <motion.div
@@ -85,22 +85,22 @@ export function LookbookCarousel() {
                 className="w-full h-full object-cover"
               />
 
-              {/* Overlay with content */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent">
-                <div className="absolute bottom-0 left-0 right-0 p-8 md:p-10 lg:p-12 xl:p-16">
+              {/* Overlay with content - Better positioning */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+                <div className="absolute bottom-8 sm:bottom-12 md:bottom-16 lg:bottom-20 left-4 sm:left-6 md:left-8 lg:left-12 right-4 sm:right-6 md:right-8 lg:right-12">
                   <motion.div
-                    initial={{ y: 30 }}
-                    animate={{ y: 0 }}
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
                     className="text-white"
                   >
                     {photo.title && (
-                      <h3 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 md:mb-4">
+                      <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 sm:mb-3 md:mb-4 leading-tight">
                         {photo.title}
                       </h3>
                     )}
                     {photo.description && (
-                      <p className="text-xl md:text-2xl lg:text-3xl xl:text-4xl opacity-90 max-w-3xl md:max-w-4xl">
+                      <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl opacity-90 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl leading-relaxed">
                         {photo.description}
                       </p>
                     )}
@@ -111,6 +111,23 @@ export function LookbookCarousel() {
           ))}
         </motion.div>
       </div>
+
+      {/* Navigation Dots */}
+      {photos.length > 1 && (
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          {photos.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
+                index === currentIndex
+                  ? "bg-white"
+                  : "bg-white/50 hover:bg-white/75"
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
