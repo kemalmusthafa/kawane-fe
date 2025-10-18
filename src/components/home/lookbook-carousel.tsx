@@ -66,7 +66,7 @@ export function LookbookCarousel() {
   }
 
   return (
-    <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden group mb-8">
+    <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] xl:h-[800px] overflow-hidden group mb-2">
       {/* Main Carousel */}
       <div className="relative w-full h-full overflow-hidden">
         <motion.div

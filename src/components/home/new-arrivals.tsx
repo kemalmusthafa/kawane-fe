@@ -54,7 +54,7 @@ export function NewArrivals() {
 
   if (isLoading) {
     return (
-      <section className="py-8 sm:py-12 lg:py-16">
+      <section className="py-4 sm:py-6 lg:py-8">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
@@ -87,7 +87,7 @@ export function NewArrivals() {
 
   if (error) {
     return (
-      <section className="py-8 sm:py-12 lg:py-16">
+      <section className="py-4 sm:py-6 lg:py-8">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
@@ -106,7 +106,7 @@ export function NewArrivals() {
   return (
     <section className="py-8 sm:py-12 lg:py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+          <div className="text-center mb-4 sm:mb-6 lg:mb-8">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">
             New Arrivals
           </h2>
