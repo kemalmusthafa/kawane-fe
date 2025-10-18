@@ -47,7 +47,7 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
         limit: 8,
       });
 
-      setSearchResults(response.data?.products || []);
+      setSearchResults(response.data?.data?.products || []);
     } catch (error) {
       console.error("Search error:", error);
       setSearchResults([]);

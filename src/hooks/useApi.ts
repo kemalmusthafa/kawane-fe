@@ -227,10 +227,10 @@ export const useProducts = (params?: {
   };
 
   return {
-    products: Array.isArray((data as any)?.products)
-      ? (data as any).products
+    products: Array.isArray((data as any)?.data?.products)
+      ? (data as any).data.products
       : [],
-    pagination: (data as any)?.pagination,
+    pagination: (data as any)?.data?.pagination,
     error,
     isLoading,
     createProduct,

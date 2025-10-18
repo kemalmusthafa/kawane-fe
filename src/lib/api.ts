@@ -577,14 +577,16 @@ class ApiClient {
     if (params?.sortOrder) queryParams.append("sortOrder", params.sortOrder);
 
     return this.request<{
-      products: Product[];
-      pagination: {
-        page: number;
-        limit: number;
-        totalItems: number;
-        totalPages: number;
-        hasNext: boolean;
-        hasPrev: boolean;
+      data: {
+        products: Product[];
+        pagination: {
+          page: number;
+          limit: number;
+          totalItems: number;
+          totalPages: number;
+          hasNext: boolean;
+          hasPrev: boolean;
+        };
       };
     }>(`/products?${queryParams.toString()}`);
   }
