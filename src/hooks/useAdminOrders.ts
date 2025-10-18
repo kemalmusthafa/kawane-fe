@@ -87,9 +87,9 @@ export const useAdminOrders = (params: AdminOrdersParams = {}) => {
             orderNumber:
               order.orderNumber || `ORD-${order.id.slice(-6).toUpperCase()}`,
             user: {
-              id: order.customer?.id || "",
-              name: order.customer?.name || "Unknown Customer",
-              email: order.customer?.email || "",
+              id: order.user?.id || "",
+              name: order.user?.name || "Unknown Customer",
+              email: order.user?.email || "",
             },
             items:
               order.items?.map((item: any) => ({
