@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[600px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-muted/20 to-background dark:from-background dark:via-primary/5 dark:to-secondary/10 py-4 sm:py-6 md:py-8 lg:py-10">
+    <section className="relative min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[600px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-muted/20 to-background dark:from-background dark:via-primary/5 dark:to-secondary/10 py-0 sm:py-0 md:py-0 lg:py-0">
       {/* Enhanced Background for Dark Mode */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/5 to-background dark:from-primary/20 dark:via-accent/10 dark:to-muted/20">
         <div className="absolute inset-0 opacity-5 dark:opacity-10">
@@ -59,15 +59,15 @@ export function HeroSection() {
           <div className="mt-4 sm:mt-5 md:mt-6 flex flex-wrap justify-center items-center gap-4 sm:gap-6 md:gap-8 text-sm sm:text-base md:text-lg text-muted-foreground dark:text-muted-foreground">
             <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-background/50 dark:bg-card/30 backdrop-blur-sm border border-border/20 dark:border-border/30">
               <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
-              <span>Free Shipping</span>
+              <span>KAWANE</span>
             </div>
             <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-background/50 dark:bg-card/30 backdrop-blur-sm border border-border/20 dark:border-border/30">
               <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
-              <span>30-Day Returns</span>
+              <span>STUDIO</span>
             </div>
             <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-background/50 dark:bg-card/30 backdrop-blur-sm border border-border/20 dark:border-border/30">
               <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
-              <span>Premium Support</span>
+              <span>1921</span>
             </div>
           </div>
         </motion.div>

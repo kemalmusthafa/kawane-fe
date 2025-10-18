@@ -32,7 +32,7 @@ export default function HomePage() {
         delayChildren: 0.1,
       }}
     >
-      <div className="space-y-2 sm:space-y-3 lg:space-y-4">
+      <div className="space-y-0">
         <motion.div
           variants={sectionVariants}
           transition={{ duration: 0.6, ease: "easeOut" }}

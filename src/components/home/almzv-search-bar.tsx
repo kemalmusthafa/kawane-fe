@@ -58,20 +58,22 @@ export function AlmzvSearchBar() {
       try {
         // Use direct fetch to bypass any caching issues
         const response = await fetch(
-          `https://kawane-be.vercel.app/api/products?search=${encodeURIComponent(query)}&page=1&limit=5&t=${Date.now()}`,
+          `https://kawane-be.vercel.app/api/products?search=${encodeURIComponent(
+            query
+          )}&page=1&limit=5&t=${Date.now()}`,
           {
-            method: 'GET',
+            method: "GET",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           }
         );
-        
+
         const data = await response.json();
-        
+
         console.log("🔍 Direct Fetch Response:", data);
         console.log("🔍 Direct Fetch Products:", data.data?.products);
-        
+
         const products = data.data?.products || [];
         setSearchResults(products);
       } catch (error) {
