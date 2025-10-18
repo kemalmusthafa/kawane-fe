@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[600px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-muted/20 to-background dark:from-background dark:via-primary/5 dark:to-secondary/10 py-0 sm:py-0 md:py-0 lg:py-0">
+    <section className="relative min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[600px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-muted/20 to-background dark:from-background dark:via-primary/5 dark:to-secondary/10 py-8 sm:py-0 md:py-0 lg:py-0">
       {/* Enhanced Background for Dark Mode */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/5 to-background dark:from-primary/20 dark:via-accent/10 dark:to-muted/20">
         <div className="absolute inset-0 opacity-5 dark:opacity-10">
@@ -16,7 +16,7 @@ export function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center hero-content relative z-10">
+      <div className="container mx-auto px-6 sm:px-6 lg:px-8 text-center hero-content relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

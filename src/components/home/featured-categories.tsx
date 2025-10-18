@@ -50,8 +50,8 @@ export function FeaturedCategories() {
 
   if (isLoading) {
     return (
-      <section className="py-4 sm:py-6 lg:py-8">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-6 sm:py-6 lg:py-8">
+        <div className="container mx-auto px-6 sm:px-6 lg:px-8">
           <div className="text-center mb-4 sm:mb-6 lg:mb-8">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-3 sm:mb-4">
               Shop by Category
@@ -80,8 +80,8 @@ export function FeaturedCategories() {
 
   if (error) {
     return (
-      <section className="py-4 sm:py-6 lg:py-8">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-6 sm:py-6 lg:py-8">
+        <div className="container mx-auto px-6 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-3 sm:mb-4">
               Shop by Category
@@ -97,8 +97,8 @@ export function FeaturedCategories() {
   }
 
   return (
-    <section className="py-4 sm:py-6 lg:py-8">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-6 sm:py-6 lg:py-8">
+      <div className="container mx-auto px-6 sm:px-6 lg:px-8">
         <div className="text-center mb-4 sm:mb-6 lg:mb-8">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-3 sm:mb-4">
             Shop by Category
