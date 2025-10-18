@@ -1,6 +1,5 @@
 // API Configuration
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://kawane-be.vercel.app/api";
+const API_BASE_URL = "https://kawane-be.vercel.app/api";
 
 // Types
 export interface ApiResponse<T = any> {
