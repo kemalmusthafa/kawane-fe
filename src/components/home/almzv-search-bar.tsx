@@ -62,6 +62,9 @@ export function AlmzvSearchBar() {
           limit: 5, // Limit results for dropdown display
         });
 
+        console.log("🔍 Search API Response:", response);
+        console.log("🔍 Search Products:", response.data?.data?.products);
+        
         const products = response.data?.data?.products || [];
         setSearchResults(products);
       } catch (error) {
