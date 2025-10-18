@@ -56,16 +56,23 @@ export function AlmzvSearchBar() {
       setIsLoading(true);
       setHasSearched(true);
       try {
-        const response = await apiClient.getProducts({
-          search: query,
-          page: 1,
-          limit: 5, // Limit results for dropdown display
-        });
-
-        console.log("🔍 Search API Response:", response);
-        console.log("🔍 Search Products:", response.data?.data?.products);
+        // Use direct fetch to bypass any caching issues
+        const response = await fetch(
+          `https://kawane-be.vercel.app/api/products?search=${encodeURIComponent(query)}&page=1&limit=5&t=${Date.now()}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
         
-        const products = response.data?.data?.products || [];
+        const data = await response.json();
+        
+        console.log("🔍 Direct Fetch Response:", data);
+        console.log("🔍 Direct Fetch Products:", data.data?.products);
+        
+        const products = data.data?.products || [];
         setSearchResults(products);
       } catch (error) {
         console.error("Error fetching search results:", error);
