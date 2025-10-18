@@ -56,15 +56,14 @@ export function AlmzvSearchBar() {
       setIsLoading(true);
       setHasSearched(true);
       try {
-        console.log("🔍 AlmzvSearchBar: Searching for:", query);
         const response = await apiClient.getProducts({
           search: query,
           page: 1,
           limit: 5, // Limit results for dropdown display
         });
-        console.log("🔍 AlmzvSearchBar: API Response:", response);
-        console.log("🔍 AlmzvSearchBar: Products found:", response.data?.data?.products?.length || 0);
-        setSearchResults(response.data?.data?.products || []);
+        
+        const products = response.data?.data?.products || [];
+        setSearchResults(products);
       } catch (error) {
         console.error("Error fetching search results:", error);
         setSearchResults([]);
