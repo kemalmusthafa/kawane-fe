@@ -37,6 +37,12 @@ export default function HomePage() {
           variants={sectionVariants}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
+          <LookbookCarousel />
+        </motion.div>
+        <motion.div
+          variants={sectionVariants}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <HeroSection />
         </motion.div>
         <motion.div
@@ -66,9 +72,7 @@ export default function HomePage() {
         <motion.div
           variants={sectionVariants}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="space-y-0"
         >
-          <LookbookCarousel />
           <NewsletterSignup />
         </motion.div>
         <motion.div

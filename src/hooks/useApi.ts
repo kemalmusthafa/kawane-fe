@@ -387,9 +387,7 @@ export const useAdminOrders = (params?: {
 
   return {
     data: data?.data,
-    orders: Array.isArray(data?.data?.orders)
-      ? data.data.orders
-      : [],
+    orders: Array.isArray(data?.data?.orders) ? data.data.orders : [],
     totalItems: data?.data?.pagination?.totalItems || 0,
     totalPages: data?.data?.pagination?.totalPages || 1,
     pagination: data?.data?.pagination,
