@@ -92,15 +92,15 @@ export default function CreateShipmentForm({
 
   // Filter orders that are ready for shipment (PAID status and no existing shipment)
   const availableOrders =
-    orders?.filter((order: Order) => {
+    orders?.filter((order: any) => {
       // ✅ FIXED: More flexible filtering with proper enum values
       const isReadyForShipment =
         order.status === "PAID" ||
         order.status === "COMPLETED" ||
         order.status === "SHIPPED" ||
         (order.status === "PENDING" &&
-          ((order as any).paymentStatus === "SUCCEEDED" ||
-            (order as any).paymentStatus === "PAID"));
+          (order.paymentStatus === "SUCCEEDED" ||
+            order.paymentStatus === "PAID"));
 
       const hasNoShipment = !order.shipment;
 
@@ -143,7 +143,7 @@ export default function CreateShipmentForm({
                   <SelectValue placeholder="Select an order" />
                 </SelectTrigger>
                 <SelectContent>
-                  {availableOrders.map((order: Order) => (
+                  {availableOrders.map((order: any) => (
                     <SelectItem key={order.id} value={order.id}>
                       {order.id} - {order.user?.name} - Rp{" "}
                       {order.totalAmount.toLocaleString("id-ID")}

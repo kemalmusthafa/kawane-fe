@@ -359,11 +359,11 @@ export const useAdminOrders = (params?: {
     isLoading,
     mutate: mutateOrders,
   } = useSWR(
-    isAuthenticated ? `/orders/admin?${queryString.toString()}` : null,
-    async (url: string) => {
+    isAuthenticated ? `/admin/orders?${queryString.toString()}` : null,
+    async () => {
       try {
-        console.log("🔍 useAdminOrders fetching URL:", url);
-        const response = await apiClient.request(url);
+        console.log("🔍 useAdminOrders fetching with params:", params);
+        const response = await apiClient.getAdminOrders(params);
         console.log("📦 useAdminOrders response:", response);
         return response;
       } catch (error) {
@@ -386,10 +386,13 @@ export const useAdminOrders = (params?: {
   );
 
   return {
-    orders: Array.isArray((data as any)?.data?.orders)
-      ? (data as any).data.orders
+    data: data?.data,
+    orders: Array.isArray(data?.data?.orders)
+      ? data.data.orders
       : [],
-    pagination: (data as any)?.data?.pagination,
+    totalItems: data?.data?.pagination?.totalItems || 0,
+    totalPages: data?.data?.pagination?.totalPages || 1,
+    pagination: data?.data?.pagination,
     error,
     isLoading,
     mutateOrders,
