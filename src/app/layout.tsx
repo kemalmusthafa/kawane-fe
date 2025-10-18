@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     siteName: "Kawane Studio",
     images: [
       {
-        url: "/logo-hitam.png",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Kawane Studio",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     title: "Kawane Studio - Premium E-commerce Platform",
     description:
       "Discover premium products with exceptional quality and service at Kawane Studio.",
-    images: ["/logo-hitam.png"],
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,

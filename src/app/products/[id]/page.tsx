@@ -14,7 +14,9 @@ export async function generateMetadata({
   try {
     // Fetch product data for metadata
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || "https://kawane-be.vercel.app/api"}/products/${params.id}`,
+      `${
+        process.env.NEXT_PUBLIC_API_URL || "https://kawane-be.vercel.app/api"
+      }/products/${params.id}`,
       {
         cache: "no-store", // Ensure fresh data for metadata
       }
@@ -31,7 +33,7 @@ export async function generateMetadata({
       process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app";
     const productUrl = `${baseUrl}/products/${params.id}`;
     const productImage =
-      product.images?.[0]?.url || `${baseUrl}/logo-hitam.png`;
+      product.images?.[0]?.url || `${baseUrl}/og-image.jpg`;
 
     return {
       title: `${product.name} - Kawane Studio`,
@@ -63,9 +65,24 @@ export async function generateMetadata({
           product.description ||
           `Premium ${product.name} from Kawane Studio. Shop now for the best quality products.`,
         images: [productImage],
+        creator: "@kawanestudio",
+        site: "@kawanestudio",
       },
       alternates: {
         canonical: productUrl,
+      },
+      other: {
+        "og:image:width": "800",
+        "og:image:height": "600",
+        "og:image:type": "image/jpeg",
+        "og:image:alt": product.name,
+        "og:price:amount": product.price?.toString() || "0",
+        "og:price:currency": "IDR",
+        "product:brand": "Kawane Studio",
+        "product:availability": "in stock",
+        "product:condition": "new",
+        "product:price:amount": product.price?.toString() || "0",
+        "product:price:currency": "IDR",
       },
     };
   } catch (error) {
@@ -84,7 +101,7 @@ export async function generateMetadata({
         siteName: "Kawane Studio",
         images: [
           {
-            url: `${baseUrl}/logo-hitam.png`,
+            url: `${baseUrl}/og-image.jpg`,
             width: 800,
             height: 600,
             alt: "Kawane Studio",
