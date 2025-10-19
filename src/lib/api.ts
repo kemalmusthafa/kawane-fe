@@ -633,7 +633,17 @@ class ApiClient {
     if (params?.page) queryParams.append("page", params.page.toString());
     if (params?.limit) queryParams.append("limit", params.limit.toString());
 
-    return this.request<Order[]>(`/orders?${queryParams.toString()}`);
+    return this.request<{
+      orders: Order[];
+      pagination: {
+        page: number;
+        limit: number;
+        totalItems: number;
+        totalPages: number;
+        hasNext: boolean;
+        hasPrev: boolean;
+      };
+    }>(`/orders?${queryParams.toString()}`);
   }
 
   async getAdminOrders(params?: {
