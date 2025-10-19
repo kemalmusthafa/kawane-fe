@@ -25,7 +25,13 @@ const signUpSchema = z
     firstName: z.string().min(2, "First name must be at least 2 characters"),
     lastName: z.string().min(2, "Last name must be at least 2 characters"),
     email: z.string().email("Please enter a valid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(
+        /^(?=.*[a-z])(?=.*\d)/,
+        "Password must contain at least one lowercase letter and one number"
+      ),
     confirmPassword: z.string(),
     agreeToTerms: z.boolean().refine((val) => val === true, {
       message: "You must agree to the terms and conditions",
@@ -62,7 +68,7 @@ export function SignUpForm() {
     setIsLoading(true);
     try {
       // Call the actual API
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch("https://kawane-be.vercel.app/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,7 +80,14 @@ export function SignUpForm() {
         }),
       });
 
-      const result = await response.json();
+      let result;
+      try {
+        result = await response.json();
+      } catch (jsonError) {
+        console.error("JSON parsing error:", jsonError);
+        toast.error("Server response error. Please try again.");
+        return;
+      }
 
       if (response.ok) {
         if (result.data?.emailError) {
@@ -92,9 +105,15 @@ export function SignUpForm() {
         // Redirect to sign in page
         window.location.href = "/auth/sign-in";
       } else {
-        toast.error(
-          result.message || "Failed to create account. Please try again."
-        );
+        // Handle validation errors from backend
+        if (result.errors && Array.isArray(result.errors)) {
+          const errorMessages = result.errors.map((error: any) => error.message).join(", ");
+          toast.error(errorMessages);
+        } else {
+          toast.error(
+            result.message || "Failed to create account. Please try again."
+          );
+        }
       }
     } catch (error) {
       console.error("Registration error:", error);
@@ -190,6 +209,14 @@ export function SignUpForm() {
                 {errors.password.message}
               </p>
             )}
+            <div className="text-xs text-muted-foreground mt-1">
+              <p>Password requirements:</p>
+              <ul className="list-disc list-inside ml-2 space-y-0.5">
+                <li>At least 8 characters</li>
+                <li>At least one lowercase letter</li>
+                <li>At least one number</li>
+              </ul>
+            </div>
           </div>
 
           <div className="space-y-2">
