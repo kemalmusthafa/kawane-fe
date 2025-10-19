@@ -61,15 +61,43 @@ export function SignUpForm() {
   const onSubmit = async (data: SignUpFormData) => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Call the actual API
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: `${data.firstName} ${data.lastName}`,
+          email: data.email,
+          password: data.password,
+        }),
+      });
 
-      toast.success(
-        "Account created successfully! Please check your email to verify your account."
-      );
-      // Redirect to sign in page
-      window.location.href = "/auth/sign-in";
+      const result = await response.json();
+
+      if (response.ok) {
+        if (result.data?.emailError) {
+          toast.warning(
+            "Account created successfully, but verification email failed to send. Please contact support.",
+            {
+              description: result.data.emailError,
+            }
+          );
+        } else {
+          toast.success(
+            "Account created successfully! Please check your email to verify your account."
+          );
+        }
+        // Redirect to sign in page
+        window.location.href = "/auth/sign-in";
+      } else {
+        toast.error(
+          result.message || "Failed to create account. Please try again."
+        );
+      }
     } catch (error) {
+      console.error("Registration error:", error);
       toast.error("Failed to create account. Please try again.");
     } finally {
       setIsLoading(false);

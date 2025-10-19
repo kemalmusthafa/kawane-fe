@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiClient } from "@/lib/api";
 import Image from "next/image";
@@ -21,25 +21,24 @@ export function LookbookCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [imagesLoaded, setImagesLoaded] = useState<Set<string>>(new Set());
+  const imagesLoadedRef = useRef<Set<string>>(new Set());
 
   // Preload images for smoother transitions
-  const preloadImages = useCallback(
-    (imageUrls: string[]) => {
-      imageUrls.forEach((url) => {
-        if (!imagesLoaded.has(url)) {
-          const img = new window.Image();
-          img.onload = () => {
-            setImagesLoaded((prev) => new Set([...prev, url]));
-          };
-          img.src = url;
-        }
-      });
-    },
-    [imagesLoaded]
-  );
+  const preloadImages = useCallback((imageUrls: string[]) => {
+    imageUrls.forEach((url) => {
+      if (!imagesLoadedRef.current.has(url)) {
+        const img = new window.Image();
+        img.onload = () => {
+          imagesLoadedRef.current.add(url);
+          setImagesLoaded(new Set(imagesLoadedRef.current));
+        };
+        img.src = url;
+      }
+    });
+  }, []);
 
   // Fetch photos
-  const fetchPhotos = async () => {
+  const fetchPhotos = useCallback(async () => {
     try {
       setLoading(true);
       const response = await apiClient.get("/lookbook?isActive=true");
@@ -58,11 +57,11 @@ export function LookbookCarousel() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [preloadImages]);
 
   useEffect(() => {
     fetchPhotos();
-  }, []);
+  }, [fetchPhotos]);
 
   // Optimized auto-slide functionality
   useEffect(() => {

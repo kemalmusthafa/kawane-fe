@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -28,12 +28,12 @@ export function AlmzvSearchBar() {
   };
 
   // Handle search deactivation
-  const handleSearchClose = () => {
+  const handleSearchClose = useCallback(() => {
     setIsSearchActive(false);
     setSearchTerm("");
     setSearchResults([]);
     setHasSearched(false);
-  };
+  }, []);
 
   // Handle search submission
   const handleSubmit = (e: React.FormEvent) => {
@@ -45,55 +45,57 @@ export function AlmzvSearchBar() {
   };
 
   // Handle search results
+  const handleSearch = useCallback(async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      setIsLoading(false);
+      setHasSearched(false);
+      return;
+    }
+    setIsLoading(true);
+    setHasSearched(true);
+    try {
+      // Use direct fetch to bypass any caching issues
+      const response = await fetch(
+        `https://kawane-be.vercel.app/api/products?search=${encodeURIComponent(
+          query
+        )}&page=1&limit=5&t=${Date.now()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      console.log("🔍 Direct Fetch Response:", data);
+      console.log("🔍 Direct Fetch Products:", data.data?.products);
+
+      const products = data.data?.products || [];
+      setSearchResults(products);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      setSearchResults([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
-    const handleSearch = async (query: string) => {
-      if (!query.trim()) {
-        setSearchResults([]);
-        setIsLoading(false);
-        setHasSearched(false);
-        return;
-      }
-      setIsLoading(true);
-      setHasSearched(true);
-      try {
-        // Use direct fetch to bypass any caching issues
-        const response = await fetch(
-          `https://kawane-be.vercel.app/api/products?search=${encodeURIComponent(
-            query
-          )}&page=1&limit=5&t=${Date.now()}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        const data = await response.json();
-
-        console.log("🔍 Direct Fetch Response:", data);
-        console.log("🔍 Direct Fetch Products:", data.data?.products);
-
-        const products = data.data?.products || [];
-        setSearchResults(products);
-      } catch (error) {
-        console.error("Error fetching search results:", error);
-        setSearchResults([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     if (debouncedSearchTerm) {
       handleSearch(debouncedSearchTerm);
     } else {
       setSearchResults([]);
       setHasSearched(false);
     }
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, handleSearch]);
 
   // Handle click outside to close
   useEffect(() => {
+    if (!isSearchActive) return;
+
     const handleClickOutside = (event: MouseEvent) => {
       if (
         containerRef.current &&
@@ -103,19 +105,19 @@ export function AlmzvSearchBar() {
       }
     };
 
-    if (isSearchActive) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isSearchActive]);
+  }, [isSearchActive, handleSearchClose]);
 
   // Handle escape key
   useEffect(() => {
+    if (!isSearchActive) return;
+
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isSearchActive) {
+      if (e.key === "Escape") {
         handleSearchClose();
       }
     };
@@ -124,7 +126,7 @@ export function AlmzvSearchBar() {
     return () => {
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [isSearchActive]);
+  }, [isSearchActive, handleSearchClose]);
 
   return (
     <div ref={containerRef} className="relative w-full">

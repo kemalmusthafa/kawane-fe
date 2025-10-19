@@ -1,5 +1,5 @@
 import useSWR, { mutate } from "swr";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import {
   apiClient,
   type ApiResponse,
@@ -28,7 +28,13 @@ export const useUser = (userId?: string) => {
     error,
     isLoading,
     mutate: mutateUser,
-  } = useSWR(userId ? `/users/${userId}` : null);
+  } = useSWR(
+    userId ? `/users/${userId}` : null,
+    useCallback(async () => {
+      if (!userId) return null;
+      return await apiClient.getUser(userId);
+    }, [userId])
+  );
 
   const updateUser = async (userData: Partial<User>) => {
     if (!userId) throw new Error("User ID is required");
@@ -74,17 +80,25 @@ export const useUsers = (params?: {
   page?: number;
   limit?: number;
 }) => {
-  const queryString = new URLSearchParams();
-  if (params?.search) queryString.append("search", params.search);
-  if (params?.page) queryString.append("page", params.page.toString());
-  if (params?.limit) queryString.append("limit", params.limit.toString());
+  const queryString = useMemo(() => {
+    const qs = new URLSearchParams();
+    if (params?.search) qs.append("search", params.search);
+    if (params?.page) qs.append("page", params.page.toString());
+    if (params?.limit) qs.append("limit", params.limit.toString());
+    return qs;
+  }, [params?.search, params?.page, params?.limit]);
 
   const {
     data,
     error,
     isLoading,
     mutate: mutateUsers,
-  } = useSWR(`/users?${queryString.toString()}`);
+  } = useSWR(
+    `/users?${queryString.toString()}`,
+    useCallback(async () => {
+      return await apiClient.getUsers(params);
+    }, [params?.search, params?.page, params?.limit])
+  );
 
   const createUser = async (userData: {
     name: string;
@@ -149,27 +163,51 @@ export const useProducts = (params?: {
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 }) => {
-  const queryString = new URLSearchParams();
-  if (params?.search) queryString.append("search", params.search);
-  if (params?.categoryId) queryString.append("categoryId", params.categoryId);
-  if (params?.minPrice)
-    queryString.append("minPrice", params.minPrice.toString());
-  if (params?.maxPrice)
-    queryString.append("maxPrice", params.maxPrice.toString());
-  if (params?.inStock !== undefined)
-    queryString.append("inStock", params.inStock.toString());
-  if (params?.page) queryString.append("page", params.page.toString());
-  if (params?.limit) queryString.append("limit", params.limit.toString());
-  if (params?.sortBy) queryString.append("sortBy", params.sortBy);
-  if (params?.sortOrder) queryString.append("sortOrder", params.sortOrder);
+  const queryString = useMemo(() => {
+    const qs = new URLSearchParams();
+    if (params?.search) qs.append("search", params.search);
+    if (params?.categoryId) qs.append("categoryId", params.categoryId);
+    if (params?.minPrice) qs.append("minPrice", params.minPrice.toString());
+    if (params?.maxPrice) qs.append("maxPrice", params.maxPrice.toString());
+    if (params?.inStock !== undefined)
+      qs.append("inStock", params.inStock.toString());
+    if (params?.page) qs.append("page", params.page.toString());
+    if (params?.limit) qs.append("limit", params.limit.toString());
+    if (params?.sortBy) qs.append("sortBy", params.sortBy);
+    if (params?.sortOrder) qs.append("sortOrder", params.sortOrder);
+    return qs;
+  }, [
+    params?.search,
+    params?.categoryId,
+    params?.minPrice,
+    params?.maxPrice,
+    params?.inStock,
+    params?.page,
+    params?.limit,
+    params?.sortBy,
+    params?.sortOrder,
+  ]);
 
   const {
     data,
     error,
     isLoading,
     mutate: mutateProducts,
-  } = useSWR(`/products?${queryString.toString()}`, () =>
-    apiClient.getProducts(params)
+  } = useSWR(
+    `/products?${queryString.toString()}`,
+    useCallback(async () => {
+      return await apiClient.getProducts(params);
+    }, [
+      params?.search,
+      params?.categoryId,
+      params?.minPrice,
+      params?.maxPrice,
+      params?.inStock,
+      params?.page,
+      params?.limit,
+      params?.sortBy,
+      params?.sortOrder,
+    ])
   );
 
   const createProduct = async (productData: {
@@ -246,8 +284,12 @@ export const useProduct = (productId: string) => {
     error,
     isLoading,
     mutate: mutateProduct,
-  } = useSWR(productId ? `/products/${productId}` : null, () =>
-    apiClient.getProduct(productId)
+  } = useSWR(
+    productId ? `/products/${productId}` : null,
+    useCallback(async () => {
+      if (!productId) return null;
+      return await apiClient.getProduct(productId);
+    }, [productId])
   );
 
   const updateProduct = async (productData: Partial<Product>) => {
@@ -279,17 +321,26 @@ export const useOrders = (params?: {
   limit?: number;
 }) => {
   const { isAuthenticated } = useAuth();
-  const queryString = new URLSearchParams();
-  if (params?.status) queryString.append("status", params.status);
-  if (params?.page) queryString.append("page", params.page.toString());
-  if (params?.limit) queryString.append("limit", params.limit.toString());
+  const queryString = useMemo(() => {
+    const qs = new URLSearchParams();
+    if (params?.status) qs.append("status", params.status);
+    if (params?.page) qs.append("page", params.page.toString());
+    if (params?.limit) qs.append("limit", params.limit.toString());
+    return qs;
+  }, [params?.status, params?.page, params?.limit]);
 
   const {
     data,
     error,
     isLoading,
     mutate: mutateOrders,
-  } = useSWR(isAuthenticated ? `/orders?${queryString.toString()}` : null);
+  } = useSWR(
+    isAuthenticated ? `/orders?${queryString.toString()}` : null,
+    useCallback(async () => {
+      if (!isAuthenticated) return null;
+      return await apiClient.getOrders(params);
+    }, [isAuthenticated, params?.status, params?.page, params?.limit])
+  );
 
   const createOrder = async (orderData: {
     items: { productId: string; quantity: number }[];
@@ -347,11 +398,14 @@ export const useAdminOrders = (params?: {
     user: user?.email,
   });
 
-  const queryString = new URLSearchParams();
-  if (params?.status) queryString.append("status", params.status);
-  if (params?.page) queryString.append("page", params.page.toString());
-  if (params?.limit) queryString.append("limit", params.limit.toString());
-  if (params?.search) queryString.append("search", params.search);
+  const queryString = useMemo(() => {
+    const qs = new URLSearchParams();
+    if (params?.status) qs.append("status", params.status);
+    if (params?.page) qs.append("page", params.page.toString());
+    if (params?.limit) qs.append("limit", params.limit.toString());
+    if (params?.search) qs.append("search", params.search);
+    return qs;
+  }, [params?.status, params?.page, params?.limit, params?.search]);
 
   const {
     data,
@@ -360,7 +414,8 @@ export const useAdminOrders = (params?: {
     mutate: mutateOrders,
   } = useSWR(
     isAuthenticated ? `/admin/orders?${queryString.toString()}` : null,
-    async () => {
+    useCallback(async () => {
+      if (!isAuthenticated) return null;
       try {
         console.log("🔍 useAdminOrders fetching with params:", params);
         const response = await apiClient.getAdminOrders(params);
@@ -370,7 +425,13 @@ export const useAdminOrders = (params?: {
         console.error("Error fetching admin orders:", error);
         throw error;
       }
-    },
+    }, [
+      isAuthenticated,
+      params?.status,
+      params?.page,
+      params?.limit,
+      params?.search,
+    ]),
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
@@ -819,7 +880,7 @@ export const useWishlist = () => {
     mutate,
   } = useSWR(
     isAuthenticated ? "/wishlist" : null,
-    isAuthenticated ? () => apiClient.getWishlist() : null
+    useCallback(() => apiClient.getWishlist(), [])
   );
 
   const toggleWishlist = async (productId: string) => {
@@ -869,7 +930,7 @@ export const useCartApi = () => {
     mutate,
   } = useSWR(
     isAuthenticated ? "/cart" : null,
-    isAuthenticated ? () => apiClient.getCart() : null
+    useCallback(() => apiClient.getCart(), [])
   );
 
   const addToCart = async (
@@ -1312,12 +1373,12 @@ export const useAdminShipments = (params?: {
           ])
         ).toString()}`
       : null,
-    async () => {
+    useCallback(async () => {
       console.log("🔍 useAdminShipments fetching with params:", params);
       const response = await apiClient.getShipments(params);
       console.log("📦 useAdminShipments response:", response);
       return response;
-    },
+    }, [params]),
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
