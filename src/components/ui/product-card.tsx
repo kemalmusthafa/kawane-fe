@@ -61,43 +61,43 @@ export function ProductCard({
             </div>
           </Link>
 
-          {/* Wishlist Button */}
-          <div className="absolute top-4 right-4">
+          {/* Wishlist Button - Smaller on mobile */}
+          <div className="absolute top-2 right-2 sm:top-4 sm:right-4">
             <AddToWishlistButton
               product={product}
               variant="ghost"
               size="icon"
-              className="bg-white/80 hover:bg-white dark:bg-black/80 dark:hover:bg-black"
+              className="bg-white/80 hover:bg-white dark:bg-black/80 dark:hover:bg-black w-6 h-6 sm:w-8 sm:h-8"
             />
           </div>
 
-          {/* Deal Badge */}
+          {/* Deal Badge - Smaller and more responsive */}
           {product.deal && (
-            <div className="absolute top-4 left-4">
+            <div className="absolute top-2 left-2 sm:top-4 sm:left-4">
               <DealBadge deal={product.deal} size="sm" />
             </div>
           )}
 
-          {/* New Badge */}
+          {/* New Badge - Smaller and more responsive */}
           {showNewBadge && !product.deal && (
-            <div className="absolute top-2 left-2 sm:top-4 sm:left-4">
-              <span className="bg-red-500 text-white text-[10px] sm:text-xs font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full">
+            <div className="absolute top-1 left-1 sm:top-2 sm:left-2">
+              <span className="bg-red-500 text-white text-[8px] xs:text-[9px] sm:text-[10px] font-bold px-1 py-0.5 sm:px-1.5 sm:py-0.5 rounded-md">
                 NEW
               </span>
             </div>
           )}
 
-          {/* Sales Count Badge - Bottom Left of Image */}
+          {/* Sales Count Badge - Bottom Left of Image - Smaller and more responsive */}
           {salesCount !== undefined && (
-            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4">
-              <div className="bg-black/80 text-white text-[10px] sm:text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full">
+            <div className="absolute bottom-1 left-1 sm:bottom-2 sm:left-2">
+              <div className="bg-black/80 text-white text-[8px] xs:text-[9px] sm:text-[10px] px-1 py-0.5 sm:px-1.5 sm:py-0.5 rounded-md">
                 {salesCount} terjual
               </div>
             </div>
           )}
         </div>
 
-        <div className="p-3 sm:p-4 lg:p-6">
+        <div className="p-2 sm:p-3 md:p-4 lg:p-6">
           <div className="mb-1 sm:mb-2">
             <ProductRating
               rating={product.rating || 0}
@@ -108,14 +108,14 @@ export function ProductCard({
           </div>
 
           <Link href={`/products/${product.id}`}>
-            <h4 className="text-xs sm:text-sm font-semibold mb-1 sm:mb-2 line-clamp-2 hover:text-primary transition-colors">
+            <h4 className="text-[11px] sm:text-xs md:text-sm font-semibold mb-1 sm:mb-2 line-clamp-2 hover:text-primary transition-colors">
               {product.name}
             </h4>
           </Link>
 
-          {/* Size Information */}
+          {/* Size Information - Hidden on mobile for better responsiveness */}
           {hasSizes && (
-            <div className="mb-2 sm:mb-3">
+            <div className="mb-1 sm:mb-2 md:mb-3 hidden sm:block">
               <div className="flex items-center gap-2 mb-1 sm:mb-2">
                 <span className="text-[10px] sm:text-xs font-semibold text-gray-700">
                   Pilih Ukuran:
@@ -132,7 +132,9 @@ export function ProductCard({
                         : "border-gray-300 hover:border-gray-400"
                     }`}
                   >
-                    <div className="text-[10px] sm:text-xs font-medium">{size.size}</div>
+                    <div className="text-[10px] sm:text-xs font-medium">
+                      {size.size}
+                    </div>
                   </button>
                 ))}
               </div>
@@ -149,14 +151,14 @@ export function ProductCard({
             </div>
           )}
 
-          <div className="flex items-center space-x-2 mb-2 sm:mb-3">
+          <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2 md:mb-3">
             {product.deal ? (
               <div className="flex flex-col">
                 <div className="flex items-center space-x-1 sm:space-x-2">
-                  <span className="text-sm sm:text-lg font-bold text-primary">
+                  <span className="text-xs sm:text-sm md:text-lg font-bold text-primary">
                     Rp {product.deal.discountedPrice.toLocaleString()}
                   </span>
-                  <span className="text-xs sm:text-sm text-muted-foreground line-through">
+                  <span className="text-[10px] sm:text-xs text-muted-foreground line-through">
                     Rp {product.deal.originalPrice.toLocaleString()}
                   </span>
                 </div>
@@ -165,17 +167,17 @@ export function ProductCard({
                 </div>
               </div>
             ) : (
-              <span className="text-sm sm:text-lg font-bold text-primary">
+              <span className="text-xs sm:text-sm md:text-lg font-bold text-primary">
                 Rp {product.price.toLocaleString()}
               </span>
             )}
           </div>
 
-          <div className="flex space-x-2">
+          <div className="flex space-x-1 sm:space-x-2">
             {!hideAddToCart && (
               <AddToCartButton
                 product={product}
-                className="flex-1"
+                className="flex-1 text-[10px] sm:text-xs"
                 size="sm"
                 selectedSize={selectedSize}
               />

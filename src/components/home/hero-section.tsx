@@ -59,12 +59,9 @@ export function HeroSection() {
           <div className="mt-4 sm:mt-5 md:mt-6 flex flex-wrap justify-center items-center gap-4 sm:gap-6 md:gap-8 text-sm sm:text-base md:text-lg text-muted-foreground dark:text-muted-foreground">
             <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-background/50 dark:bg-card/30 backdrop-blur-sm border border-border/20 dark:border-border/30">
               <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
-              <span>KAWANE</span>
+              <span>Kawane Studio</span>
             </div>
-            <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-background/50 dark:bg-card/30 backdrop-blur-sm border border-border/20 dark:border-border/30">
-              <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
-              <span>STUDIO</span>
-            </div>
+
             <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-background/50 dark:bg-card/30 backdrop-blur-sm border border-border/20 dark:border-border/30">
               <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
               <span>1921</span>

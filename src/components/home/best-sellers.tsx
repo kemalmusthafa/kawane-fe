@@ -130,7 +130,7 @@ export function BestSellers() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
           {bestSellers.map((product: BestSellerProduct, index: number) => (
             <motion.div
               key={product.id}
@@ -139,9 +139,9 @@ export function BestSellers() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <div className="relative">
-                {/* Best Seller Badge */}
-                <div className="absolute top-1 left-1 sm:top-2 sm:left-2 z-10">
-                  <span className="bg-orange-500 text-white text-[9px] sm:text-xs font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full">
+                {/* Best Seller Badge - Smaller and more responsive */}
+                <div className="absolute top-1 left-1 z-10">
+                  <span className="bg-orange-500 text-white text-[8px] xs:text-[9px] sm:text-[10px] font-bold px-1 py-0.5 sm:px-1.5 sm:py-0.5 rounded-md">
                     #{index + 1} Best Seller
                   </span>
                 </div>
