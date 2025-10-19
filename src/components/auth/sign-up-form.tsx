@@ -68,17 +68,20 @@ export function SignUpForm() {
     setIsLoading(true);
     try {
       // Call the actual API
-      const response = await fetch("https://kawane-be.vercel.app/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: `${data.firstName} ${data.lastName}`,
-          email: data.email,
-          password: data.password,
-        }),
-      });
+      const response = await fetch(
+        "https://kawane-be.vercel.app/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: `${data.firstName} ${data.lastName}`,
+            email: data.email,
+            password: data.password,
+          }),
+        }
+      );
 
       let result;
       try {
@@ -107,7 +110,9 @@ export function SignUpForm() {
       } else {
         // Handle validation errors from backend
         if (result.errors && Array.isArray(result.errors)) {
-          const errorMessages = result.errors.map((error: any) => error.message).join(", ");
+          const errorMessages = result.errors
+            .map((error: any) => error.message)
+            .join(", ");
           toast.error(errorMessages);
         } else {
           toast.error(
