@@ -1,9 +1,9 @@
 {
-  "version": 2,
-  "framework": "nextjs",
-  "installCommand": "npm ci --prefer-offline",
-  "buildCommand": "npm run build:vercel",
-  "env": {
-    "NEXT_PUBLIC_API_URL": "https://kawane-be.vercel.app/api"
-  }
+    "version": 2,
+    "framework": "nextjs",
+  "installCommand": "npm install",
+  "buildCommand": "npm run build",
+    "env": {
+        "NEXT_PUBLIC_API_URL": "https://kawane-be.vercel.app/api"
+    }
 }
