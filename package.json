@@ -6,6 +6,7 @@
         "dev": "cross-env NODE_NO_WARNINGS=1 NODE_OPTIONS=\"--no-deprecation\" next dev",
         "dev:clean": "cross-env NODE_NO_WARNINGS=1 NODE_OPTIONS=\"--no-deprecation\" next dev --clean",
         "build": "cross-env NODE_NO_WARNINGS=1 NODE_OPTIONS=\"--no-deprecation --max-old-space-size=4096\" next build",
+        "build:vercel": "cross-env NODE_NO_WARNINGS=1 NODE_OPTIONS=\"--no-deprecation --max-old-space-size=4096\" next build",
         "build:analyze": "cross-env ANALYZE=true npm run build",
         "start": "cross-env NODE_NO_WARNINGS=1 NODE_OPTIONS=\"--no-deprecation\" next start",
         "lint": "next lint",

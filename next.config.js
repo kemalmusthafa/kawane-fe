@@ -16,6 +16,8 @@ const nextConfig = {
     if (!isServer) {
       config.optimization.splitChunks = {
         chunks: 'all',
+        minSize: 20000,
+        maxSize: 244000,
         cacheGroups: {
           default: {
             minChunks: 2,
@@ -27,6 +29,7 @@ const nextConfig = {
             name: 'vendors',
             priority: -10,
             chunks: 'all',
+            maxSize: 244000,
           },
         },
       };

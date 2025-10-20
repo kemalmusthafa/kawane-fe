@@ -1,8 +1,8 @@
 {
     "version": 2,
-    "buildCommand": "npm run build",
+    "buildCommand": "npm run build:vercel",
     "outputDirectory": ".next",
-    "installCommand": "npm ci",
+    "installCommand": "npm ci --prefer-offline",
     "framework": "nextjs",
     "functions": {
         "src/app/api/**/*.ts": {
@@ -11,6 +11,11 @@
     },
     "env": {
         "NEXT_PUBLIC_API_URL": "https://kawane-be.vercel.app/api"
+    },
+    "build": {
+        "env": {
+            "NODE_OPTIONS": "--max-old-space-size=4096"
+        }
     },
     "headers": [
         {
