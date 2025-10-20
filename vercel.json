@@ -1,39 +1,9 @@
 {
-    "version": 2,
-    "buildCommand": "npm run build:vercel",
-    "outputDirectory": ".next",
-    "installCommand": "npm ci --prefer-offline",
-    "framework": "nextjs",
-    "functions": {
-        "src/app/api/**/*.ts": {
-            "maxDuration": 30
-        }
-    },
-    "env": {
-        "NEXT_PUBLIC_API_URL": "https://kawane-be.vercel.app/api"
-    },
-    "build": {
-        "env": {
-            "NODE_OPTIONS": "--max-old-space-size=4096"
-        }
-    },
-    "headers": [
-        {
-            "source": "/(.*)",
-            "headers": [
-                {
-                    "key": "X-Content-Type-Options",
-                    "value": "nosniff"
-                },
-                {
-                    "key": "X-Frame-Options",
-                    "value": "DENY"
-                },
-                {
-                    "key": "X-XSS-Protection",
-                    "value": "1; mode=block"
-                }
-            ]
-        }
-    ]
+  "version": 2,
+  "framework": "nextjs",
+  "installCommand": "npm ci --prefer-offline",
+  "buildCommand": "npm run build:vercel",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://kawane-be.vercel.app/api"
+  }
 }
