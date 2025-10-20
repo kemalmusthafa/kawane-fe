@@ -64,20 +64,49 @@ export default function OrdersPage() {
     switch (normalizedStatus) {
       case "checkout":
         return (
-          <Badge className="bg-orange-100 text-orange-800">Checkout</Badge>
+          <Badge className="bg-orange-100 text-orange-800 dark:bg-orange-200 dark:text-orange-900 text-[10px] md:text-xs px-2 py-0.5">
+            Checkout
+          </Badge>
         );
       case "pending":
-        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
+        return (
+          <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-200 dark:text-yellow-900 text-[10px] md:text-xs px-2 py-0.5">
+            Pending
+          </Badge>
+        );
       case "paid":
-        return <Badge className="bg-green-100 text-green-800">Paid</Badge>;
+        return (
+          <Badge className="bg-green-100 text-green-800 dark:bg-green-200 dark:text-green-900 text-[10px] md:text-xs px-2 py-0.5">
+            Paid
+          </Badge>
+        );
       case "shipped":
-        return <Badge className="bg-purple-100 text-purple-800">Shipped</Badge>;
+        return (
+          <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-200 dark:text-purple-900 text-[10px] md:text-xs px-2 py-0.5">
+            Shipped
+          </Badge>
+        );
       case "completed":
-        return <Badge className="bg-green-100 text-green-800">Completed</Badge>;
+        return (
+          <Badge className="bg-green-100 text-green-800 dark:bg-green-200 dark:text-green-900 text-[10px] md:text-xs px-2 py-0.5">
+            Completed
+          </Badge>
+        );
       case "cancelled":
-        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>;
+        return (
+          <Badge className="bg-red-100 text-red-800 dark:bg-red-200 dark:text-red-900 text-[10px] md:text-xs px-2 py-0.5">
+            Cancelled
+          </Badge>
+        );
       default:
-        return <Badge variant="secondary">{status || "Unknown"}</Badge>;
+        return (
+          <Badge
+            variant="secondary"
+            className="text-[10px] md:text-xs px-2 py-0.5 dark:bg-gray-700 dark:text-gray-100"
+          >
+            {status || "Unknown"}
+          </Badge>
+        );
     }
   };
 
@@ -85,15 +114,38 @@ export default function OrdersPage() {
     const normalizedStatus = status?.toLowerCase();
     switch (normalizedStatus) {
       case "pending":
-        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
+        return (
+          <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-200 dark:text-yellow-900 text-[10px] md:text-xs px-2 py-0.5">
+            Pending
+          </Badge>
+        );
       case "succeeded":
-        return <Badge className="bg-green-100 text-green-800">Succeeded</Badge>;
+        return (
+          <Badge className="bg-green-100 text-green-800 dark:bg-green-200 dark:text-green-900 text-[10px] md:text-xs px-2 py-0.5">
+            Succeeded
+          </Badge>
+        );
       case "cancelled":
-        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>;
+        return (
+          <Badge className="bg-red-100 text-red-800 dark:bg-red-200 dark:text-red-900 text-[10px] md:text-xs px-2 py-0.5">
+            Cancelled
+          </Badge>
+        );
       case "expired":
-        return <Badge className="bg-gray-100 text-gray-800">Expired</Badge>;
+        return (
+          <Badge className="bg-gray-100 text-gray-800 dark:bg-gray-300 dark:text-gray-900 text-[10px] md:text-xs px-2 py-0.5">
+            Expired
+          </Badge>
+        );
       default:
-        return <Badge variant="secondary">{status || "Unknown"}</Badge>;
+        return (
+          <Badge
+            variant="secondary"
+            className="text-[10px] md:text-xs px-2 py-0.5 dark:bg-gray-700 dark:text-gray-100"
+          >
+            {status || "Unknown"}
+          </Badge>
+        );
     }
   };
 
