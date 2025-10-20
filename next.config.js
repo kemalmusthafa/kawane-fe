@@ -6,7 +6,35 @@ const nextConfig = {
   // Ensure static assets are properly served
   assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
   
-  // Headers untuk mengatasi Cross-Origin-Opener-Policy
+  // Optimize chunks untuk mengurangi 429 errors
+  experimental: {
+    optimizeCss: true,
+  },
+  
+  // Webpack configuration untuk chunk optimization
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          default: {
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            priority: -10,
+            chunks: 'all',
+          },
+        },
+      };
+    }
+    return config;
+  },
+  
+  // Headers untuk mengatasi Cross-Origin-Opener-Policy dan rate limiting
   async headers() {
     return [
       {
@@ -19,6 +47,19 @@ const nextConfig = {
           {
             key: 'Cross-Origin-Embedder-Policy',
             value: 'unsafe-none',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
