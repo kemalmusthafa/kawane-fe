@@ -108,9 +108,7 @@ export function LookbookCarousel() {
 
   if (loading) {
     return (
-      <div className="w-full h-[500px] bg-muted animate-pulse rounded-lg flex items-center justify-center">
-        <div className="text-muted-foreground">Memuat lookbook...</div>
-      </div>
+      <div className="w-full h-[500px] bg-muted animate-pulse rounded-lg"></div>
     );
   }
 
