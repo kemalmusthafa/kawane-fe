@@ -91,12 +91,29 @@ export const createOrderMessage = (orderData: {
     size?: string; // ✅ Added size field
   }>;
 }): string => {
-  let message = ` *PEMBAYARAN ORDER KAWANE STUDIO* 
+  // Try to surface ONE product link at the very top (alone on its own line)
+  // so WhatsApp generates a rich link preview (image + title) reliably.
+  let firstProductLink: string | null = null;
+  if (orderData.items && orderData.items.length > 0) {
+    const first = orderData.items.find((it) => (it.product as any).id);
+    if (first && (first.product as any).id) {
+      firstProductLink = `${
+        process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
+      }/products/${(first.product as any).id}`;
+    }
+  }
 
-📋 *Detail Order:*
-Order ID: ${orderData.orderNumber} 
-Total: Rp ${orderData.totalAmount.toLocaleString("id-ID")}
-Status: ${orderData.status}`;
+  let message = ``;
+  if (firstProductLink) {
+    // Put link on its own line first to trigger preview
+    message += `${firstProductLink}\n\n`;
+  }
+
+  message += `🧾 *PEMBAYARAN ORDER KAWANE STUDIO*\n\n`;
+  message += `📋 *Detail Order:*\n`;
+  message += `• Order ID: ${orderData.orderNumber}\n`;
+  message += `• Total: Rp ${orderData.totalAmount.toLocaleString("id-ID")}\n`;
+  message += `• Status: ${orderData.status}`;
 
   // Add order date if available
   if (orderData.createdAt) {
@@ -111,7 +128,7 @@ Status: ${orderData.status}`;
         minute: "2-digit",
       }
     );
-    message += `\nTanggal: ${orderDate}`;
+    message += `\n• Tanggal: ${orderDate}`;
   }
 
   if (orderData.items && orderData.items.length > 0) {
@@ -126,10 +143,8 @@ Status: ${orderData.status}`;
 
       message += `\n   Qty: ${item.quantity}`;
       message += `\n   Harga: Rp ${item.price.toLocaleString("id-ID")}`;
-
-      // Include product link for better WhatsApp preview
-      // WhatsApp will show image preview if the product page has proper Open Graph metadata
-      if ((item.product as any).id) {
+      // Keep product link only for the first item (already placed on top) to avoid losing preview
+      if ((item.product as any).id && !firstProductLink) {
         message += `\n   🔗 Lihat produk: ${
           process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
         }/products/${(item.product as any).id}`;
@@ -169,9 +184,21 @@ export const createCheckoutMessage = (cartData: {
   totalAmount: number;
   shippingAddress?: string;
 }): string => {
-  let message = `🛒 *CHECKOUT ORDER KAWANE STUDIO* 🛒
+  // Promote first product link to the top to trigger rich preview
+  let firstProductLink: string | null = null;
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app";
+  const firstWithId = cartData.items.find((it: any) => (it.product as any)?.id);
+  if ((firstWithId as any)?.product?.id) {
+    firstProductLink = `${appUrl}/products/${(firstWithId as any).product.id}`;
+  }
 
-💰 Total: Rp ${cartData.totalAmount.toLocaleString("id-ID")}`;
+  let message = ``;
+  if (firstProductLink) {
+    message += `${firstProductLink}\n\n`;
+  }
+  message += `🛒 *CHECKOUT ORDER KAWANE STUDIO* 🛒\n\n`;
+  message += `💰 Total: Rp ${cartData.totalAmount.toLocaleString("id-ID")}`;
 
   if (cartData.items && cartData.items.length > 0) {
     message += `\n\n📦 *Items yang akan dibeli:*`;
@@ -186,12 +213,11 @@ export const createCheckoutMessage = (cartData: {
       message += `\n   Qty: ${item.quantity}`;
       message += `\n   Harga: Rp ${item.price.toLocaleString("id-ID")}`;
 
-      // Include product link for better WhatsApp preview
-      // WhatsApp will show image preview if the product page has proper Open Graph metadata
-      if ((item.product as any).id) {
-        message += `\n   🔗 Lihat produk: ${
-          process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
-        }/products/${(item.product as any).id}`;
+      // Keep link only for first product to not break preview
+      if ((item as any).product?.id && !firstProductLink) {
+        message += `\n   🔗 Lihat produk: ${appUrl}/products/${
+          (item as any).product.id
+        }`;
       }
     });
   }
