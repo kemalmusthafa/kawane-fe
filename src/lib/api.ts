@@ -456,7 +456,7 @@ class ApiClient {
   }
 
   async verifyEmail(token: string) {
-    return this.request(`/auth/verify?token=${token}`);
+    return this.request(`https://kawane-be.vercel.app/api/auth/verify?token=${token}`);
   }
 
   async forgotPassword(email: string) {
