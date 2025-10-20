@@ -15,6 +15,7 @@ export interface BestSellerProduct {
   category: {
     id: string;
     name: string;
+    type: "COLLECTION" | "CATEGORY";
     description: string | null;
     image: string | null;
   } | null;

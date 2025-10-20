@@ -50,7 +50,7 @@ export function FeaturedCategories() {
 
   // Filter hanya Collections untuk homepage
   const collections =
-    categories?.filter((category) => category.type === "COLLECTION") || [];
+    categories?.filter((category: Category) => category.type === "COLLECTION") || [];
 
   if (isLoading) {
     return (
