@@ -46,7 +46,6 @@ export function CategoryForm({
 }: CategoryFormProps) {
   const [formData, setFormData] = useState({
     name: category?.name || "",
-    type: category?.type || "COLLECTION",
     description: category?.description || "",
     image: category?.image || "",
   });
@@ -57,14 +56,12 @@ export function CategoryForm({
     if (category) {
       setFormData({
         name: category.name || "",
-        type: category.type || "COLLECTION",
         description: category.description || "",
         image: category.image || "",
       });
     } else {
       setFormData({
         name: "",
-        type: "COLLECTION",
         description: "",
         image: "",
       });
@@ -81,12 +78,6 @@ export function CategoryForm({
     }));
   };
 
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
   const handleImageChange = (imageUrl: string) => {
     setFormData((prev) => ({
@@ -131,7 +122,6 @@ export function CategoryForm({
       // Reset form
       setFormData({
         name: "",
-        type: "COLLECTION",
         description: "",
         image: "",
       });
@@ -176,26 +166,6 @@ export function CategoryForm({
             onSubmit={handleSubmit}
             className="space-y-6"
           >
-            {/* Category Type */}
-            <div className="space-y-2">
-              <Label htmlFor="type">Category Type *</Label>
-              <Select
-                value={formData.type}
-                onValueChange={(value) => handleSelectChange("type", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="COLLECTION">
-                    Collection (Shows on Homepage)
-                  </SelectItem>
-                  <SelectItem value="CATEGORY">
-                    Category (For Product Filtering)
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
 
             {/* Category Name */}
             <div className="space-y-2">

@@ -153,7 +153,6 @@ export function BestSellers() {
                     category: product.category
                       ? {
                           ...product.category,
-                          type: "COLLECTION" as const,
                           description:
                             product.category.description || undefined,
                           image: product.category.image || undefined,

@@ -1104,7 +1104,6 @@ export const useCategories = (params?: {
 
   const createCategory = async (categoryData: {
     name: string;
-    type?: "COLLECTION" | "CATEGORY";
     description?: string;
   }) => {
     try {
@@ -1122,7 +1121,6 @@ export const useCategories = (params?: {
     categoryId: string,
     categoryData: {
       name: string;
-      type?: "COLLECTION" | "CATEGORY";
       description?: string;
     }
   ) => {

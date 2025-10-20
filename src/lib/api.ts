@@ -24,7 +24,6 @@ export interface User {
 export interface Category {
   id: string;
   name: string;
-  type: "COLLECTION" | "CATEGORY";
   description?: string;
   image?: string;
   createdAt: string;
@@ -1126,7 +1125,6 @@ class ApiClient {
 
   async createCategory(categoryData: {
     name: string;
-    type?: "COLLECTION" | "CATEGORY";
     description?: string;
   }) {
     return this.request("/categories", {
@@ -1139,7 +1137,6 @@ class ApiClient {
     categoryId: string,
     categoryData: {
       name: string;
-      type?: "COLLECTION" | "CATEGORY";
       description?: string;
     }
   ) {

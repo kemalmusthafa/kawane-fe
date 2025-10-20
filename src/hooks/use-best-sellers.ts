@@ -12,13 +12,12 @@ export interface BestSellerProduct {
   categoryId: string | null;
   createdAt: string;
   updatedAt: string;
-  category: {
-    id: string;
-    name: string;
-    type: "COLLECTION" | "CATEGORY";
-    description: string | null;
-    image: string | null;
-  } | null;
+      category: {
+        id: string;
+        name: string;
+        description: string | null;
+        image: string | null;
+      } | null;
   images: Array<{
     id: string;
     url: string;

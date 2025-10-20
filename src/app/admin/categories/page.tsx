@@ -166,7 +166,6 @@ export default function AdminCategoriesPage() {
                     <TableRow>
                       <TableHead className="min-w-[80px]">Image</TableHead>
                       <TableHead className="min-w-[120px]">Name</TableHead>
-                      <TableHead className="min-w-[100px]">Type</TableHead>
                       <TableHead className="min-w-[200px] hidden sm:table-cell">
                         Description
                       </TableHead>
@@ -202,19 +201,6 @@ export default function AdminCategoriesPage() {
                           <div className="max-w-[120px] truncate">
                             {category.name}
                           </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={
-                              category.type === "COLLECTION"
-                                ? "default"
-                                : "secondary"
-                            }
-                          >
-                            {category.type === "COLLECTION"
-                              ? "Collection"
-                              : "Category"}
-                          </Badge>
                         </TableCell>
                         <TableCell className="max-w-md truncate text-muted-foreground hidden sm:table-cell">
                           {category.description || "-"}
