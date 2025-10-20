@@ -32,9 +32,9 @@ export function ProfileForm({
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
-          <User className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+          <User className="h-4 w-4 md:h-5 md:w-5 text-gray-600 dark:text-gray-300" />
         </div>
-        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+        <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-gray-100">
           Profile Information
         </h3>
       </div>
@@ -44,7 +44,7 @@ export function ProfileForm({
         <div className="group">
           <Label
             htmlFor="name"
-            className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2"
+            className="flex items-center gap-2 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             <User className="h-4 w-4" />
             Full Name
@@ -70,7 +70,7 @@ export function ProfileForm({
         <div className="group">
           <Label
             htmlFor="email"
-            className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2"
+            className="flex items-center gap-2 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             <Mail className="h-4 w-4 flex-shrink-0" />
             <span className="truncate">Email Address</span>
@@ -108,13 +108,13 @@ export function ProfileForm({
           ) : (
             <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 group-hover:border-gray-300 dark:group-hover:border-gray-600 transition-colors">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <p className="text-sm text-gray-900 dark:text-gray-100 font-medium break-words overflow-wrap-anywhere">
+                <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100 font-medium break-words overflow-wrap-anywhere">
                   {profile.email}
                 </p>
                 {profile.isVerified && (
                   <Badge
                     variant="outline"
-                    className="text-gray-600 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex-shrink-0 w-fit"
+                    className="text-gray-600 dark:text-gray-200 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex-shrink-0 w-fit text-[10px] md:text-xs px-2 py-0.5"
                   >
                     <CheckCircle className="h-3 w-3 mr-1" />
                     <span className="hidden xs:inline">Verified</span>
@@ -130,7 +130,7 @@ export function ProfileForm({
         <div className="group">
           <Label
             htmlFor="phone"
-            className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2"
+            className="flex items-center gap-2 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             <Phone className="h-4 w-4" />
             Phone Number
@@ -145,7 +145,7 @@ export function ProfileForm({
             />
           ) : (
             <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 group-hover:border-gray-300 dark:group-hover:border-gray-600 transition-colors">
-              <p className="text-sm text-gray-900 dark:text-gray-100 font-medium break-words">
+              <p className="text-xs md:text-sm text-gray-900 dark:text-gray-100 font-medium break-words">
                 {profile.phone || "Not provided"}
               </p>
             </div>

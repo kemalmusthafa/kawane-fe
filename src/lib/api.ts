@@ -456,9 +456,8 @@ class ApiClient {
   }
 
   async verifyEmail(token: string) {
-    return this.request(
-      `https://kawane-be.vercel.app/api/auth/verify?token=${token}`
-    );
+    // Use relative endpoint so baseURL is not duplicated
+    return this.request(`/auth/verify?token=${token}`);
   }
 
   async forgotPassword(email: string) {
