@@ -18,11 +18,8 @@ export const getWhatsAppNumber = (): string => {
 
 export const getWhatsAppUrl = (message: string): string => {
   const phoneNumber = getWhatsAppNumber();
-
-  // Use the more reliable WhatsApp Web URL format
-  // This format works better across different platforms and browsers
   const encodedMessage = encodeURIComponent(message);
-  return `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+  return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 };
 
 // Alternative function for mobile devices
@@ -42,13 +39,8 @@ export const getWhatsAppUniversalUrl = (message: string): string => {
       navigator.userAgent
     );
 
-  if (isMobile) {
-    // Use wa.me for mobile devices
-    return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-  } else {
-    // Use web.whatsapp.com for desktop - this format is more reliable for desktop apps
-    return `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
-  }
+  // Always use wa.me; browser/OS will route to app or web as needed
+  return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 };
 
 // Enhanced function that tries multiple URL formats for better compatibility
@@ -56,9 +48,7 @@ export const getWhatsAppEnhancedUrl = (message: string): string => {
   const phoneNumber = getWhatsAppNumber();
   const encodedMessage = encodeURIComponent(message);
 
-  // For desktop, use the WhatsApp Web format that works better with desktop apps
-  // This format is more reliable for opening WhatsApp Desktop with pre-filled message
-  return `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+  return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 };
 
 // Alternative function using api.whatsapp.com format (sometimes works better)
@@ -66,8 +56,7 @@ export const getWhatsAppApiUrl = (message: string): string => {
   const phoneNumber = getWhatsAppNumber();
   const encodedMessage = encodeURIComponent(message);
 
-  // Use api.whatsapp.com format - this sometimes works better for desktop apps
-  return `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+  return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 };
 
 // Most reliable function for desktop WhatsApp - uses the format that works best with WhatsApp Desktop
@@ -75,9 +64,8 @@ export const getWhatsAppDesktopUrl = (message: string): string => {
   const phoneNumber = getWhatsAppNumber();
   const encodedMessage = encodeURIComponent(message);
 
-  // This format is specifically designed to work with WhatsApp Desktop
-  // It should open the desktop app with the message pre-filled
-  return `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+  // Force using wa.me so browser/device chooses the best handler (app or web)
+  return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 };
 
 export const createOrderMessage = (orderData: {
