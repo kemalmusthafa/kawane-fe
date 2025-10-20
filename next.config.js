@@ -1,0 +1,83 @@
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Force dynamic rendering untuk semua halaman
+  trailingSlash: true,
+  
+  // Ensure static assets are properly served
+  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
+  
+  // Headers untuk mengatasi Cross-Origin-Opener-Policy
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin-allow-popups',
+          },
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'unsafe-none',
+          },
+        ],
+      },
+    ];
+  },
+  images: {
+    // Use custom loader to normalize Google Drive share links to direct links
+    loader: 'default',
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "img.freepik.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.goteso.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.digitalopeners.com",
+      },
+      {
+        protocol: "https",
+        hostname: "drive.google.com",
+        pathname: "/uc/**",
+      },
+      {
+        protocol: "https",
+        hostname: "drive.google.com",
+        pathname: "/file/d/**",
+      },
+    ],
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
+  async rewrites() {
+    // Only rewrite API calls in development
+    if (process.env.NODE_ENV === 'development') {
+      return [
+        {
+          source: '/api/:path*',
+          destination: 'http://localhost:8000/api/:path*',
+        },
+      ];
+    }
+    return [];
+  },
+};
+
+module.exports = nextConfig;
