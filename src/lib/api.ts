@@ -24,6 +24,7 @@ export interface User {
 export interface Category {
   id: string;
   name: string;
+  type: "COLLECTION" | "CATEGORY";
   description?: string;
   image?: string;
   createdAt: string;

@@ -202,29 +202,30 @@ export default function ProfilePage() {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <motion.div
-        className="flex items-center justify-between mb-8"
+        className="flex items-center justify-between mb-4 md:mb-8"
         variants={headerVariants}
         transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
       >
         <div>
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1 md:mb-2">
+          <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">
             Profile
           </h1>
-          <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300">
+          <p className="text-[11px] md:text-xs lg:text-sm text-gray-600 dark:text-gray-300">
             Manage your profile information and settings
           </p>
         </div>
         <Button
           onClick={() => setEditing(true)}
-          className="text-xs md:text-sm py-2 md:py-2.5"
+          size="sm"
+          className="text-[10px] md:text-xs py-1.5 md:py-2 px-2 md:px-3"
         >
-          <User className="h-4 w-4 mr-2" />
+          <User className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
           Edit Profile
         </Button>
       </motion.div>
 
       <motion.div
-        className="grid grid-cols-1 xl:grid-cols-3 gap-8"
+        className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8"
         variants={contentVariants}
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
       >
@@ -239,7 +240,7 @@ export default function ProfilePage() {
                 onAvatarUpdate={handleAvatarUpdate}
               />
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-3 md:p-4 lg:p-6">
               <ProfileInfo
                 name={profile.name}
                 role={profile.role}
@@ -252,9 +253,9 @@ export default function ProfilePage() {
         </div>
 
         {/* Right Column - Form & Security */}
-        <div className="xl:col-span-2 space-y-6">
+        <div className="xl:col-span-2 space-y-3 md:space-y-4 lg:space-y-6">
           <Card className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-            <CardContent className="p-5 md:p-6">
+            <CardContent className="p-3 md:p-4 lg:p-6">
               <ProfileForm
                 profile={profile}
                 formData={formData}
@@ -265,7 +266,7 @@ export default function ProfilePage() {
           </Card>
 
           <Card className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-            <CardContent className="p-5 md:p-6">
+            <CardContent className="p-3 md:p-4 lg:p-6">
               <ProfileSecurity
                 onPasswordChange={handleChangePassword}
                 saving={saving}
@@ -275,7 +276,7 @@ export default function ProfilePage() {
 
           {editing && (
             <Card className="overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-              <CardContent className="p-5 md:p-6">
+              <CardContent className="p-3 md:p-4 lg:p-6">
                 <ProfileActions
                   editing={editing}
                   saving={saving}

@@ -48,6 +48,10 @@ const getCategoryImage = (category: any) => {
 export function FeaturedCategories() {
   const { categories, isLoading, error } = useCategories();
 
+  // Filter hanya Collections untuk homepage
+  const collections =
+    categories?.filter((category) => category.type === "COLLECTION") || [];
+
   if (isLoading) {
     return (
       <section className="py-6 sm:py-6 lg:py-8">
@@ -109,7 +113,7 @@ export function FeaturedCategories() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
-          {categories?.slice(0, 6).map((category: Category, index: number) => (
+          {collections?.slice(0, 6).map((category: Category, index: number) => (
             <motion.div
               key={category.id}
               initial={{ opacity: 0, y: 20 }}

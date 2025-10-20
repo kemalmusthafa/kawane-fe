@@ -153,19 +153,33 @@ export default function OrderDetailPage() {
     const normalizedStatus = status?.toLowerCase();
     switch (normalizedStatus) {
       case "checkout":
-        return <Clock className="h-5 w-5 text-orange-500" />;
+        return (
+          <Clock className="h-3 w-3 md:h-4 md:w-4 lg:h-5 lg:w-5 text-orange-500" />
+        );
       case "pending":
-        return <Clock className="h-5 w-5 text-yellow-500" />;
+        return (
+          <Clock className="h-3 w-3 md:h-4 md:w-4 lg:h-5 lg:w-5 text-yellow-500" />
+        );
       case "paid":
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return (
+          <CheckCircle className="h-3 w-3 md:h-4 md:w-4 lg:h-5 lg:w-5 text-green-500" />
+        );
       case "shipped":
-        return <Truck className="h-5 w-5 text-purple-500" />;
+        return (
+          <Truck className="h-3 w-3 md:h-4 md:w-4 lg:h-5 lg:w-5 text-purple-500" />
+        );
       case "completed":
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return (
+          <CheckCircle className="h-3 w-3 md:h-4 md:w-4 lg:h-5 lg:w-5 text-green-500" />
+        );
       case "cancelled":
-        return <XCircle className="h-5 w-5 text-red-500" />;
+        return (
+          <XCircle className="h-3 w-3 md:h-4 md:w-4 lg:h-5 lg:w-5 text-red-500" />
+        );
       default:
-        return <AlertCircle className="h-5 w-5 text-gray-500" />;
+        return (
+          <AlertCircle className="h-3 w-3 md:h-4 md:w-4 lg:h-5 lg:w-5 text-gray-500" />
+        );
     }
   };
 
@@ -313,29 +327,29 @@ export default function OrderDetailPage() {
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 md:py-8">
         {/* Header Section */}
-        <div className="bg-white rounded-lg p-4 md:p-6 mb-6 md:mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-9 h-9 md:w-10 md:h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                <Package className="h-4 w-4 md:h-5 md:w-5 text-gray-600" />
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-3 md:p-4 lg:p-6 mb-4 md:mb-6 lg:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-center space-x-2 md:space-x-3 lg:space-x-4">
+              <div className="w-7 h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                <Package className="h-3 w-3 md:h-4 md:w-4 lg:h-5 lg:w-5 text-gray-600 dark:text-gray-300" />
               </div>
               <div>
-                <h1 className="text-lg md:text-xl font-semibold text-gray-900">
+                <h1 className="text-sm md:text-base lg:text-lg font-semibold text-gray-900 dark:text-gray-100">
                   Order Details
                 </h1>
-                <p className="text-xs md:text-sm text-gray-600 font-mono bg-gray-50 px-2.5 py-1 rounded-lg inline-block mt-1">
+                <p className="text-[10px] md:text-xs lg:text-sm text-gray-600 dark:text-gray-300 font-mono bg-gray-50 dark:bg-gray-700 px-2 py-0.5 md:px-2.5 md:py-1 rounded-lg inline-block mt-0.5 md:mt-1">
                   #{order.orderNumber}
                 </p>
               </div>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-2 md:gap-3">
               <Link href="/account/orders">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="hover:bg-gray-50 text-xs py-1.5"
+                  className="hover:bg-gray-50 dark:hover:bg-gray-700 text-[9px] md:text-[10px] lg:text-xs py-1 md:py-1.5 px-2 md:px-3"
                 >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  <ArrowLeft className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
                   Back to Orders
                 </Button>
               </Link>
@@ -344,40 +358,40 @@ export default function OrderDetailPage() {
         </div>
 
         <div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-3 md:space-y-4 lg:space-y-6">
               {/* Order Status Card */}
-              <Card className="bg-white rounded-lg">
-                <CardHeader className="bg-gray-50">
-                  <CardTitle className="flex items-center gap-3 text-base md:text-lg font-semibold">
-                    <div className="w-7 h-7 md:w-8 md:h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+              <Card className="bg-white dark:bg-gray-800 rounded-lg">
+                <CardHeader className="bg-gray-50 dark:bg-gray-900 p-3 md:p-4 lg:p-6">
+                  <CardTitle className="flex items-center gap-2 md:gap-3 text-sm md:text-base lg:text-lg font-semibold">
+                    <div className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
                       {getStatusIcon(order.status)}
                     </div>
                     Order Status
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-4 md:p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs md:text-sm font-semibold text-gray-700">
+                <CardContent className="p-3 md:p-4 lg:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 md:gap-3 lg:gap-4">
+                    <div className="space-y-2 md:space-y-3">
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <span className="text-[10px] md:text-xs lg:text-sm font-semibold text-gray-700 dark:text-gray-300">
                           Status:
                         </span>
                         {getStatusBadge(order.status)}
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs md:text-sm font-semibold text-gray-700">
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <span className="text-[10px] md:text-xs lg:text-sm font-semibold text-gray-700 dark:text-gray-300">
                           Payment:
                         </span>
                         {getPaymentStatusBadge(order.paymentStatus)}
                       </div>
                     </div>
-                    <div className="text-right bg-gray-50 p-3 md:p-4 rounded-lg">
-                      <p className="text-[11px] md:text-xs text-gray-600 font-medium">
+                    <div className="text-right bg-gray-50 dark:bg-gray-700 p-2 md:p-3 lg:p-4 rounded-lg">
+                      <p className="text-[9px] md:text-[10px] lg:text-xs text-gray-600 dark:text-gray-400 font-medium">
                         Order Date
                       </p>
-                      <p className="text-xs md:text-sm font-medium text-gray-900 mt-1">
+                      <p className="text-[10px] md:text-xs lg:text-sm font-medium text-gray-900 dark:text-gray-100 mt-0.5 md:mt-1">
                         {formatDate(order.createdAt)}
                       </p>
                     </div>

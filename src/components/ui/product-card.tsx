@@ -91,7 +91,7 @@ export function ProductCard({
           {salesCount !== undefined && (
             <div className="absolute bottom-1 left-1 sm:bottom-2 sm:left-2">
               <div className="bg-black/80 text-white text-[8px] xs:text-[9px] sm:text-[10px] px-1 py-0.5 sm:px-1.5 sm:py-0.5 rounded-md">
-                {salesCount} terjual
+                {salesCount} sold
               </div>
             </div>
           )}

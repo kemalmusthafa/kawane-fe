@@ -28,6 +28,14 @@ export function ProductFilters({
   filters,
 }: ProductFiltersProps) {
   const { categories } = useCategories();
+
+  // Filter Collections untuk Collections section
+  const collections =
+    categories?.filter((category) => category.type === "COLLECTION") || [];
+
+  // Filter Categories untuk Categories section
+  const categoriesList =
+    categories?.filter((category) => category.type === "CATEGORY") || [];
   const [priceRange, setPriceRange] = useState([
     filters.minPrice,
     filters.maxPrice,
@@ -106,13 +114,13 @@ export function ProductFilters({
 
         <Separator />
 
-        {/* Categories */}
+        {/* Collections */}
         <div>
           <Label className="text-xs sm:text-sm font-medium mb-2 sm:mb-3 block">
-            Categories
+            Collections
           </Label>
           <div className="space-y-2 max-h-48 overflow-y-auto">
-            {categories?.map((category: Category) => (
+            {collections?.map((category: Category) => (
               <div key={category.id} className="flex items-center space-x-2">
                 <Checkbox
                   id={category.id}
@@ -122,6 +130,33 @@ export function ProductFilters({
                 />
                 <Label
                   htmlFor={category.id}
+                  className="text-xs sm:text-sm cursor-pointer"
+                >
+                  {category.name}
+                </Label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* Categories */}
+        <div>
+          <Label className="text-xs sm:text-sm font-medium mb-2 sm:mb-3 block">
+            Categories
+          </Label>
+          <div className="space-y-2 max-h-48 overflow-y-auto">
+            {categoriesList?.map((category: Category) => (
+              <div key={category.id} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`category-${category.id}`}
+                  checked={filters.categoryId === category.id}
+                  onCheckedChange={() => handleCategoryChange(category.id)}
+                  className="h-4 w-4"
+                />
+                <Label
+                  htmlFor={`category-${category.id}`}
                   className="text-xs sm:text-sm cursor-pointer"
                 >
                   {category.name}
