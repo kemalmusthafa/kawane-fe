@@ -43,16 +43,16 @@ export const Cart: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center py-16">
-          <ShoppingCart className="w-24 h-24 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <div className="text-center py-12">
+          <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">
             Login Required
           </h2>
-          <p className="text-gray-600 mb-8">
+          <p className="text-sm text-gray-600 mb-6">
             Please login to view your shopping cart
           </p>
           <Link href="/auth/sign-in">
-            <Button>Login</Button>
+            <Button size="sm">Login</Button>
           </Link>
         </div>
       </div>
@@ -92,12 +92,12 @@ export const Cart: React.FC = () => {
   if (isLoading && items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center py-16">
-          <Loader2 className="w-24 h-24 text-gray-300 mx-auto mb-4 animate-spin" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <div className="text-center py-12">
+          <Loader2 className="w-16 h-16 text-gray-300 mx-auto mb-4 animate-spin" />
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">
             Loading Cart...
           </h2>
-          <p className="text-gray-600 mb-8">Loading your shopping cart data</p>
+          <p className="text-sm text-gray-600 mb-6">Loading your shopping cart data</p>
         </div>
       </div>
     );
@@ -106,15 +106,15 @@ export const Cart: React.FC = () => {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center py-16">
-          <ShoppingCart className="w-24 h-24 text-red-300 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <div className="text-center py-12">
+          <ShoppingCart className="w-16 h-16 text-red-300 mx-auto mb-4" />
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">
             Error Loading Cart
           </h2>
-          <p className="text-red-600 mb-8">
+          <p className="text-sm text-red-600 mb-6">
             {error instanceof Error ? error.message : String(error)}
           </p>
-          <Button onClick={() => window.location.reload()}>Try Again</Button>
+          <Button size="sm" onClick={() => window.location.reload()}>Try Again</Button>
         </div>
       </div>
     );
@@ -123,14 +123,14 @@ export const Cart: React.FC = () => {
   if (items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center py-16">
+        <div className="text-center py-12">
           <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Empty Cart</h2>
-          <p className="text-sm text-gray-600 mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">Empty Cart</h2>
+          <p className="text-sm text-gray-600 mb-6">
             Add some products to your cart
           </p>
           <Link href="/products">
-            <Button>
+            <Button size="sm">
               <Package className="w-4 h-4 mr-2" />
               View Products
             </Button>
@@ -144,7 +144,7 @@ export const Cart: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
         <div className="mb-4 sm:mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+          <h1 className="text-lg sm:text-xl font-semibold text-gray-900">
             Shopping Cart
           </h1>
           <p className="text-xs sm:text-sm text-gray-600 mt-1 sm:mt-2">
@@ -368,7 +368,7 @@ export const Cart: React.FC = () => {
           <div className="lg:col-span-1">
             <Card className="sticky top-4">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base sm:text-lg">
+                <CardTitle className="text-sm sm:text-base font-semibold">
                   Order Summary
                 </CardTitle>
               </CardHeader>
@@ -390,7 +390,7 @@ export const Cart: React.FC = () => {
 
                 <Separator />
 
-                <div className="flex justify-between text-sm sm:text-base font-semibold">
+                <div className="flex justify-between text-sm font-semibold">
                   <span>Total</span>
                   <span>Rp {totalAmount.toLocaleString("id-ID")}</span>
                 </div>
@@ -406,7 +406,7 @@ export const Cart: React.FC = () => {
                   ) : (
                     <CreditCard className="w-4 h-4 mr-2" />
                   )}
-                  <span className="text-xs sm:text-sm">
+                  <span className="text-xs">
                     Proceed to Checkout
                   </span>
                   {!isLoading && <ArrowRight className="w-4 h-4 ml-2" />}
@@ -415,7 +415,7 @@ export const Cart: React.FC = () => {
                 <Link href="/products" className="block">
                   <Button variant="outline" className="w-full" size="sm">
                     <Package className="w-4 h-4 mr-2" />
-                    <span className="text-xs sm:text-sm">
+                    <span className="text-xs">
                       Continue Shopping
                     </span>
                   </Button>
