@@ -48,9 +48,11 @@ const getCategoryImage = (category: any) => {
 export function FeaturedCategories() {
   const { categories, isLoading, error } = useCategories();
 
-  // Filter hanya Collections untuk homepage
+  // Filter hanya Collections untuk homepage dengan fallback
   const collections =
-    categories?.filter((category: Category) => category.type === "COLLECTION") || [];
+    categories?.filter(
+      (category: Category) => category.type === "COLLECTION" || !category.type // Fallback untuk data lama
+    ) || [];
 
   if (isLoading) {
     return (

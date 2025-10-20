@@ -31,11 +31,14 @@ export function ProductFilters({
 
   // Filter Collections untuk Collections section
   const collections =
-    categories?.filter((category: Category) => category.type === "COLLECTION") || [];
+    categories?.filter(
+      (category: Category) => category.type === "COLLECTION" || !category.type // Fallback untuk data lama
+    ) || [];
 
   // Filter Categories untuk Categories section
   const categoriesList =
-    categories?.filter((category: Category) => category.type === "CATEGORY") || [];
+    categories?.filter((category: Category) => category.type === "CATEGORY") ||
+    [];
   const [priceRange, setPriceRange] = useState([
     filters.minPrice,
     filters.maxPrice,

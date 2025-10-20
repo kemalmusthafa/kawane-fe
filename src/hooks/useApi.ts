@@ -1120,10 +1120,10 @@ export const useCategories = (params?: {
 
   const updateCategory = async (
     categoryId: string,
-    categoryData: { 
-      name: string; 
+    categoryData: {
+      name: string;
       type?: "COLLECTION" | "CATEGORY";
-      description?: string 
+      description?: string;
     }
   ) => {
     try {

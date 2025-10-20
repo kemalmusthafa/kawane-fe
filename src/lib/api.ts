@@ -1124,10 +1124,10 @@ class ApiClient {
     return response.data;
   }
 
-  async createCategory(categoryData: { 
-    name: string; 
+  async createCategory(categoryData: {
+    name: string;
     type?: "COLLECTION" | "CATEGORY";
-    description?: string 
+    description?: string;
   }) {
     return this.request("/categories", {
       method: "POST",
@@ -1137,10 +1137,10 @@ class ApiClient {
 
   async updateCategory(
     categoryId: string,
-    categoryData: { 
-      name: string; 
+    categoryData: {
+      name: string;
       type?: "COLLECTION" | "CATEGORY";
-      description?: string 
+      description?: string;
     }
   ) {
     return this.request(`/categories/${categoryId}`, {
