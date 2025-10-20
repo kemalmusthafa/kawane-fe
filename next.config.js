@@ -8,7 +8,7 @@ const nextConfig = {
   
   // Optimize chunks untuk mengurangi 429 errors
   experimental: {
-    optimizeCss: true,
+    // optimizeCss: true, // Disabled karena menyebabkan error dengan critters
   },
   
   // Webpack configuration untuk chunk optimization
