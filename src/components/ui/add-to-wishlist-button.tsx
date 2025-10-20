@@ -41,12 +41,12 @@ export const AddToWishlistButton: React.FC<AddToWishlistButtonProps> = ({
         await toggleWishlist(product.id);
         toast.success(
           isInWishlist(product.id)
-            ? "Dihapus dari wishlist"
-            : "Ditambahkan ke wishlist"
+            ? "Removed from wishlist"
+            : "Added to wishlist"
         );
       } catch (error) {
         console.error("Error toggling wishlist:", error);
-        toast.error("Gagal mengupdate wishlist");
+        toast.error("Failed to update wishlist");
       } finally {
         setIsToggling(false);
       }

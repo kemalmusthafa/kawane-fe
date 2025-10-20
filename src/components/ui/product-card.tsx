@@ -118,7 +118,7 @@ export function ProductCard({
             <div className="mb-1 sm:mb-2 md:mb-3 hidden sm:block">
               <div className="flex items-center gap-2 mb-1 sm:mb-2">
                 <span className="text-[10px] sm:text-xs font-semibold text-gray-700">
-                  Pilih Ukuran:
+                  Select Size:
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-1">
@@ -140,12 +140,12 @@ export function ProductCard({
               </div>
               {availableSizes.length > 6 && (
                 <p className="text-[9px] sm:text-xs text-gray-500 mt-1 text-center">
-                  +{availableSizes.length - 6} ukuran lainnya
+                  +{availableSizes.length - 6} more sizes
                 </p>
               )}
               {selectedSize && (
                 <p className="text-[9px] sm:text-xs text-green-600 mt-1 sm:mt-2 text-center">
-                  ✓ Ukuran {selectedSize} dipilih
+                  ✓ Size {selectedSize} selected
                 </p>
               )}
             </div>
@@ -156,10 +156,10 @@ export function ProductCard({
               <div className="flex flex-col">
                 <div className="flex items-center space-x-1 sm:space-x-2">
                   <span className="text-xs sm:text-sm md:text-lg font-bold text-primary">
-                    Rp {product.deal.discountedPrice.toLocaleString()}
+                    Rp {product.deal.discountedPrice.toLocaleString("id-ID")}
                   </span>
                   <span className="text-[10px] sm:text-xs text-muted-foreground line-through">
-                    Rp {product.deal.originalPrice.toLocaleString()}
+                    Rp {product.deal.originalPrice.toLocaleString("id-ID")}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2 mt-1">
@@ -168,7 +168,7 @@ export function ProductCard({
               </div>
             ) : (
               <span className="text-xs sm:text-sm md:text-lg font-bold text-primary">
-                Rp {product.price.toLocaleString()}
+                Rp {product.price.toLocaleString("id-ID")}
               </span>
             )}
           </div>

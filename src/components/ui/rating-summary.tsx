@@ -39,11 +39,11 @@ export function RatingSummary({
   };
 
   const getRatingText = (rating: number) => {
-    if (rating >= 4.5) return "Sangat Bagus";
-    if (rating >= 3.5) return "Bagus";
-    if (rating >= 2.5) return "Biasa";
-    if (rating >= 1.5) return "Buruk";
-    return "Sangat Buruk";
+    if (rating >= 4.5) return "Excellent";
+    if (rating >= 3.5) return "Good";
+    if (rating >= 2.5) return "Average";
+    if (rating >= 1.5) return "Poor";
+    return "Very Poor";
   };
 
   const getRatingColor = (rating: number) => {
@@ -73,7 +73,7 @@ export function RatingSummary({
             {getRatingText(averageRating)}
           </p>
           <p className="text-xs text-muted-foreground">
-            Berdasarkan {totalReviews} review
+            Based on {totalReviews} review{totalReviews !== 1 ? "s" : ""}
           </p>
         </CardContent>
       </Card>
@@ -82,7 +82,7 @@ export function RatingSummary({
       <Card className="lg:col-span-2">
         <CardContent className="p-4 sm:p-6">
           <h4 className="font-medium mb-4 text-gray-900 dark:text-white">
-            Distribusi Rating
+            Rating Distribution
           </h4>
           <div className="space-y-3">
             {[5, 4, 3, 2, 1].map((star) => {
@@ -119,11 +119,3 @@ export function RatingSummary({
     </div>
   );
 }
-
-
-
-
-
-
-
-

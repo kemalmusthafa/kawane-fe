@@ -22,33 +22,31 @@ export function BestSellers() {
 
   const handleAddToCart = async (product: BestSellerProduct) => {
     if (!isAuthenticated) {
-      toast.error("Silakan login terlebih dahulu");
+      toast.error("Please login first");
       return;
     }
 
     try {
       await addToCart(product.id, 1);
-      toast.success("Produk ditambahkan ke keranjang");
+      toast.success("Product added to cart");
     } catch (error) {
-      toast.error("Gagal menambahkan ke keranjang");
+      toast.error("Failed to add to cart");
     }
   };
 
   const handleToggleWishlist = async (product: BestSellerProduct) => {
     if (!isAuthenticated) {
-      toast.error("Silakan login terlebih dahulu");
+      toast.error("Please login first");
       return;
     }
 
     try {
       await toggleWishlist(product.id);
       toast.success(
-        isInWishlist(product.id)
-          ? "Dihapus dari wishlist"
-          : "Ditambahkan ke wishlist"
+        isInWishlist(product.id) ? "Removed from wishlist" : "Added to wishlist"
       );
     } catch (error) {
-      toast.error("Gagal mengupdate wishlist");
+      toast.error("Failed to update wishlist");
     }
   };
 
@@ -108,7 +106,7 @@ export function BestSellers() {
               Best Sellers
             </h2>
             <p className="text-red-600 text-base sm:text-lg">
-              Gagal memuat produk: {error}
+              Failed to load products: {error}
             </p>
           </div>
         </div>
@@ -176,10 +174,10 @@ export function BestSellers() {
         {bestSellers.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground text-lg">
-              Belum ada data penjualan untuk menampilkan best sellers
+              No sales data available to display best sellers
             </p>
             <p className="text-muted-foreground text-sm mt-2">
-              Data akan muncul setelah ada transaksi dan review produk
+              Data will appear after there are transactions and product reviews
             </p>
           </div>
         )}

@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { StarIcon, MessageSquare } from "lucide-react";
 import { format } from "date-fns";
-import { id } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { RatingSummary } from "@/components/ui/rating-summary";
 
 interface Review {
@@ -58,11 +58,11 @@ export function ReviewList({
 
   const getRatingText = (rating: number) => {
     const texts = {
-      1: "Sangat Buruk",
-      2: "Buruk",
-      3: "Biasa",
-      4: "Bagus",
-      5: "Sangat Bagus",
+      1: "Very Poor",
+      2: "Poor",
+      3: "Average",
+      4: "Good",
+      5: "Excellent",
     };
     return texts[rating as keyof typeof texts] || "";
   };
@@ -127,14 +127,14 @@ export function ReviewList({
             <CardContent className="p-8 text-center">
               <MessageSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
               <h4 className="text-lg font-medium mb-2 text-gray-900 dark:text-white">
-                Belum ada review
+                No reviews yet
               </h4>
               <p className="text-sm text-muted-foreground mb-4">
-                Jadilah yang pertama memberikan review untuk produk ini!
+                Be the first to review this product!
               </p>
               <div className="text-xs text-muted-foreground">
-                ⭐ Rating dan review membantu customer lain dalam memutuskan
-                pembelian
+                ⭐ Ratings and reviews help other customers make purchasing
+                decisions
               </div>
             </CardContent>
           </Card>
@@ -180,9 +180,13 @@ export function ReviewList({
                             Verified Customer
                           </Badge>
                           <span className="text-xs text-muted-foreground">
-                            {format(new Date(review.createdAt), "dd MMM yyyy", {
-                              locale: id,
-                            })}
+                            {format(
+                              new Date(review.createdAt),
+                              "MMM dd, yyyy",
+                              {
+                                locale: enUS,
+                              }
+                            )}
                           </span>
                         </div>
                       </div>

@@ -141,276 +141,288 @@ export const Cart: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Shopping Cart</h1>
-        <p className="text-sm text-gray-600 mt-2">
-          {totalItems} item{totalItems !== 1 ? "s" : ""} in your cart
-        </p>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
+        <div className="mb-4 sm:mb-6">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+            Shopping Cart
+          </h1>
+          <p className="text-xs sm:text-sm text-gray-600 mt-1 sm:mt-2">
+            {totalItems} item{totalItems !== 1 ? "s" : ""} in your cart
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Cart Items */}
-        <div className="lg:col-span-2 space-y-4">
-          {items.map((item: CartItemState) => {
-            return (
-              <Card key={item.id}>
-                <CardContent className="p-6">
-                  <div className="flex items-center space-x-4">
-                    {/* Product Image */}
-                    <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 relative overflow-hidden">
-                      {/* Fallback icon - shown by default */}
-                      <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
-                        <Package className="w-8 h-8 text-gray-400" />
-                      </div>
-
-                      {/* Product image - hides fallback when loaded */}
-                      {item.product.images && item.product.images.length > 0 ? (
-                        <img
-                          src={item.product.images[0].url}
-                          alt={item.product.name}
-                          className="w-full h-full rounded-lg object-cover relative z-10"
-                          onLoad={(e) => {
-                            // Hide fallback icon when image loads successfully
-                            const fallback =
-                              e.currentTarget.parentElement?.querySelector(
-                                ".absolute"
-                              );
-                            if (fallback) {
-                              (fallback as HTMLElement).style.display = "none";
-                            }
-                            return;
-                          }}
-                          onError={(e) => {
-                            // Hide the failed image, show fallback
-                            e.currentTarget.style.display = "none";
-                            return;
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-48 bg-gray-100 flex items-center justify-center">
-                          <Package className="w-12 h-12 text-gray-400" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+          {/* Cart Items */}
+          <div className="lg:col-span-2 space-y-3 sm:space-y-4">
+            {items.map((item: CartItemState) => {
+              return (
+                <Card key={item.id}>
+                  <CardContent className="p-3 sm:p-4 lg:p-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                      {/* Product Image */}
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 relative overflow-hidden mx-auto sm:mx-0">
+                        {/* Fallback icon - shown by default */}
+                        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg">
+                          <Package className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
                         </div>
-                      )}
-                    </div>
 
-                    {/* Product Info */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-semibold text-gray-900 break-words">
-                        {item.product.name}
-                      </h3>
-                      {item.size && (
-                        <p className="text-xs text-blue-600 font-medium">
-                          Ukuran: {item.size}
-                        </p>
-                      )}
-                      {item.product.deal && (
-                        <p className="text-xs text-orange-600 font-medium">
-                          {item.product.deal.title}
-                        </p>
-                      )}
-                      <p className="text-gray-600 text-xs break-words">
-                        {item.product.description}
-                      </p>
-                      <div className="flex items-center space-x-2 mt-2">
-                        <Badge
-                          variant={
-                            item.product.stock > 10
-                              ? "default"
-                              : item.product.stock > 0
-                              ? "secondary"
-                              : "destructive"
-                          }
-                        >
-                          {item.product.stock > 10
-                            ? "In Stock"
-                            : item.product.stock > 0
-                            ? "Low Stock"
-                            : "Out of Stock"}
-                        </Badge>
-                      </div>
-                    </div>
-
-                    {/* Price and Quantity */}
-                    <div className="flex items-center space-x-4">
-                      <div className="text-right">
-                        {/* Show deal price if available, otherwise show original price */}
-                        {item.product.deal ? (
-                          <>
-                            <p className="text-sm font-semibold text-gray-900">
-                              Rp{" "}
-                              {item.product.deal.discountedPrice.toLocaleString(
-                                "id-ID"
-                              )}
-                            </p>
-                            <p className="text-xs text-gray-500 line-through">
-                              Rp{" "}
-                              {item.product.deal.originalPrice.toLocaleString(
-                                "id-ID"
-                              )}
-                            </p>
-                            <p className="text-xs text-green-600 font-medium">
-                              -{item.product.deal.discountPercentage}% OFF
-                            </p>
-                          </>
+                        {/* Product image - hides fallback when loaded */}
+                        {item.product.images &&
+                        item.product.images.length > 0 ? (
+                          <img
+                            src={item.product.images[0].url}
+                            alt={item.product.name}
+                            className="w-full h-full rounded-lg object-cover relative z-10"
+                            onLoad={(e) => {
+                              // Hide fallback icon when image loads successfully
+                              const fallback =
+                                e.currentTarget.parentElement?.querySelector(
+                                  ".absolute"
+                                );
+                              if (fallback) {
+                                (fallback as HTMLElement).style.display =
+                                  "none";
+                              }
+                              return;
+                            }}
+                            onError={(e) => {
+                              // Hide the failed image, show fallback
+                              e.currentTarget.style.display = "none";
+                              return;
+                            }}
+                          />
                         ) : (
-                          <p className="text-sm font-semibold text-gray-900">
-                            Rp {item.product.price.toLocaleString("id-ID")}
+                          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                            <Package className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Product Info */}
+                      <div className="flex-1 min-w-0 w-full sm:w-auto">
+                        <h3 className="text-sm sm:text-base font-semibold text-gray-900 break-words text-center sm:text-left">
+                          {item.product.name}
+                        </h3>
+                        {item.size && (
+                          <p className="text-xs text-blue-600 font-medium text-center sm:text-left">
+                            Size: {item.size}
                           </p>
                         )}
-
-                        {/* Total for this item */}
-                        <p className="text-xs text-gray-600 mt-1">
-                          Total: Rp{" "}
-                          {item.product.deal
-                            ? (
-                                item.product.deal.discountedPrice *
-                                item.quantity
-                              ).toLocaleString("id-ID")
-                            : (
-                                item.product.price * item.quantity
-                              ).toLocaleString("id-ID")}
+                        {item.product.deal && (
+                          <p className="text-xs text-orange-600 font-medium text-center sm:text-left">
+                            {item.product.deal.title}
+                          </p>
+                        )}
+                        <p className="text-gray-600 text-xs break-words text-center sm:text-left line-clamp-2">
+                          {item.product.description}
                         </p>
+                        <div className="flex items-center justify-center sm:justify-start space-x-2 mt-2">
+                          <Badge
+                            variant={
+                              item.product.stock > 10
+                                ? "default"
+                                : item.product.stock > 0
+                                ? "secondary"
+                                : "destructive"
+                            }
+                          >
+                            {item.product.stock > 10
+                              ? "In Stock"
+                              : item.product.stock > 0
+                              ? "Low Stock"
+                              : "Out of Stock"}
+                          </Badge>
+                        </div>
                       </div>
 
-                      {/* Quantity Controls */}
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() =>
-                            handleQuantityChange(item.id, item.quantity - 1)
-                          }
-                          disabled={item.quantity <= 1 || isLoading}
-                        >
-                          <Minus className="w-4 h-4" />
-                        </Button>
-                        <Input
-                          type="number"
-                          value={item.quantity}
-                          onChange={(e) =>
-                            handleQuantityChange(
-                              item.id,
-                              parseInt(e.target.value) || 1
-                            )
-                          }
-                          className="w-16 text-center"
-                          min="1"
-                          max={
-                            item.size && item.product.sizes
-                              ? item.product.sizes.find(
-                                  (s) => s.size === item.size
-                                )?.stock || item.product.stock
-                              : item.product.stock
-                          }
-                          disabled={isLoading}
-                        />
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() =>
-                            handleQuantityChange(item.id, item.quantity + 1)
-                          }
-                          disabled={
-                            item.quantity >=
-                              (item.size && item.product.sizes
+                      {/* Price and Quantity */}
+                      <div className="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto space-y-3 sm:space-y-0 sm:space-x-4">
+                        <div className="text-center sm:text-right">
+                          {/* Show deal price if available, otherwise show original price */}
+                          {item.product.deal ? (
+                            <>
+                              <p className="text-sm font-semibold text-gray-900">
+                                Rp{" "}
+                                {item.product.deal.discountedPrice.toLocaleString(
+                                  "id-ID"
+                                )}
+                              </p>
+                              <p className="text-xs text-gray-500 line-through">
+                                Rp{" "}
+                                {item.product.deal.originalPrice.toLocaleString(
+                                  "id-ID"
+                                )}
+                              </p>
+                              <p className="text-xs text-green-600 font-medium">
+                                -{item.product.deal.discountPercentage}% OFF
+                              </p>
+                            </>
+                          ) : (
+                            <p className="text-sm font-semibold text-gray-900">
+                              Rp {item.product.price.toLocaleString("id-ID")}
+                            </p>
+                          )}
+
+                          {/* Total for this item */}
+                          <p className="text-xs text-gray-600 mt-1">
+                            Total: Rp{" "}
+                            {item.product.deal
+                              ? (
+                                  item.product.deal.discountedPrice *
+                                  item.quantity
+                                ).toLocaleString("id-ID")
+                              : (
+                                  item.product.price * item.quantity
+                                ).toLocaleString("id-ID")}
+                          </p>
+                        </div>
+
+                        {/* Quantity Controls */}
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              handleQuantityChange(item.id, item.quantity - 1)
+                            }
+                            disabled={item.quantity <= 1 || isLoading}
+                          >
+                            <Minus className="w-4 h-4" />
+                          </Button>
+                          <Input
+                            type="number"
+                            value={item.quantity}
+                            onChange={(e) =>
+                              handleQuantityChange(
+                                item.id,
+                                parseInt(e.target.value) || 1
+                              )
+                            }
+                            className="w-16 text-center"
+                            min="1"
+                            max={
+                              item.size && item.product.sizes
                                 ? item.product.sizes.find(
                                     (s) => s.size === item.size
                                   )?.stock || item.product.stock
-                                : item.product.stock) || isLoading
-                          }
+                                : item.product.stock
+                            }
+                            disabled={isLoading}
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              handleQuantityChange(item.id, item.quantity + 1)
+                            }
+                            disabled={
+                              item.quantity >=
+                                (item.size && item.product.sizes
+                                  ? item.product.sizes.find(
+                                      (s) => s.size === item.size
+                                    )?.stock || item.product.stock
+                                  : item.product.stock) || isLoading
+                            }
+                          >
+                            <Plus className="w-4 h-4" />
+                          </Button>
+                        </div>
+
+                        {/* Remove Button */}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => removeItem(item.id)}
+                          disabled={isLoading}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
                         >
-                          <Plus className="w-4 h-4" />
+                          <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
-
-                      {/* Remove Button */}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeItem(item.id)}
-                        disabled={isLoading}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+                  </CardContent>
+                </Card>
+              );
+            })}
 
-          {/* Clear Cart Button */}
-          <div className="flex justify-end">
-            <Button
-              variant="outline"
-              onClick={handleClearCart}
-              disabled={isLoading}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-            >
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Trash2 className="w-4 h-4 mr-2" />
-              )}
-              Clear Cart
-            </Button>
-          </div>
-        </div>
-
-        {/* Order Summary */}
-        <div className="lg:col-span-1">
-          <Card className="sticky top-4">
-            <CardHeader>
-              <CardTitle className="text-base">Order Summary</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex justify-between text-sm">
-                <span>Subtotal ({totalItems} items)</span>
-                <span>Rp {totalAmount.toLocaleString("id-ID")}</span>
-              </div>
-
-              <div className="flex justify-between text-sm">
-                <span>Shipping</span>
-                <span className="text-green-600">Free</span>
-              </div>
-
-              <div className="flex justify-between text-sm">
-                <span>Tax</span>
-                <span>Rp 0</span>
-              </div>
-
-              <Separator />
-
-              <div className="flex justify-between text-base font-semibold">
-                <span>Total</span>
-                <span>Rp {totalAmount.toLocaleString("id-ID")}</span>
-              </div>
-
+            {/* Clear Cart Button */}
+            <div className="flex justify-end">
               <Button
-                onClick={handleCheckout}
-                className="w-full"
-                size="lg"
+                variant="outline"
+                onClick={handleClearCart}
                 disabled={isLoading}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
               >
                 {isLoading ? (
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 ) : (
-                  <CreditCard className="w-4 h-4 mr-2" />
+                  <Trash2 className="w-4 h-4 mr-2" />
                 )}
-                Proceed to Checkout
-                {!isLoading && <ArrowRight className="w-4 h-4 ml-2" />}
+                Clear Cart
               </Button>
+            </div>
+          </div>
 
-              <Link href="/products" className="block">
-                <Button variant="outline" className="w-full">
-                  <Package className="w-4 h-4 mr-2" />
-                  Continue Shopping
+          {/* Order Summary */}
+          <div className="lg:col-span-1">
+            <Card className="sticky top-4">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base sm:text-lg">
+                  Order Summary
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 sm:space-y-4">
+                <div className="flex justify-between text-xs sm:text-sm">
+                  <span>Subtotal ({totalItems} items)</span>
+                  <span>Rp {totalAmount.toLocaleString("id-ID")}</span>
+                </div>
+
+                <div className="flex justify-between text-xs sm:text-sm">
+                  <span>Shipping</span>
+                  <span className="text-green-600">Free</span>
+                </div>
+
+                <div className="flex justify-between text-xs sm:text-sm">
+                  <span>Tax</span>
+                  <span>Rp 0</span>
+                </div>
+
+                <Separator />
+
+                <div className="flex justify-between text-sm sm:text-base font-semibold">
+                  <span>Total</span>
+                  <span>Rp {totalAmount.toLocaleString("id-ID")}</span>
+                </div>
+
+                <Button
+                  onClick={handleCheckout}
+                  className="w-full"
+                  size="sm"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <CreditCard className="w-4 h-4 mr-2" />
+                  )}
+                  <span className="text-xs sm:text-sm">
+                    Proceed to Checkout
+                  </span>
+                  {!isLoading && <ArrowRight className="w-4 h-4 ml-2" />}
                 </Button>
-              </Link>
-            </CardContent>
-          </Card>
+
+                <Link href="/products" className="block">
+                  <Button variant="outline" className="w-full" size="sm">
+                    <Package className="w-4 h-4 mr-2" />
+                    <span className="text-xs sm:text-sm">
+                      Continue Shopping
+                    </span>
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

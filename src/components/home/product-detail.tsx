@@ -61,7 +61,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
 
     // Check if product has sizes and size is selected
     if (product.sizes && product.sizes.length > 0 && !selectedSize) {
-      toast.error("Pilih ukuran terlebih dahulu");
+      toast.error("Please select a size first");
       return;
     }
 
@@ -69,13 +69,13 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
       try {
         // Add to cart first with size information
         await addItem(product.id, quantity, selectedSize);
-        toast.success("Produk ditambahkan ke keranjang");
+        toast.success("Product added to cart");
 
         // Then redirect to checkout
         router.push("/checkout");
       } catch (error) {
         console.error("Error adding to cart:", error);
-        toast.error("Gagal menambahkan produk ke keranjang");
+        toast.error("Failed to add product to cart");
       }
     };
 
@@ -133,12 +133,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="text-center">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
-            Product tidak ditemukan
+            Product not found
           </h1>
           <Link href="/products">
             <Button variant="outline">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Kembali ke Products
+              Back to Products
             </Button>
           </Link>
         </div>
@@ -217,7 +217,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
 
           <div>
             <h3 className="text-sm sm:text-base font-semibold mb-2">
-              Deskripsi
+              Description
             </h3>
             <p className="text-xs sm:text-sm text-gray-600">
               {product.description}
@@ -227,7 +227,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
           {product.sizes && product.sizes.length > 0 && (
             <div>
               <h3 className="text-sm sm:text-base font-semibold mb-2">
-                Pilih Ukuran
+                Select Size
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
                 {product.sizes.map((sizeItem) => (
@@ -253,7 +253,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
               </div>
               {selectedSize && (
                 <p className="text-sm text-green-600 mb-2">
-                  ✓ Ukuran {selectedSize} dipilih
+                  ✓ Size {selectedSize} selected
                 </p>
               )}
             </div>
@@ -346,11 +346,11 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-              Bagikan Pengalaman Anda
+              Share Your Experience
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">
-              Bantu customer lain dengan memberikan review dan rating untuk
-              produk ini
+              Help other customers by providing reviews and ratings for this
+              product
             </p>
           </div>
           <Button
@@ -358,7 +358,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
             className="w-full sm:w-auto bg-primary hover:bg-primary/90"
           >
             <MessageSquare className="w-4 h-4 mr-2" />
-            {isAuthenticated ? "Tulis Review" : "Login untuk Review"}
+            {isAuthenticated ? "Write Review" : "Login to Review"}
           </Button>
         </div>
       </div>

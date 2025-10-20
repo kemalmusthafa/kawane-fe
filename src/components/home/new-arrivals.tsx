@@ -48,7 +48,7 @@ export function NewArrivals() {
           : "Ditambahkan ke wishlist"
       );
     } catch (error) {
-      toast.error("Gagal mengupdate wishlist");
+      toast.error("Failed to update wishlist");
     }
   };
 
@@ -94,7 +94,7 @@ export function NewArrivals() {
               New Arrivals
             </h2>
             <p className="text-red-600 text-lg">
-              Gagal memuat produk:{" "}
+              Failed to load products:{" "}
               {error instanceof Error ? error.message : String(error)}
             </p>
           </div>

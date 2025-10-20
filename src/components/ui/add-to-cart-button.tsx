@@ -41,7 +41,7 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
 
     // Check if product has sizes and size is selected
     if (product.sizes && product.sizes.length > 0 && !selectedSize) {
-      toast.error("Pilih ukuran terlebih dahulu");
+      toast.error("Please select a size first");
       return;
     }
 
@@ -50,10 +50,10 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
         setIsAdding(true);
 
         await addItem(product.id, quantity, selectedSize);
-        toast.success("Produk ditambahkan ke keranjang");
+        toast.success("Product added to cart");
       } catch (error) {
         console.error("Error adding to cart:", error);
-        toast.error("Gagal menambahkan produk ke keranjang");
+        toast.error("Failed to add product to cart");
       } finally {
         setIsAdding(false);
       }

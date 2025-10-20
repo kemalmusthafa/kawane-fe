@@ -68,7 +68,7 @@ export default function CheckoutPage() {
 
   const handleCreateOrder = async () => {
     if (!agreeToTerms) {
-      toast.error("Anda harus menyetujui syarat dan ketentuan");
+      toast.error("You must agree to the terms and conditions");
       return;
     }
 
@@ -128,14 +128,14 @@ export default function CheckoutPage() {
           item.product.sizes.find((s) => s.size === item.size)?.stock || 0;
         if (sizeStock < item.quantity) {
           toast.error(
-            `Stok tidak mencukupi untuk ${item.product.name} ukuran ${item.size}. Tersedia: ${sizeStock}, Diminta: ${item.quantity}`
+            `Insufficient stock for ${item.product.name} size ${item.size}. Available: ${sizeStock}, Requested: ${item.quantity}`
           );
           return;
         }
       } else {
         if (item.product.stock < item.quantity) {
           toast.error(
-            `Stok tidak mencukupi untuk ${item.product.name}. Tersedia: ${item.product.stock}, Diminta: ${item.quantity}`
+            `Insufficient stock for ${item.product.name}. Available: ${item.product.stock}, Requested: ${item.quantity}`
           );
           return;
         }
@@ -144,7 +144,7 @@ export default function CheckoutPage() {
 
     // Additional validation
     if (cartItems.length === 0) {
-      toast.error("Keranjang kosong");
+      toast.error("Cart is empty");
       return;
     }
 
@@ -153,7 +153,7 @@ export default function CheckoutPage() {
       !shippingAddress.city ||
       !shippingAddress.postalCode
     ) {
-      toast.error("Alamat pengiriman tidak lengkap");
+      toast.error("Shipping address is incomplete");
       return;
     }
 
@@ -164,7 +164,7 @@ export default function CheckoutPage() {
 
       // Debug logging
 
-      toast.success("Order berhasil dibuat!");
+      toast.success("Order created successfully!");
 
       // Clear cart
       clearCart();
@@ -173,7 +173,7 @@ export default function CheckoutPage() {
       if (order.paymentUrl) {
         // Redirect directly to Midtrans payment page
         toast.success(
-          "Pembayaran sedang diproses. Anda akan diarahkan ke halaman pembayaran."
+          "Payment is being processed. You will be redirected to the payment page."
         );
         // Use window.location.href for direct redirect
         window.location.href = order.paymentUrl;
@@ -184,7 +184,7 @@ export default function CheckoutPage() {
     } catch (error: any) {
       console.error("Order creation error:", error);
       console.error("Error details:", error.response || error.message);
-      toast.error(error.message || "Gagal membuat order");
+      toast.error(error.message || "Failed to create order");
     } finally {
       setIsLoading(false);
     }
@@ -202,59 +202,62 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-6 lg:py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="mb-4">
-            <h1 className="text-2xl font-bold text-gray-900">Checkout</h1>
+        <div className="mb-6 sm:mb-8">
+          <div className="mb-3 sm:mb-4">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+              Checkout
+            </h1>
           </div>
-          <p className="text-sm text-gray-600">
-            Lengkapi informasi untuk menyelesaikan pesanan Anda
+          <p className="text-sm sm:text-base text-gray-600">
+            Complete your information to finalize your order
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="xl:col-span-2 space-y-4 sm:space-y-6">
             {/* Shipping Address */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <MapPin className="h-4 w-4" />
-                  Alamat Pengiriman
+                  Shipping Address
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="street">Alamat Lengkap *</Label>
+              <CardContent className="space-y-4 sm:space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label htmlFor="street">Full Address *</Label>
                     <Textarea
                       id="street"
                       value={shippingAddress.street}
                       onChange={(e) =>
                         handleInputChange("street", e.target.value)
                       }
-                      placeholder="Jl. Contoh No. 123, RT/RW 01/01"
+                      placeholder="Street address, apartment, suite, etc."
                       rows={3}
+                      className="resize-none"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Nomor Telepon</Label>
+                    <Label htmlFor="phone">Phone Number</Label>
                     <Input
                       id="phone"
                       value={shippingAddress.phone}
                       onChange={(e) =>
                         handleInputChange("phone", e.target.value)
                       }
-                      placeholder="08123456789"
+                      placeholder="+62 812 3456 7890"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="city">Kota *</Label>
+                    <Label htmlFor="city">City *</Label>
                     <Input
                       id="city"
                       value={shippingAddress.city}
@@ -265,7 +268,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="postalCode">Kode Pos *</Label>
+                    <Label htmlFor="postalCode">Postal Code *</Label>
                     <Input
                       id="postalCode"
                       value={shippingAddress.postalCode}
@@ -276,7 +279,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="country">Negara *</Label>
+                    <Label htmlFor="country">Country *</Label>
                     <Input
                       id="country"
                       value={shippingAddress.country}
@@ -294,41 +297,45 @@ export default function CheckoutPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-base">
-                  Catatan Pesanan (Opsional)
+                  Order Notes (Optional)
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <Textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Tambahkan catatan untuk pesanan Anda..."
+                  placeholder="Add any special instructions for your order..."
                   rows={3}
+                  className="resize-none"
                 />
               </CardContent>
             </Card>
           </div>
 
           {/* Order Summary */}
-          <div className="space-y-6">
-            <Card className="sticky top-8">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <Package className="h-4 w-4" />
-                  Ringkasan Pesanan
+          <div className="space-y-4 sm:space-y-6">
+            <Card className="sticky top-4 sm:top-6 lg:top-8">
+              <CardHeader className="pb-3 sm:pb-4">
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Package className="h-4 w-4 sm:h-5 sm:w-5" />
+                  Order Summary
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 sm:space-y-6">
                 {/* Order Items */}
-                <div className="space-y-3">
+                <div className="space-y-3 sm:space-y-4">
                   {cartItems.map((item) => (
-                    <div key={item.id} className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <div
+                      key={item.id}
+                      className="flex items-center gap-3 sm:gap-4"
+                    >
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                         {item.product.images &&
                         item.product.images.length > 0 ? (
                           <img
                             src={item.product.images[0].url}
                             alt={item.product.name}
-                            className="w-12 h-12 rounded-lg object-cover"
+                            className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover"
                             onError={(e) => {
                               e.currentTarget.style.display = "none";
                               const fallback = e.currentTarget
@@ -339,24 +346,24 @@ export default function CheckoutPage() {
                             }}
                           />
                         ) : null}
-                        <div className="w-12 h-12 bg-gray-100 rounded-lg items-center justify-center hidden">
-                          <Package className="h-6 w-6 text-gray-400" />
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-lg items-center justify-center hidden">
+                          <Package className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium break-words">
+                        <p className="text-xs sm:text-sm font-medium break-words line-clamp-2">
                           {item.product.name}
                         </p>
                         {(item as any).size && (
-                          <p className="text-xs text-blue-600 font-medium">
-                            Ukuran: {(item as any).size}
+                          <p className="text-xs sm:text-sm text-blue-600 font-medium mt-1">
+                            Size: {(item as any).size}
                           </p>
                         )}
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1">
                           Qty: {item.quantity}
                         </p>
                       </div>
-                      <div className="text-xs font-medium">
+                      <div className="text-xs sm:text-sm font-medium text-right">
                         Rp {item.product.price.toLocaleString("id-ID")}
                       </div>
                     </div>
@@ -366,38 +373,42 @@ export default function CheckoutPage() {
                 <Separator />
 
                 {/* Order Total */}
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs">
+                <div className="space-y-2 sm:space-y-3">
+                  <div className="flex justify-between text-sm sm:text-base">
                     <span>Subtotal</span>
                     <span>Rp {total.toLocaleString("id-ID")}</span>
                   </div>
-                  <div className="flex justify-between text-xs">
-                    <span>Ongkos Kirim</span>
-                    <span className="text-green-600">Gratis</span>
+                  <div className="flex justify-between text-sm sm:text-base">
+                    <span>Shipping</span>
+                    <span className="text-green-600">Free</span>
                   </div>
                   <Separator />
-                  <div className="flex justify-between text-base font-bold">
+                  <div className="flex justify-between text-base sm:text-lg font-bold">
                     <span>Total</span>
                     <span>Rp {total.toLocaleString("id-ID")}</span>
                   </div>
                 </div>
 
                 {/* Terms and Conditions */}
-                <div className="flex items-center space-x-2">
+                <div className="flex items-start space-x-2 sm:space-x-3">
                   <Checkbox
                     id="terms"
                     checked={agreeToTerms}
                     onCheckedChange={(checked) =>
                       setAgreeToTerms(checked as boolean)
                     }
+                    className="mt-0.5 sm:mt-1"
                   />
-                  <Label htmlFor="terms" className="text-sm">
-                    Saya menyetujui{" "}
+                  <Label
+                    htmlFor="terms"
+                    className="text-xs sm:text-sm leading-relaxed"
+                  >
+                    I agree to the{" "}
                     <Link
                       href="/terms"
                       className="text-primary hover:underline"
                     >
-                      Syarat dan Ketentuan
+                      Terms and Conditions
                     </Link>
                   </Label>
                 </div>
@@ -411,13 +422,13 @@ export default function CheckoutPage() {
                 >
                   {isLoading ? (
                     <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Memproses...
+                      <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2 animate-spin" />
+                      Processing...
                     </>
                   ) : (
                     <>
-                      <Truck className="h-4 w-4 mr-2" />
-                      Buat Pesanan
+                      <Truck className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                      Place Order
                     </>
                   )}
                 </Button>
