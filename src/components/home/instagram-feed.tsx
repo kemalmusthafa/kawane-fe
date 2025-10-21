@@ -9,8 +9,8 @@ export function InstagramFeed() {
   const { theme } = useTheme();
 
   // Widget IDs untuk light dan dark mode
-  const LIGHT_WIDGET_ID = "004a0706-8a45-408b-89ba-a23be841cbc6"; // Widget untuk light mode
-  const DARK_WIDGET_ID = "004a0706-8a45-408b-89ba-a23be841cbc6"; // Widget untuk dark mode (sama untuk sekarang)
+  const LIGHT_WIDGET_ID = "c8fd5002-bb9d-4039-a80f-3b119ac14fe8"; // Widget untuk light mode
+  const DARK_WIDGET_ID = "c8fd5002-bb9d-4039-a80f-3b119ac14fe8"; // Widget untuk dark mode (sama untuk sekarang)
 
   useEffect(() => {
     // Load Elfsight script only once
