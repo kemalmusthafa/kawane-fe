@@ -62,16 +62,3 @@ export function ConfigurableBanner() {
 
   return bannerContent;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

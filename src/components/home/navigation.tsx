@@ -305,36 +305,36 @@ export function HomeNavigation() {
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="w-80 sm:w-96 p-0 mobile-sidebar"
+                className="w-72 sm:w-80 lg:w-96 p-0 mobile-sidebar"
               >
                 <div className="flex flex-col h-full">
                   {/* Header */}
-                  <div className="p-4 sm:p-6 pb-4 mobile-sidebar-header border-b border-border/20">
-                    <h2 className="text-base font-semibold">Menu</h2>
+                  <div className="p-3 sm:p-4 lg:p-6 pb-3 sm:pb-4 mobile-sidebar-header border-b border-border/20">
+                    <h2 className="text-sm sm:text-base font-semibold">Menu</h2>
                   </div>
 
                   {/* Scrollable Content */}
-                  <div className="flex-1 px-4 sm:px-6 py-4 mobile-sidebar-content overflow-y-auto">
+                  <div className="flex-1 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 mobile-sidebar-content overflow-y-auto">
                     {/* User Profile Section */}
                     {currentUser && (
-                      <div className="mb-6 p-3 bg-muted/50 rounded-lg border border-border/50">
-                        <div className="flex items-center space-x-3">
+                      <div className="mb-4 sm:mb-6 p-2 sm:p-3 bg-muted/50 rounded-lg border border-border/50">
+                        <div className="flex items-center space-x-2 sm:space-x-3">
                           <UserAvatar
                             avatar={currentUser.avatar}
                             name={currentUser.name}
                             isVerified={currentUser.isVerified}
-                            size="md"
+                            size="sm"
                             showVerifiedBadge={false}
                           />
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-foreground truncate">
+                            <p className="text-xs sm:text-sm font-medium text-foreground truncate">
                               {currentUser.name}
                             </p>
-                            <p className="text-xs text-muted-foreground truncate">
+                            <p className="text-[10px] sm:text-xs text-muted-foreground truncate">
                               {currentUser.email}
                             </p>
-                            <div className="mt-1">
-                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium role-badge">
+                            <div className="mt-0.5 sm:mt-1">
+                              <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium role-badge">
                                 {currentUser.role}
                               </span>
                             </div>
@@ -344,9 +344,9 @@ export function HomeNavigation() {
                     )}
 
                     {/* Action Buttons */}
-                    <div className="mb-6 space-y-2">
-                      <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border/30">
-                        <span className="text-sm font-medium text-foreground">
+                    <div className="mb-4 sm:mb-6 space-y-1.5 sm:space-y-2">
+                      <div className="flex items-center justify-between p-2 sm:p-3 bg-muted/30 rounded-lg border border-border/30">
+                        <span className="text-xs sm:text-sm font-medium text-foreground">
                           Dark Mode
                         </span>
                         <ThemeToggle />
@@ -354,15 +354,15 @@ export function HomeNavigation() {
 
                       <Button
                         variant="ghost"
-                        className="w-full justify-start hover:bg-accent/50 dark:hover:bg-accent/30 hover:text-foreground dark:hover:text-foreground transition-colors duration-200"
+                        className="w-full justify-start hover:bg-accent/50 dark:hover:bg-accent/30 hover:text-foreground dark:hover:text-foreground transition-colors duration-200 py-2 sm:py-3"
                         asChild
                       >
                         <Link href="/wishlist">
                           <div className="flex items-center">
-                            <Heart className="h-5 w-5 mr-3 text-muted-foreground" />
-                            <span className="text-foreground">Wishlist</span>
+                            <Heart className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
+                            <span className="text-xs sm:text-sm text-foreground">Wishlist</span>
                             {currentUser && wishlistItems > 0 && (
-                              <span className="ml-auto bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                              <span className="ml-auto bg-primary text-primary-foreground text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center">
                                 {wishlistItems}
                               </span>
                             )}
@@ -372,15 +372,15 @@ export function HomeNavigation() {
 
                       <Button
                         variant="ghost"
-                        className="w-full justify-start hover:bg-accent/50 dark:hover:bg-accent/30 hover:text-foreground dark:hover:text-foreground transition-colors duration-200"
+                        className="w-full justify-start hover:bg-accent/50 dark:hover:bg-accent/30 hover:text-foreground dark:hover:text-foreground transition-colors duration-200 py-2 sm:py-3"
                         asChild
                       >
                         <Link href="/cart">
                           <div className="flex items-center">
-                            <ShoppingCart className="h-5 w-5 mr-3 text-muted-foreground" />
-                            <span className="text-foreground">Cart</span>
+                            <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
+                            <span className="text-xs sm:text-sm text-foreground">Cart</span>
                             {currentUser && totalItems > 0 && (
-                              <span className="ml-auto bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                              <span className="ml-auto bg-primary text-primary-foreground text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center">
                                 {totalItems}
                               </span>
                             )}
@@ -390,41 +390,41 @@ export function HomeNavigation() {
                     </div>
 
                     {/* Navigation Links */}
-                    <nav className="space-y-2 mb-6">
-                      <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+                    <nav className="space-y-1 sm:space-y-2 mb-4 sm:mb-6">
+                      <h3 className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 sm:mb-4">
                         Navigation
                       </h3>
                       <Link
                         href="/products"
-                        className="block py-3 px-3 text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
+                        className="block py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Products
                       </Link>
                       <Link
                         href="/contact"
-                        className="block py-3 px-3 text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
+                        className="block py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Contact
                       </Link>
                       <Link
                         href="/deals"
-                        className="block py-3 px-3 text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
+                        className="block py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Deals
                       </Link>
                       <Link
                         href="/about"
-                        className="block py-3 px-3 text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
+                        className="block py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         About
                       </Link>
                       <Link
                         href="/help"
-                        className="block py-3 px-3 text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
+                        className="block py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Help & Support
@@ -433,8 +433,8 @@ export function HomeNavigation() {
 
                     {/* User Actions */}
                     {currentUser ? (
-                      <div className="mt-6 pt-6 border-t border-border/50 space-y-2">
-                        <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+                      <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-border/50 space-y-1.5 sm:space-y-2">
+                        <h3 className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 sm:mb-4">
                           Account
                         </h3>
 
@@ -443,73 +443,73 @@ export function HomeNavigation() {
                           currentUser?.role === "STAFF") && (
                           <Button
                             variant="ghost"
-                            className="w-full justify-start py-3 hover:bg-accent/50 dark:hover:bg-accent/30"
+                            className="w-full justify-start py-2 sm:py-3 hover:bg-accent/50 dark:hover:bg-accent/30"
                             asChild
                           >
                             <Link
                               href="/admin"
                               onClick={() => setIsMobileMenuOpen(false)}
                             >
-                              <Home className="h-5 w-5 mr-3 text-primary" />
-                              <span className="text-foreground">Dashboard</span>
+                              <Home className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-primary" />
+                              <span className="text-xs sm:text-sm text-foreground">Dashboard</span>
                             </Link>
                           </Button>
                         )}
 
                         <Button
                           variant="ghost"
-                          className="w-full justify-start py-3 hover:bg-accent/50 dark:hover:bg-accent/30"
+                          className="w-full justify-start py-2 sm:py-3 hover:bg-accent/50 dark:hover:bg-accent/30"
                           asChild
                         >
                           <Link
                             href="/account/profile"
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
-                            <UserIcon className="h-5 w-5 mr-3 text-muted-foreground" />
-                            <span className="text-foreground">Profile</span>
+                            <UserIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
+                            <span className="text-xs sm:text-sm text-foreground">Profile</span>
                           </Link>
                         </Button>
                         <Button
                           variant="ghost"
-                          className="w-full justify-start py-3 text-destructive hover:text-destructive hover:bg-destructive/10 dark:hover:bg-destructive/20"
+                          className="w-full justify-start py-2 sm:py-3 text-destructive hover:text-destructive hover:bg-destructive/10 dark:hover:bg-destructive/20"
                           onClick={() => {
                             handleLogout();
                             setIsMobileMenuOpen(false);
                           }}
                         >
-                          <LogOut className="h-5 w-5 mr-3" />
-                          <span>Logout</span>
+                          <LogOut className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
+                          <span className="text-xs sm:text-sm">Logout</span>
                         </Button>
                       </div>
                     ) : (
-                      <div className="mt-6 pt-6 border-t border-border/50 space-y-2">
-                        <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+                      <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-border/50 space-y-1.5 sm:space-y-2">
+                        <h3 className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 sm:mb-4">
                           Account
                         </h3>
                         <Button
                           variant="ghost"
-                          className="w-full justify-start py-3 hover:bg-accent/50 dark:hover:bg-accent/30"
+                          className="w-full justify-start py-2 sm:py-3 hover:bg-accent/50 dark:hover:bg-accent/30"
                           asChild
                         >
                           <Link
                             href="/auth/sign-in"
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
-                            <UserIcon className="h-5 w-5 mr-3 text-muted-foreground" />
-                            <span className="text-foreground">Sign In</span>
+                            <UserIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
+                            <span className="text-xs sm:text-sm text-foreground">Sign In</span>
                           </Link>
                         </Button>
                         <Button
                           variant="ghost"
-                          className="w-full justify-start py-3 hover:bg-accent/50 dark:hover:bg-accent/30"
+                          className="w-full justify-start py-2 sm:py-3 hover:bg-accent/50 dark:hover:bg-accent/30"
                           asChild
                         >
                           <Link
                             href="/auth/sign-up"
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
-                            <UserPlus className="h-5 w-5 mr-3 text-muted-foreground" />
-                            <span className="text-foreground">Sign Up</span>
+                            <UserPlus className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
+                            <span className="text-xs sm:text-sm text-foreground">Sign Up</span>
                           </Link>
                         </Button>
                       </div>
