@@ -1123,10 +1123,7 @@ class ApiClient {
     return response.data;
   }
 
-  async createCategory(categoryData: {
-    name: string;
-    description?: string;
-  }) {
+  async createCategory(categoryData: { name: string; description?: string }) {
     return this.request("/categories", {
       method: "POST",
       body: JSON.stringify(categoryData),

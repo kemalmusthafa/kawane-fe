@@ -24,7 +24,7 @@ export default function CategoriesPage() {
       </Breadcrumb>
 
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Shop by Category</h1>
+        <h1 className="text-4xl font-bold mb-4">Shop by Collections</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           Discover our curated collections across various categories. Find
           exactly what you're looking for.

@@ -78,7 +78,6 @@ export function CategoryForm({
     }));
   };
 
-
   const handleImageChange = (imageUrl: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -166,7 +165,6 @@ export function CategoryForm({
             onSubmit={handleSubmit}
             className="space-y-6"
           >
-
             {/* Category Name */}
             <div className="space-y-2">
               <Label htmlFor="name">Category Name *</Label>

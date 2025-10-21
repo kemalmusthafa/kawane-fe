@@ -108,8 +108,8 @@ export function FeaturedCategories() {
           </p>
         </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
-        {categories?.slice(0, 6).map((category: Category, index: number) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
+          {categories?.slice(0, 6).map((category: Category, index: number) => (
             <motion.div
               key={category.id}
               initial={{ opacity: 0, y: 20 }}
