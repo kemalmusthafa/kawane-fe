@@ -244,13 +244,13 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="start"
-          className="w-80 dropdown-enhanced dropdown-positioned"
+          className="w-80 dropdown-enhanced dropdown-positioned bg-card border-border"
           sideOffset={4}
           forceMount
         >
           <div className="p-3">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-semibold text-foreground">
+              <h4 className="text-sm font-semibold text-card-foreground">
                 Notifications
               </h4>
               {unreadCount > 0 && (
@@ -258,7 +258,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                   variant="ghost"
                   size="sm"
                   onClick={handleMarkAllAsRead}
-                  className="h-6 px-2 text-xs font-medium"
+                  className="h-6 px-2 text-xs font-medium text-card-foreground hover:bg-accent"
                 >
                   <CheckCheck className="h-3 w-3 mr-1" />
                   Mark all read
@@ -267,7 +267,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
             </div>
             {unreadCount > 0 && (
               <div className="flex justify-start">
-                <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-accent text-accent-foreground">
                   {unreadCount} unread
                 </Badge>
               </div>
@@ -299,10 +299,10 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                   <DropdownMenuItem
                     key={notification.id}
                     asChild
-                    className={`p-2.5 cursor-pointer hover:bg-gray-50 transition-colors ${
+                    className={`p-2.5 cursor-pointer hover:bg-accent transition-colors ${
                       !notification.isRead
-                        ? "bg-blue-50 border-l-2 border-l-blue-500"
-                        : "hover:bg-gray-50"
+                        ? "bg-accent/50 border-l-2 border-l-primary"
+                        : "hover:bg-accent"
                     }`}
                   >
                     <Link
@@ -327,14 +327,14 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between mb-1">
                           <p
-                            className={`text-xs font-medium truncate ${
+                            className={`text-xs font-medium truncate text-card-foreground ${
                               !notification.isRead ? "font-semibold" : ""
                             }`}
                           >
                             {notification.title}
                           </p>
                           {!notification.isRead && (
-                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full flex-shrink-0 mt-1" />
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0 mt-1" />
                           )}
                         </div>
                         <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
@@ -346,7 +346,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                           </span>
                           <Badge
                             variant="outline"
-                            className={`text-xs px-1.5 py-0.5 ${getPriorityColor(
+                            className={`text-xs px-1.5 py-0.5 text-card-foreground border-border ${getPriorityColor(
                               notification.priority
                             )}`}
                           >
@@ -367,7 +367,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
               <DropdownMenuItem asChild>
                 <Link
                   href="/admin/notifications"
-                  className="flex items-center justify-center w-full py-2.5 text-xs font-semibold text-foreground hover:text-primary transition-colors"
+                  className="flex items-center justify-center w-full py-2.5 text-xs font-semibold text-card-foreground hover:text-primary transition-colors"
                 >
                   View all notifications
                 </Link>

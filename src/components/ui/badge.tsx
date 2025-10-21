@@ -16,11 +16,25 @@ const badgeVariants = cva(
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
         success:
-          "border-transparent bg-success text-success-foreground hover:bg-success/80",
+          "border-transparent bg-green-600 text-white hover:bg-green-700 dark:bg-green-500 dark:text-white dark:hover:bg-green-600",
         warning:
-          "border-transparent bg-warning text-warning-foreground hover:bg-warning/80",
+          "border-transparent bg-yellow-600 text-white hover:bg-yellow-700 dark:bg-yellow-500 dark:text-white dark:hover:bg-yellow-600",
         danger:
-          "border-transparent bg-danger text-danger-foreground hover:bg-danger/80",
+          "border-transparent bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:text-white dark:hover:bg-red-600",
+        info:
+          "border-transparent bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600",
+        pending:
+          "border-transparent bg-orange-600 text-white hover:bg-orange-700 dark:bg-orange-500 dark:text-white dark:hover:bg-orange-600",
+        cancelled:
+          "border-transparent bg-gray-600 text-white hover:bg-gray-700 dark:bg-gray-500 dark:text-white dark:hover:bg-gray-600",
+        completed:
+          "border-transparent bg-green-600 text-white hover:bg-green-700 dark:bg-green-500 dark:text-white dark:hover:bg-green-600",
+        low_stock:
+          "border-transparent bg-yellow-600 text-white hover:bg-yellow-700 dark:bg-yellow-500 dark:text-white dark:hover:bg-yellow-600",
+        out_of_stock:
+          "border-transparent bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:text-white dark:hover:bg-red-600",
+        in_stock:
+          "border-transparent bg-green-600 text-white hover:bg-green-700 dark:bg-green-500 dark:text-white dark:hover:bg-green-600",
       },
     },
     defaultVariants: {

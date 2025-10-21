@@ -82,29 +82,62 @@ export default function AdminDashboard() {
 
   const getStatusBadge = (status: string) => {
     try {
-      const color = getOrderStatusColor(status);
       const label = getOrderStatusLabel(status);
+      let variant: "pending" | "completed" | "cancelled" | "default" = "default";
+      
+      switch (status.toLowerCase()) {
+        case "pending":
+          variant = "pending";
+          break;
+        case "completed":
+        case "delivered":
+          variant = "completed";
+          break;
+        case "cancelled":
+          variant = "cancelled";
+          break;
+        default:
+          variant = "default";
+      }
+      
       return (
-        <Badge variant="outline" className={color}>
+        <Badge variant={variant}>
           {label}
         </Badge>
       );
     } catch (err) {
-      return <Badge variant="outline">{status || "Unknown"}</Badge>;
+      return <Badge variant="default">{status || "Unknown"}</Badge>;
     }
   };
 
   const getPaymentStatusBadge = (status: string) => {
     try {
-      const color = getPaymentStatusColor(status);
       const label = getPaymentStatusLabel(status);
+      let variant: "pending" | "completed" | "cancelled" | "default" = "default";
+      
+      switch (status.toLowerCase()) {
+        case "pending":
+          variant = "pending";
+          break;
+        case "completed":
+        case "paid":
+          variant = "completed";
+          break;
+        case "cancelled":
+        case "failed":
+          variant = "cancelled";
+          break;
+        default:
+          variant = "default";
+      }
+      
       return (
-        <Badge variant="outline" className={color}>
+        <Badge variant={variant}>
           {label}
         </Badge>
       );
     } catch (err) {
-      return <Badge variant="outline">{status || "Unknown"}</Badge>;
+      return <Badge variant="default">{status || "Unknown"}</Badge>;
     }
   };
 

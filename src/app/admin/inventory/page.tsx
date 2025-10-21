@@ -68,21 +68,13 @@ export default function AdminInventoryPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "IN_STOCK":
-        return (
-          <Badge variant="default" className="bg-green-100 text-green-800">
-            In Stock
-          </Badge>
-        );
+        return <Badge variant="in_stock">In Stock</Badge>;
       case "LOW_STOCK":
-        return (
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-            Low Stock
-          </Badge>
-        );
+        return <Badge variant="low_stock">Low Stock</Badge>;
       case "OUT_OF_STOCK":
-        return <Badge variant="destructive">Out of Stock</Badge>;
+        return <Badge variant="out_of_stock">Out of Stock</Badge>;
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return <Badge variant="default">{status}</Badge>;
     }
   };
 

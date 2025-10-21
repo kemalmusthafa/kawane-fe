@@ -85,9 +85,9 @@ export default function AdminProducts() {
 
   const getStatusBadge = (stock: number) => {
     if (stock > 0) {
-      return <Badge className="bg-green-100 text-green-800">Active</Badge>;
+      return <Badge variant="in_stock">Active</Badge>;
     } else {
-      return <Badge className="bg-red-100 text-red-800">Out of Stock</Badge>;
+      return <Badge variant="out_of_stock">Out of Stock</Badge>;
     }
   };
 

@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import {
   BarChart3,
   TrendingUp,
@@ -42,16 +43,15 @@ export default function AdminAnalyticsPage() {
   };
 
   const getStatusBadge = (status: string) => {
-    const baseClasses = "px-2 py-1 rounded-full text-xs font-medium";
     switch (status) {
       case "COMPLETED":
-        return `${baseClasses} bg-green-100 text-green-800`;
+        return <Badge variant="completed">Completed</Badge>;
       case "SHIPPED":
-        return `${baseClasses} bg-blue-100 text-blue-800`;
+        return <Badge variant="info">Shipped</Badge>;
       case "PENDING":
-        return `${baseClasses} bg-yellow-100 text-yellow-800`;
+        return <Badge variant="pending">Pending</Badge>;
       default:
-        return `${baseClasses} bg-gray-100 text-gray-800`;
+        return <Badge variant="default">{status}</Badge>;
     }
   };
 
@@ -353,9 +353,7 @@ export default function AdminAnalyticsPage() {
                       {formatCurrency(order.amount)}
                     </span>
                     <div className="flex items-center justify-between sm:justify-start space-x-2 sm:space-x-3">
-                      <span className={getStatusBadge(order.status)}>
-                        {order.status}
-                      </span>
+                      {getStatusBadge(order.status)}
                       <div className="flex items-center text-xs sm:text-sm text-gray-500">
                         <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                         <span className="hidden sm:inline">{order.date}</span>
