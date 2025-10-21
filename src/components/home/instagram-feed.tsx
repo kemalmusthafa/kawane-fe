@@ -23,7 +23,9 @@ export function InstagramFeed() {
     // Load Elfsight script
     const loadScript = () => {
       // Check if script already exists
-      const existingScript = document.querySelector('script[src="https://elfsightcdn.com/platform.js"]');
+      const existingScript = document.querySelector(
+        'script[src="https://elfsightcdn.com/platform.js"]'
+      );
       if (existingScript) {
         setScriptLoaded(true);
         initializeWidget();
@@ -56,19 +58,72 @@ export function InstagramFeed() {
     const widgetContainer = document.createElement("div");
     widgetContainer.className = `elfsight-app-${WIDGET_ID}`;
     widgetContainer.setAttribute("data-elfsight-app-lazy", "");
-    
+
     // Add theme information
     const currentTheme = resolvedTheme || theme || "light";
     widgetContainer.setAttribute("data-theme", currentTheme);
-    
+
     containerRef.current.appendChild(widgetContainer);
 
     // Initialize the widget
     if (window.Elfsight && window.Elfsight.init) {
       setTimeout(() => {
         window.Elfsight.init();
+        // Apply dark mode styling after widget loads
+        applyDarkModeStyling();
       }, 200);
     }
+  };
+
+  // Apply dark mode styling to widget
+  const applyDarkModeStyling = () => {
+    if (!containerRef.current) return;
+
+    const currentTheme = resolvedTheme || theme || "light";
+    
+    // Find all Elfsight widget elements
+    const widgetElements = containerRef.current.querySelectorAll('[class*="elfsight"]');
+    
+    widgetElements.forEach((element: any) => {
+      if (currentTheme === "dark") {
+        // Apply dark mode styles
+        element.style.setProperty("--elfsight-bg-color", "#000000", "important");
+        element.style.setProperty("--elfsight-text-color", "#ffffff", "important");
+        element.style.setProperty("--elfsight-border-color", "#333333", "important");
+        
+        // Force dark background
+        element.style.backgroundColor = "#000000";
+        element.style.color = "#ffffff";
+        
+        // Find and style specific widget components
+        const profileCard = element.querySelector('[class*="profile"]') || element.querySelector('[class*="header"]');
+        if (profileCard) {
+          profileCard.style.backgroundColor = "#000000";
+          profileCard.style.color = "#ffffff";
+        }
+        
+        const postsGrid = element.querySelector('[class*="posts"]') || element.querySelector('[class*="grid"]');
+        if (postsGrid) {
+          postsGrid.style.backgroundColor = "#000000";
+        }
+        
+        // Style all text elements
+        const textElements = element.querySelectorAll('p, span, div, h1, h2, h3, h4, h5, h6');
+        textElements.forEach((textEl: any) => {
+          if (textEl.style.color !== "rgb(255, 255, 255)") {
+            textEl.style.color = "#ffffff";
+          }
+        });
+      } else {
+        // Apply light mode styles
+        element.style.setProperty("--elfsight-bg-color", "#ffffff", "important");
+        element.style.setProperty("--elfsight-text-color", "#000000", "important");
+        element.style.setProperty("--elfsight-border-color", "#e5e5e5", "important");
+        
+        element.style.backgroundColor = "#ffffff";
+        element.style.color = "#000000";
+      }
+    });
   };
 
   // Re-initialize widget when theme changes
@@ -76,11 +131,37 @@ export function InstagramFeed() {
     if (mounted && scriptLoaded && containerRef.current) {
       const timer = setTimeout(() => {
         initializeWidget();
+        // Also apply styling after theme change
+        setTimeout(() => {
+          applyDarkModeStyling();
+        }, 1000);
       }, 500);
 
       return () => clearTimeout(timer);
     }
   }, [theme, resolvedTheme, mounted, scriptLoaded]);
+
+  // Monitor widget changes and apply styling
+  useEffect(() => {
+    if (!mounted || !scriptLoaded) return;
+
+    const observer = new MutationObserver(() => {
+      // Apply styling when widget content changes
+      setTimeout(() => {
+        applyDarkModeStyling();
+      }, 100);
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+      });
+    }
+
+    return () => observer.disconnect();
+  }, [mounted, scriptLoaded, theme, resolvedTheme]);
 
   // Don't render until mounted to avoid hydration mismatch
   if (!mounted) {
@@ -98,7 +179,9 @@ export function InstagramFeed() {
           </div>
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-center h-64">
-              <div className="animate-pulse text-muted-foreground">Loading...</div>
+              <div className="animate-pulse text-muted-foreground">
+                Loading...
+              </div>
             </div>
           </div>
         </div>
@@ -125,6 +208,13 @@ export function InstagramFeed() {
             className="instagram-feed-container min-h-[400px]"
             data-theme={resolvedTheme || theme}
             suppressHydrationWarning
+            style={{
+              // Force dark mode styling
+              ...(resolvedTheme === "dark" && {
+                backgroundColor: "#000000",
+                color: "#ffffff",
+              }),
+            }}
           >
             {!scriptLoaded && (
               <div className="flex items-center justify-center h-64">
