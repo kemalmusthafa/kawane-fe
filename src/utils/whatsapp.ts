@@ -85,6 +85,16 @@ export const createOrderMessage = (orderData: {
       id?: string;
       name: string;
       images?: Array<{ url: string }>;
+      deal?: {
+        id: string;
+        title: string;
+        originalPrice: number;
+        discountedPrice: number;
+        discountAmount: number;
+        discountPercentage: number;
+        isFlashSale: boolean;
+        endDate: string;
+      } | null;
     };
     quantity: number;
     price: number;
@@ -97,9 +107,18 @@ export const createOrderMessage = (orderData: {
   if (orderData.items && orderData.items.length > 0) {
     const first = orderData.items.find((it) => (it.product as any).id);
     if (first && (first.product as any).id) {
-      firstProductLink = `${
-        process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
-      }/products/${(first.product as any).id}`;
+      // Check if this item has deal information
+      if (first.product.deal && first.product.deal.id) {
+        // Use deal link instead of product link
+        firstProductLink = `${
+          process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
+        }/deals/${first.product.deal.id}`;
+      } else {
+        // Use regular product link
+        firstProductLink = `${
+          process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
+        }/products/${(first.product as any).id}`;
+      }
     }
   }
 
@@ -147,9 +166,16 @@ export const createOrderMessage = (orderData: {
       )}`;
       // Keep product link only for the first item (already placed on top) to avoid losing preview
       if ((item.product as any).id && !firstProductLink) {
-        message += `\n   🔗 Lihat produk: ${
-          process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
-        }/products/${(item.product as any).id}`;
+        // Check if this item has deal information
+        if (item.product.deal && item.product.deal.id) {
+          message += `\n   🔗 Lihat deal: ${
+            process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
+          }/deals/${item.product.deal.id}`;
+        } else {
+          message += `\n   🔗 Lihat produk: ${
+            process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
+          }/products/${(item.product as any).id}`;
+        }
       }
     });
   }
@@ -178,6 +204,16 @@ export const createCheckoutMessage = (cartData: {
     product: {
       name: string;
       images?: Array<{ url: string }>;
+      deal?: {
+        id: string;
+        title: string;
+        originalPrice: number;
+        discountedPrice: number;
+        discountAmount: number;
+        discountPercentage: number;
+        isFlashSale: boolean;
+        endDate: string;
+      } | null;
     };
     quantity: number;
     price: number;
@@ -192,7 +228,14 @@ export const createCheckoutMessage = (cartData: {
     process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app";
   const firstWithId = cartData.items.find((it: any) => (it.product as any)?.id);
   if ((firstWithId as any)?.product?.id) {
-    firstProductLink = `${appUrl}/products/${(firstWithId as any).product.id}`;
+    // Check if this item has deal information
+    if ((firstWithId as any).product.deal && (firstWithId as any).product.deal.id) {
+      // Use deal link instead of product link
+      firstProductLink = `${appUrl}/deals/${(firstWithId as any).product.deal.id}`;
+    } else {
+      // Use regular product link
+      firstProductLink = `${appUrl}/products/${(firstWithId as any).product.id}`;
+    }
   }
 
   let message = ``;
@@ -219,9 +262,16 @@ export const createCheckoutMessage = (cartData: {
 
       // Keep link only for first product to not break preview
       if ((item as any).product?.id && !firstProductLink) {
-        message += `\n   🔗 Lihat produk: ${appUrl}/products/${
-          (item as any).product.id
-        }`;
+        // Check if this item has deal information
+        if ((item as any).product?.deal && (item as any).product?.deal?.id) {
+          message += `\n   🔗 Lihat deal: ${appUrl}/deals/${
+            (item as any).product.deal.id
+          }`;
+        } else {
+          message += `\n   🔗 Lihat produk: ${appUrl}/products/${
+            (item as any).product.id
+          }`;
+        }
       }
     });
   }

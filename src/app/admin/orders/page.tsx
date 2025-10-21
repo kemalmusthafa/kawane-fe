@@ -82,9 +82,12 @@ export default function AdminOrders() {
 
   const { data, isLoading, isSearching, error, refetch } = useAdminOrders({
     search: searchTerm,
-    status: statusFilter === "all" ? undefined : mapStatusToBackend(statusFilter),
+    status:
+      statusFilter === "all" ? undefined : mapStatusToBackend(statusFilter),
     paymentStatus:
-      paymentStatusFilter === "all" ? undefined : mapStatusToBackend(paymentStatusFilter),
+      paymentStatusFilter === "all"
+        ? undefined
+        : mapStatusToBackend(paymentStatusFilter),
     page: currentPage,
     limit: 5,
     sortBy: "createdAt",
