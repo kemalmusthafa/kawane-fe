@@ -262,10 +262,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
 
           {/* Quantity Selector */}
           <div className="flex items-center space-x-2 sm:space-x-4">
-            <Label
-              htmlFor="quantity"
-              className="text-sm sm:text-base"
-            >
+            <Label htmlFor="quantity" className="text-sm sm:text-base">
               Quantity:
             </Label>
             <div className="flex items-center space-x-1 sm:space-x-2">
@@ -317,7 +314,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
               <AddToWishlistButton 
                 product={product} 
                 variant="outline" 
-                className="h-10 w-10 sm:h-12 sm:w-12"
+                className="flex-1 text-sm sm:text-base h-10 sm:h-12"
               />
             </div>
             <Button
@@ -335,21 +332,15 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
-              <span className="text-sm sm:text-base">
-                Free Shipping
-              </span>
+              <span className="text-sm sm:text-base">Free Shipping</span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-              <span className="text-sm sm:text-base">
-                Secure Payment
-              </span>
+              <span className="text-sm sm:text-base">Secure Payment</span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Package className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
-              <span className="text-sm sm:text-base">
-                Quality Guarantee
-              </span>
+              <span className="text-sm sm:text-base">Quality Guarantee</span>
             </div>
           </div>
         </div>
