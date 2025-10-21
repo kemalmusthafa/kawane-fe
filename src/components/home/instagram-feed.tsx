@@ -88,37 +88,41 @@ export function InstagramFeed() {
 
     // Find ALL elements inside the widget container
     const allElements = containerRef.current.querySelectorAll("*");
-    
+
     allElements.forEach((element: any) => {
       if (currentTheme === "dark") {
         // Force dark background on ALL elements
         element.style.setProperty("background-color", "#000000", "important");
         element.style.setProperty("background", "#000000", "important");
         element.style.setProperty("color", "#ffffff", "important");
-        
+
         // Override any existing styles
         element.style.backgroundColor = "#000000 !important";
         element.style.color = "#ffffff !important";
-        
+
         // Handle specific widget elements
         if (element.classList.toString().includes("elfsight")) {
           element.style.setProperty("background-color", "#000000", "important");
           element.style.setProperty("color", "#ffffff", "important");
         }
-        
+
         // Handle iframe elements
         if (element.tagName === "IFRAME") {
           element.style.setProperty("background-color", "#000000", "important");
         }
-        
+
         // Handle div elements
         if (element.tagName === "DIV") {
           element.style.setProperty("background-color", "#000000", "important");
           element.style.setProperty("color", "#ffffff", "important");
         }
-        
+
         // Handle text elements
-        if (["P", "SPAN", "H1", "H2", "H3", "H4", "H5", "H6", "A"].includes(element.tagName)) {
+        if (
+          ["P", "SPAN", "H1", "H2", "H3", "H4", "H5", "H6", "A"].includes(
+            element.tagName
+          )
+        ) {
           element.style.setProperty("color", "#ffffff", "important");
         }
       } else {
@@ -131,10 +135,18 @@ export function InstagramFeed() {
     // Also style the container itself
     if (containerRef.current) {
       if (currentTheme === "dark") {
-        containerRef.current.style.setProperty("background-color", "#000000", "important");
+        containerRef.current.style.setProperty(
+          "background-color",
+          "#000000",
+          "important"
+        );
         containerRef.current.style.setProperty("color", "#ffffff", "important");
       } else {
-        containerRef.current.style.setProperty("background-color", "#ffffff", "important");
+        containerRef.current.style.setProperty(
+          "background-color",
+          "#ffffff",
+          "important"
+        );
         containerRef.current.style.setProperty("color", "#000000", "important");
       }
     }

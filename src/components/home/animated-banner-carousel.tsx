@@ -118,15 +118,15 @@ export function AnimatedBannerCarousel({
     <div className="relative overflow-hidden">
       {/* Main Banner Display */}
       <div
-        className={`${currentBanner.backgroundColor} ${currentBanner.textColor} py-1.5 sm:py-2`}
+        className={`${currentBanner.backgroundColor} ${currentBanner.textColor} py-1 sm:py-1.5 lg:py-2`}
       >
-        <div className="container mx-auto px-3 sm:px-4 text-center text-xs sm:text-sm relative">
+        <div className="container mx-auto px-2 sm:px-3 lg:px-4 text-center text-[10px] sm:text-xs lg:text-sm relative">
           <p className="font-medium leading-tight">
             {currentBanner.text}
             {currentBanner.linkUrl && currentBanner.linkText && (
               <Link
                 href={currentBanner.linkUrl}
-                className="ml-1 sm:ml-2 underline hover:no-underline transition-all duration-200 text-xs sm:text-sm"
+                className="ml-1 sm:ml-2 underline hover:no-underline transition-all duration-200 text-[10px] sm:text-xs lg:text-sm"
               >
                 {currentBanner.linkText}
               </Link>
