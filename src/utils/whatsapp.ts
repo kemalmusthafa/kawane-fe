@@ -142,7 +142,7 @@ export const createOrderMessage = (orderData: {
       }
 
       message += `\n   Qty: ${item.quantity}`;
-      message += `\n   Harga: Rp ${item.price.toLocaleString("id-ID")}`;
+      message += `\n   Harga: Rp ${(item.price * item.quantity).toLocaleString("id-ID")}`;
       // Keep product link only for the first item (already placed on top) to avoid losing preview
       if ((item.product as any).id && !firstProductLink) {
         message += `\n   🔗 Lihat produk: ${
@@ -211,7 +211,7 @@ export const createCheckoutMessage = (cartData: {
       }
 
       message += `\n   Qty: ${item.quantity}`;
-      message += `\n   Harga: Rp ${item.price.toLocaleString("id-ID")}`;
+      message += `\n   Harga: Rp ${(item.price * item.quantity).toLocaleString("id-ID")}`;
 
       // Keep link only for first product to not break preview
       if ((item as any).product?.id && !firstProductLink) {

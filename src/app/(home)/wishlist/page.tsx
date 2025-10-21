@@ -67,7 +67,9 @@ export default function WishlistPage() {
           <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
             Loading Wishlist...
           </h2>
-          <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-4 sm:mb-6 lg:mb-8">Memuat daftar wishlist Anda</p>
+          <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-4 sm:mb-6 lg:mb-8">
+            Memuat daftar wishlist Anda
+          </p>
         </div>
       </div>
     );
@@ -84,7 +86,12 @@ export default function WishlistPage() {
           <p className="text-xs sm:text-sm lg:text-base text-red-600 mb-4 sm:mb-6 lg:mb-8">
             {error instanceof Error ? error.message : String(error)}
           </p>
-          <Button onClick={() => window.location.reload()} className="text-xs sm:text-sm">Coba Lagi</Button>
+          <Button
+            onClick={() => window.location.reload()}
+            className="text-xs sm:text-sm"
+          >
+            Coba Lagi
+          </Button>
         </div>
       </div>
     );
@@ -115,7 +122,9 @@ export default function WishlistPage() {
   return (
     <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
       <div className="mb-4 sm:mb-6">
-        <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900">My Wishlist</h1>
+        <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900">
+          My Wishlist
+        </h1>
         <p className="text-xs sm:text-sm lg:text-base text-gray-600 mt-1 sm:mt-2">
           {wishlist.length} item{wishlist.length !== 1 ? "s" : ""} di wishlist
           Anda

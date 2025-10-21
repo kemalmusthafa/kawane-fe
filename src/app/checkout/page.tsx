@@ -40,6 +40,14 @@ export default function CheckoutPage() {
   const [notes, setNotes] = useState("");
 
   useEffect(() => {
+    // Add timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      if (isLoading) {
+        setIsLoading(false);
+        toast.error("Checkout process timed out. Please try again.");
+      }
+    }, 30000); // 30 second timeout
+
     if (!isAuthenticated) {
       router.push("/auth/sign-in?redirect=/checkout");
       return;
@@ -57,7 +65,9 @@ export default function CheckoutPage() {
         phone: user.phone || "",
       }));
     }
-  }, [isAuthenticated, cartItems.length, user, router]);
+
+    return () => clearTimeout(timeoutId);
+  }, [isAuthenticated, cartItems.length, user, router, isLoading]);
 
   const handleInputChange = (field: string, value: string) => {
     setShippingAddress((prev) => ({
@@ -160,26 +170,37 @@ export default function CheckoutPage() {
     setIsLoading(true);
 
     try {
-      const order = await OrderService.createOrder(orderData);
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 25000); // 25 second timeout
 
-      // Debug logging
+      try {
+        const order = await OrderService.createOrder(orderData);
+        clearTimeout(timeoutId);
 
-      toast.success("Order created successfully!");
+        // Debug logging
+        console.log("Order created:", order);
 
-      // Clear cart
-      clearCart();
+        toast.success("Order created successfully!");
 
-      // Redirect to payment or order confirmation
-      if (order.paymentUrl) {
-        // Redirect directly to Midtrans payment page
-        toast.success(
-          "Payment is being processed. You will be redirected to the payment page."
-        );
-        // Use window.location.href for direct redirect
-        window.location.href = order.paymentUrl;
-      } else {
-        // If no payment URL, go directly to order detail
-        router.push(`/account/orders/${order.orderId}`);
+        // Clear cart
+        clearCart();
+
+        // Redirect to payment or order confirmation
+        if (order.paymentUrl) {
+          // Redirect directly to Midtrans payment page
+          toast.success(
+            "Payment is being processed. You will be redirected to the payment page."
+          );
+          // Use window.location.href for direct redirect
+          window.location.href = order.paymentUrl;
+        } else {
+          // If no payment URL, go directly to order detail
+          router.push(`/account/orders/${order.orderId}`);
+        }
+      } catch (error) {
+        clearTimeout(timeoutId);
+        throw error;
       }
     } catch (error: any) {
       console.error("Order creation error:", error);
