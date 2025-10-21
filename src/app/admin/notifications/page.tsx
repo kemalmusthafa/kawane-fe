@@ -100,44 +100,32 @@ export default function AdminNotificationsPage() {
   const getTypeBadge = (type: string) => {
     switch (type) {
       case "SUCCESS":
-        return (
-          <Badge variant="default" className="bg-green-100 text-green-800">
-            Success
-          </Badge>
-        );
+        return <Badge variant="success">Success</Badge>;
       case "WARNING":
-        return (
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-            Warning
-          </Badge>
-        );
+        return <Badge variant="warning">Warning</Badge>;
       case "ERROR":
-        return <Badge variant="destructive">Error</Badge>;
+        return <Badge variant="danger">Error</Badge>;
       case "INFO":
-        return (
-          <Badge variant="default" className="bg-blue-100 text-blue-800">
-            Info
-          </Badge>
-        );
+        return <Badge variant="info">Info</Badge>;
+      case "STOCK_ALERT":
+        return <Badge variant="warning">Stock Alert</Badge>;
+      case "ORDER":
+        return <Badge variant="info">Order</Badge>;
       default:
-        return <Badge variant="outline">{type}</Badge>;
+        return <Badge variant="default">{type}</Badge>;
     }
   };
 
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case "HIGH":
-        return <Badge variant="destructive">High</Badge>;
+        return <Badge variant="danger">High</Badge>;
       case "MEDIUM":
-        return (
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-            Medium
-          </Badge>
-        );
+        return <Badge variant="warning">Medium</Badge>;
       case "LOW":
-        return <Badge variant="outline">Low</Badge>;
+        return <Badge variant="default">Low</Badge>;
       default:
-        return <Badge variant="outline">{priority}</Badge>;
+        return <Badge variant="default">{priority}</Badge>;
     }
   };
 

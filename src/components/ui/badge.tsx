@@ -21,8 +21,7 @@ const badgeVariants = cva(
           "border-transparent bg-yellow-600 text-white hover:bg-yellow-700 dark:bg-yellow-500 dark:text-white dark:hover:bg-yellow-600",
         danger:
           "border-transparent bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:text-white dark:hover:bg-red-600",
-        info:
-          "border-transparent bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600",
+        info: "border-transparent bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600",
         pending:
           "border-transparent bg-orange-600 text-white hover:bg-orange-700 dark:bg-orange-500 dark:text-white dark:hover:bg-orange-600",
         cancelled:

@@ -83,8 +83,9 @@ export default function AdminDashboard() {
   const getStatusBadge = (status: string) => {
     try {
       const label = getOrderStatusLabel(status);
-      let variant: "pending" | "completed" | "cancelled" | "default" = "default";
-      
+      let variant: "pending" | "completed" | "cancelled" | "default" =
+        "default";
+
       switch (status.toLowerCase()) {
         case "pending":
           variant = "pending";
@@ -99,12 +100,8 @@ export default function AdminDashboard() {
         default:
           variant = "default";
       }
-      
-      return (
-        <Badge variant={variant}>
-          {label}
-        </Badge>
-      );
+
+      return <Badge variant={variant}>{label}</Badge>;
     } catch (err) {
       return <Badge variant="default">{status || "Unknown"}</Badge>;
     }
@@ -113,8 +110,9 @@ export default function AdminDashboard() {
   const getPaymentStatusBadge = (status: string) => {
     try {
       const label = getPaymentStatusLabel(status);
-      let variant: "pending" | "completed" | "cancelled" | "default" = "default";
-      
+      let variant: "pending" | "completed" | "cancelled" | "default" =
+        "default";
+
       switch (status.toLowerCase()) {
         case "pending":
           variant = "pending";
@@ -130,12 +128,8 @@ export default function AdminDashboard() {
         default:
           variant = "default";
       }
-      
-      return (
-        <Badge variant={variant}>
-          {label}
-        </Badge>
-      );
+
+      return <Badge variant={variant}>{label}</Badge>;
     } catch (err) {
       return <Badge variant="default">{status || "Unknown"}</Badge>;
     }

@@ -267,7 +267,10 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
             </div>
             {unreadCount > 0 && (
               <div className="flex justify-start">
-                <Badge variant="secondary" className="text-xs px-2 py-0.5 bg-accent text-accent-foreground">
+                <Badge
+                  variant="secondary"
+                  className="text-xs px-2 py-0.5 bg-accent text-accent-foreground"
+                >
                   {unreadCount} unread
                 </Badge>
               </div>

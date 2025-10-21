@@ -242,34 +242,26 @@ export default function AdminDealsPage() {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case "active":
-        return <Badge className="bg-green-100 text-green-800">Active</Badge>;
+        return <Badge variant="success">Active</Badge>;
       case "inactive":
-        return (
-          <Badge className="bg-gray-100 dark:bg-gray-800/20 text-gray-800 dark:text-gray-300">
-            Inactive
-          </Badge>
-        );
+        return <Badge variant="cancelled">Inactive</Badge>;
       case "expired":
-        return <Badge className="bg-red-100 text-red-800">Expired</Badge>;
+        return <Badge variant="danger">Expired</Badge>;
       default:
-        return <Badge variant="secondary">{status}</Badge>;
+        return <Badge variant="default">{status}</Badge>;
     }
   };
 
   const getTypeBadge = (type: string) => {
     switch (type) {
       case "PERCENTAGE":
-        return <Badge className="bg-blue-100 text-blue-800">Percentage</Badge>;
+        return <Badge variant="info">Percentage</Badge>;
       case "FIXED_AMOUNT":
-        return (
-          <Badge className="bg-purple-100 text-purple-800">Fixed Amount</Badge>
-        );
+        return <Badge variant="warning">Fixed Amount</Badge>;
       case "FLASH_SALE":
-        return (
-          <Badge className="bg-orange-100 text-orange-800">Flash Sale</Badge>
-        );
+        return <Badge variant="pending">Flash Sale</Badge>;
       default:
-        return <Badge variant="secondary">{type}</Badge>;
+        return <Badge variant="default">{type}</Badge>;
     }
   };
 

@@ -70,19 +70,46 @@ export default function AdminOrders() {
   });
 
   const getStatusBadge = (status: string) => {
-    return (
-      <Badge className={getOrderStatusColor(status)}>
-        {getOrderStatusLabel(status)}
-      </Badge>
-    );
+    let variant: "pending" | "completed" | "cancelled" | "default" = "default";
+    
+    switch (status.toLowerCase()) {
+      case "pending":
+        variant = "pending";
+        break;
+      case "completed":
+      case "delivered":
+        variant = "completed";
+        break;
+      case "cancelled":
+        variant = "cancelled";
+        break;
+      default:
+        variant = "default";
+    }
+    
+    return <Badge variant={variant}>{getOrderStatusLabel(status)}</Badge>;
   };
 
   const getPaymentStatusBadge = (status: string) => {
-    return (
-      <Badge className={getPaymentStatusColor(status)}>
-        {getPaymentStatusLabel(status)}
-      </Badge>
-    );
+    let variant: "pending" | "completed" | "cancelled" | "default" = "default";
+    
+    switch (status.toLowerCase()) {
+      case "pending":
+        variant = "pending";
+        break;
+      case "completed":
+      case "paid":
+        variant = "completed";
+        break;
+      case "cancelled":
+      case "failed":
+        variant = "cancelled";
+        break;
+      default:
+        variant = "default";
+    }
+    
+    return <Badge variant={variant}>{getPaymentStatusLabel(status)}</Badge>;
   };
 
   const formatPrice = (price: number) => {

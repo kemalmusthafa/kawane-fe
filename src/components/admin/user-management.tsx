@@ -137,11 +137,11 @@ export default function UserManagement() {
   const getRoleBadgeVariant = (role: string) => {
     switch (role) {
       case "ADMIN":
-        return "destructive";
+        return "danger";
       case "STAFF":
-        return "default";
+        return "info";
       case "CUSTOMER":
-        return "secondary";
+        return "default";
       default:
         return "outline";
     }
@@ -381,16 +381,16 @@ export default function UserManagement() {
                             </Badge>
                             {user.isVerified ? (
                               <Badge
-                                variant="default"
-                                className="bg-green-100 text-green-800 border-green-200 text-xs"
+                                variant="success"
+                                className="text-xs"
                               >
                                 <CheckCircle className="h-3 w-3 mr-1" />
                                 Verified
                               </Badge>
                             ) : (
                               <Badge
-                                variant="outline"
-                                className="border-orange-200 text-orange-800 text-xs"
+                                variant="warning"
+                                className="text-xs"
                               >
                                 <XCircle className="h-3 w-3 mr-1" />
                                 Unverified
