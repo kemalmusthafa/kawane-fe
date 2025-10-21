@@ -178,7 +178,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
         {/* Product Info */}
         <div className="space-y-4 sm:space-y-6">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2">
               {product.name}
             </h1>
             <div className="flex items-center space-x-2 sm:space-x-4 mb-3 sm:mb-4">
@@ -211,23 +211,23 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                   : "Out of Stock"}
               </Badge>
             </div>
-            <p className="text-xl sm:text-2xl font-bold text-blue-600">
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600">
               Rp {product.price.toLocaleString("id-ID")}
             </p>
           </div>
 
           <div>
-            <h3 className="text-sm sm:text-base font-semibold mb-2">
+            <h3 className="text-xs sm:text-sm font-semibold mb-2">
               Description
             </h3>
-            <p className="text-sm sm:text-base text-gray-600">
+            <p className="text-xs sm:text-sm text-gray-600">
               {product.description}
             </p>
           </div>
 
           {product.sizes && product.sizes.length > 0 && (
             <div>
-              <h3 className="text-sm sm:text-base font-semibold mb-2">
+              <h3 className="text-xs sm:text-sm font-semibold mb-2">
                 Select Size
               </h3>
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3 mb-4 sm:mb-6">
@@ -235,7 +235,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                   <button
                     key={sizeItem.id}
                     onClick={() => setSelectedSize(sizeItem.size)}
-                    className={`p-3 sm:p-4 lg:p-3 border rounded-lg text-center transition-colors ${
+                    className={`p-2 sm:p-3 lg:p-3 border rounded-lg text-center transition-colors ${
                       selectedSize === sizeItem.size
                         ? "border-blue-500 bg-blue-500 text-white dark:bg-blue-600 dark:text-white"
                         : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
@@ -246,7 +246,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                     }`}
                     disabled={sizeItem.stock === 0}
                   >
-                    <div className="text-sm sm:text-base lg:text-sm font-medium">
+                    <div className="text-xs sm:text-sm lg:text-sm font-medium">
                       {sizeItem.size}
                     </div>
                   </button>
@@ -262,7 +262,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
 
           {/* Quantity Selector */}
           <div className="flex items-center space-x-2 sm:space-x-4">
-            <Label htmlFor="quantity" className="text-sm sm:text-base">
+            <Label htmlFor="quantity" className="text-xs sm:text-sm">
               Quantity:
             </Label>
             <div className="flex items-center space-x-1 sm:space-x-2">
@@ -271,9 +271,9 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                 size="sm"
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 disabled={quantity <= 1}
-                className="h-8 w-8 sm:h-10 sm:w-10 p-0"
+                className="h-6 w-6 sm:h-8 sm:w-8 p-0"
               >
-                <Minus className="w-4 h-4 sm:w-5 sm:h-5" />
+                <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
               <Input
                 id="quantity"
@@ -282,7 +282,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                 onChange={(e) =>
                   setQuantity(Math.max(1, parseInt(e.target.value) || 1))
                 }
-                className="w-16 sm:w-20 text-center text-sm sm:text-base h-8 sm:h-10"
+                className="w-12 sm:w-16 text-center text-xs sm:text-sm h-6 sm:h-8"
                 min="1"
                 max={product.stock}
               />
@@ -293,9 +293,9 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                   setQuantity(Math.min(product.stock, quantity + 1))
                 }
                 disabled={quantity >= product.stock}
-                className="h-8 w-8 sm:h-10 sm:w-10 p-0"
+                className="h-6 w-6 sm:h-8 sm:w-8 p-0"
               >
-                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
             </div>
           </div>
@@ -308,22 +308,22 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                 quantity={quantity}
                 selectedSize={selectedSize}
                 variant="outline"
-                className="flex-1 text-sm sm:text-base lg:text-sm h-10 sm:h-12 lg:h-10"
+                className="flex-1 text-xs sm:text-sm lg:text-sm h-8 sm:h-10 lg:h-10"
                 disabled={product.stock === 0}
               />
               <AddToWishlistButton
                 product={product}
                 variant="outline"
-                className="flex-1 text-sm sm:text-base lg:text-sm h-10 sm:h-12 lg:h-10"
+                className="flex-1 text-xs sm:text-sm lg:text-sm h-8 sm:h-10 lg:h-10"
               />
             </div>
             <Button
               onClick={handleBuyNow}
               disabled={product.stock === 0}
-              className="w-full text-sm sm:text-base lg:text-sm h-10 sm:h-12 lg:h-10"
+              className="w-full text-xs sm:text-sm lg:text-sm h-8 sm:h-10 lg:h-10"
               size="lg"
             >
-              <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 lg:w-4 lg:h-4 mr-2" />
+              <CreditCard className="w-3 h-3 sm:w-4 sm:h-4 lg:w-4 lg:h-4 mr-2" />
               Buy Now
             </Button>
           </div>
