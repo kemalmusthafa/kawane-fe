@@ -150,9 +150,6 @@ export function FeaturedCategories() {
                       <h3 className="text-sm sm:text-base font-medium mb-1 group-hover:text-primary transition-colors line-clamp-1">
                         {category.name}
                       </h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground">
-                        {category._count?.products || 0} items
-                      </p>
                     </div>
                   </CardContent>
                 </Card>
