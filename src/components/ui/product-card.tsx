@@ -113,12 +113,12 @@ export function ProductCard({
             </h4>
           </Link>
 
-          {/* Size Information - Hidden on mobile for better responsiveness */}
+          {/* Size Information - Now visible on mobile with better styling */}
           {hasSizes && (
-            <div className="mb-1 sm:mb-2 md:mb-3 hidden sm:block">
+            <div className="mb-1 sm:mb-2 md:mb-3">
               <div className="flex items-center gap-2 mb-1 sm:mb-2">
-                <span className="text-[10px] sm:text-xs font-semibold text-gray-700">
-                  Select Size:
+                <span className="text-[9px] sm:text-xs font-semibold text-gray-700 dark:text-gray-300">
+                  Size:
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-1">
@@ -128,19 +128,19 @@ export function ProductCard({
                     onClick={() => setSelectedSize(size.size)}
                     className={`p-1 sm:p-2 text-center rounded border transition-colors ${
                       selectedSize === size.size
-                        ? "border-blue-500 bg-blue-50 text-blue-700"
-                        : "border-gray-300 hover:border-gray-400"
+                        ? "border-blue-500 bg-blue-500 text-white dark:bg-blue-600 dark:text-white"
+                        : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
                     }`}
                   >
-                    <div className="text-[10px] sm:text-xs font-medium">
+                    <div className="text-[9px] sm:text-xs font-medium">
                       {size.size}
                     </div>
                   </button>
                 ))}
               </div>
               {availableSizes.length > 6 && (
-                <p className="text-[9px] sm:text-xs text-gray-500 mt-1 text-center">
-                  +{availableSizes.length - 6} more sizes
+                <p className="text-[8px] sm:text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">
+                  +{availableSizes.length - 6} more
                 </p>
               )}
               {selectedSize && (

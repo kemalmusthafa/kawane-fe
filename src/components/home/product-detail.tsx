@@ -176,20 +176,20 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
         </div>
 
         {/* Product Info */}
-        <div className="space-y-4 sm:space-y-6">
+        <div className="space-y-3 sm:space-y-6">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-lg sm:text-2xl font-bold text-gray-900 mb-2">
               {product.name}
             </h1>
-            <div className="flex items-center space-x-2 sm:space-x-4 mb-3 sm:mb-4">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 sm:space-x-4 mb-2 sm:mb-4">
+              <div className="flex items-center space-x-1 sm:space-x-2">
                 {renderStars(stats?.averageRating || 0)}
-                <span className="text-sm text-gray-600">
+                <span className="text-[10px] sm:text-sm text-gray-600">
                   {stats?.averageRating
                     ? stats.averageRating.toFixed(1)
                     : "0.0"}
                 </span>
-                <span className="text-sm text-gray-500">
+                <span className="text-[9px] sm:text-sm text-gray-500">
                   ({stats?.totalReviews || 0} review
                   {stats?.totalReviews !== 1 ? "s" : ""})
                 </span>
@@ -202,6 +202,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                     ? "secondary"
                     : "destructive"
                 }
+                className="text-[8px] sm:text-xs"
               >
                 {product.stock > 10
                   ? "In Stock"
@@ -210,34 +211,34 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                   : "Out of Stock"}
               </Badge>
             </div>
-            <p className="text-xl sm:text-2xl font-bold text-blue-600">
+            <p className="text-lg sm:text-2xl font-bold text-blue-600">
               Rp {product.price.toLocaleString("id-ID")}
             </p>
           </div>
 
           <div>
-            <h3 className="text-sm sm:text-base font-semibold mb-2">
+            <h3 className="text-xs sm:text-base font-semibold mb-2">
               Description
             </h3>
-            <p className="text-xs sm:text-sm text-gray-600">
+            <p className="text-[10px] sm:text-sm text-gray-600">
               {product.description}
             </p>
           </div>
 
           {product.sizes && product.sizes.length > 0 && (
             <div>
-              <h3 className="text-sm sm:text-base font-semibold mb-2">
+              <h3 className="text-xs sm:text-sm font-semibold mb-2">
                 Select Size
               </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-1 sm:gap-2 mb-3 sm:mb-4">
                 {product.sizes.map((sizeItem) => (
                   <button
                     key={sizeItem.id}
                     onClick={() => setSelectedSize(sizeItem.size)}
-                    className={`p-3 border rounded-lg text-center transition-colors ${
+                    className={`p-2 sm:p-3 border rounded-lg text-center transition-colors ${
                       selectedSize === sizeItem.size
-                        ? "border-blue-500 bg-blue-50 text-blue-700"
-                        : "border-gray-300 hover:border-gray-400"
+                        ? "border-blue-500 bg-blue-500 text-white dark:bg-blue-600 dark:text-white"
+                        : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
                     } ${
                       sizeItem.stock === 0
                         ? "opacity-50 cursor-not-allowed"
@@ -245,14 +246,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                     }`}
                     disabled={sizeItem.stock === 0}
                   >
-                    <div className="text-xs sm:text-sm font-medium">
+                    <div className="text-[10px] sm:text-xs font-medium">
                       {sizeItem.size}
                     </div>
                   </button>
                 ))}
               </div>
               {selectedSize && (
-                <p className="text-sm text-green-600 mb-2">
+                <p className="text-[10px] sm:text-sm text-green-600 mb-2">
                   ✓ Size {selectedSize} selected
                 </p>
               )}
@@ -261,17 +262,18 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
 
           {/* Quantity Selector */}
           <div className="flex items-center space-x-2 sm:space-x-4">
-            <Label htmlFor="quantity" className="text-xs sm:text-sm">
+            <Label htmlFor="quantity" className="text-[10px] sm:text-sm">
               Quantity:
             </Label>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 sm:space-x-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 disabled={quantity <= 1}
+                className="h-6 w-6 sm:h-8 sm:w-8 p-0"
               >
-                <Minus className="w-4 h-4" />
+                <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
               <Input
                 id="quantity"
@@ -280,7 +282,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                 onChange={(e) =>
                   setQuantity(Math.max(1, parseInt(e.target.value) || 1))
                 }
-                className="w-16 text-center"
+                className="w-12 sm:w-16 text-center text-[10px] sm:text-sm h-6 sm:h-8"
                 min="1"
                 max={product.stock}
               />
@@ -291,8 +293,9 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                   setQuantity(Math.min(product.stock, quantity + 1))
                 }
                 disabled={quantity >= product.stock}
+                className="h-6 w-6 sm:h-8 sm:w-8 p-0"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
             </div>
           </div>
@@ -305,35 +308,39 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                 quantity={quantity}
                 selectedSize={selectedSize}
                 variant="outline"
-                className="flex-1"
+                className="flex-1 text-[10px] sm:text-sm h-8 sm:h-10"
                 disabled={product.stock === 0}
               />
-              <AddToWishlistButton product={product} variant="outline" />
+              <AddToWishlistButton 
+                product={product} 
+                variant="outline" 
+                className="h-8 sm:h-10 w-8 sm:w-10"
+              />
             </div>
             <Button
               onClick={handleBuyNow}
               disabled={product.stock === 0}
-              className="w-full"
-              size="lg"
+              className="w-full text-[10px] sm:text-sm h-8 sm:h-10"
+              size="sm"
             >
-              <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+              <CreditCard className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
               Buy Now
             </Button>
           </div>
 
           {/* Product Features */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
-            <div className="flex items-center space-x-2">
-              <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
-              <span className="text-xs sm:text-sm">Free Shipping</span>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 pt-3 sm:pt-6 border-t">
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <Truck className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500" />
+              <span className="text-[9px] sm:text-xs">Free Shipping</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-              <span className="text-xs sm:text-sm">Secure Payment</span>
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+              <span className="text-[9px] sm:text-xs">Secure Payment</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <Package className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
-              <span className="text-xs sm:text-sm">Quality Guarantee</span>
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <Package className="w-3 h-3 sm:w-4 sm:h-4 text-purple-500" />
+              <span className="text-[9px] sm:text-xs">Quality Guarantee</span>
             </div>
           </div>
         </div>
@@ -342,32 +349,32 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
       <Separator className="my-6 sm:my-8" />
 
       {/* Call to Action untuk Review */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-4 sm:p-6 mb-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-3 sm:p-6 mb-4 sm:mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+            <h3 className="text-sm sm:text-lg font-semibold text-gray-900 dark:text-white mb-1">
               Share Your Experience
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
+            <p className="text-[10px] sm:text-sm text-gray-600 dark:text-gray-300">
               Help other customers by providing reviews and ratings for this
               product
             </p>
           </div>
           <Button
             onClick={() => setShowReviewForm(!showReviewForm)}
-            className="w-full sm:w-auto bg-primary hover:bg-primary/90"
+            className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-[10px] sm:text-sm h-7 sm:h-10"
           >
-            <MessageSquare className="w-4 h-4 mr-2" />
+            <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
             {isAuthenticated ? "Write Review" : "Login to Review"}
           </Button>
         </div>
       </div>
 
       {/* Reviews Section */}
-      <div className="space-y-4 sm:space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+      <div className="space-y-3 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
           <div>
-            <h2 className="text-lg sm:text-xl font-bold">
+            <h2 className="text-sm sm:text-xl font-bold">
               Reviews ({stats?.totalReviews || 0})
             </h2>
           </div>

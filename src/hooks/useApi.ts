@@ -1150,7 +1150,11 @@ export const useCategories = (params?: {
   // Fix data structure - data from SWR is the response object, not the data property
   // Try different data structures
   let categories = [];
-  if (data?.success && data?.data?.categories && Array.isArray(data.data.categories)) {
+  if (
+    data?.success &&
+    data?.data?.categories &&
+    Array.isArray(data.data.categories)
+  ) {
     categories = data.data.categories;
   } else if (data?.success && Array.isArray(data.data)) {
     categories = data.data;
