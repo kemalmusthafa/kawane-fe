@@ -80,50 +80,121 @@ export function InstagramFeed() {
     if (!containerRef.current) return;
 
     const currentTheme = resolvedTheme || theme || "light";
+
+    // Inject CSS for dark mode
+    if (currentTheme === "dark") {
+      injectDarkModeCSS();
+    }
+
+    // Find ALL elements inside the widget container
+    const allElements = containerRef.current.querySelectorAll("*");
     
-    // Find all Elfsight widget elements
-    const widgetElements = containerRef.current.querySelectorAll('[class*="elfsight"]');
-    
-    widgetElements.forEach((element: any) => {
+    allElements.forEach((element: any) => {
       if (currentTheme === "dark") {
-        // Apply dark mode styles
-        element.style.setProperty("--elfsight-bg-color", "#000000", "important");
-        element.style.setProperty("--elfsight-text-color", "#ffffff", "important");
-        element.style.setProperty("--elfsight-border-color", "#333333", "important");
+        // Force dark background on ALL elements
+        element.style.setProperty("background-color", "#000000", "important");
+        element.style.setProperty("background", "#000000", "important");
+        element.style.setProperty("color", "#ffffff", "important");
         
-        // Force dark background
-        element.style.backgroundColor = "#000000";
-        element.style.color = "#ffffff";
+        // Override any existing styles
+        element.style.backgroundColor = "#000000 !important";
+        element.style.color = "#ffffff !important";
         
-        // Find and style specific widget components
-        const profileCard = element.querySelector('[class*="profile"]') || element.querySelector('[class*="header"]');
-        if (profileCard) {
-          profileCard.style.backgroundColor = "#000000";
-          profileCard.style.color = "#ffffff";
+        // Handle specific widget elements
+        if (element.classList.toString().includes("elfsight")) {
+          element.style.setProperty("background-color", "#000000", "important");
+          element.style.setProperty("color", "#ffffff", "important");
         }
         
-        const postsGrid = element.querySelector('[class*="posts"]') || element.querySelector('[class*="grid"]');
-        if (postsGrid) {
-          postsGrid.style.backgroundColor = "#000000";
+        // Handle iframe elements
+        if (element.tagName === "IFRAME") {
+          element.style.setProperty("background-color", "#000000", "important");
         }
         
-        // Style all text elements
-        const textElements = element.querySelectorAll('p, span, div, h1, h2, h3, h4, h5, h6');
-        textElements.forEach((textEl: any) => {
-          if (textEl.style.color !== "rgb(255, 255, 255)") {
-            textEl.style.color = "#ffffff";
-          }
-        });
+        // Handle div elements
+        if (element.tagName === "DIV") {
+          element.style.setProperty("background-color", "#000000", "important");
+          element.style.setProperty("color", "#ffffff", "important");
+        }
+        
+        // Handle text elements
+        if (["P", "SPAN", "H1", "H2", "H3", "H4", "H5", "H6", "A"].includes(element.tagName)) {
+          element.style.setProperty("color", "#ffffff", "important");
+        }
       } else {
-        // Apply light mode styles
-        element.style.setProperty("--elfsight-bg-color", "#ffffff", "important");
-        element.style.setProperty("--elfsight-text-color", "#000000", "important");
-        element.style.setProperty("--elfsight-border-color", "#e5e5e5", "important");
-        
-        element.style.backgroundColor = "#ffffff";
-        element.style.color = "#000000";
+        // Light mode
+        element.style.setProperty("background-color", "#ffffff", "important");
+        element.style.setProperty("color", "#000000", "important");
       }
     });
+
+    // Also style the container itself
+    if (containerRef.current) {
+      if (currentTheme === "dark") {
+        containerRef.current.style.setProperty("background-color", "#000000", "important");
+        containerRef.current.style.setProperty("color", "#ffffff", "important");
+      } else {
+        containerRef.current.style.setProperty("background-color", "#ffffff", "important");
+        containerRef.current.style.setProperty("color", "#000000", "important");
+      }
+    }
+  };
+
+  // Inject CSS for dark mode
+  const injectDarkModeCSS = () => {
+    // Check if CSS already injected
+    const existingStyle = document.getElementById("elfsight-dark-mode-css");
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    const style = document.createElement("style");
+    style.id = "elfsight-dark-mode-css";
+    style.textContent = `
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 *,
+      [class*="elfsight"] *,
+      [class*="elfsight"] {
+        background-color: #000000 !important;
+        background: #000000 !important;
+        color: #ffffff !important;
+      }
+      
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 iframe,
+      [class*="elfsight"] iframe {
+        background-color: #000000 !important;
+        background: #000000 !important;
+      }
+      
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 div,
+      [class*="elfsight"] div {
+        background-color: #000000 !important;
+        background: #000000 !important;
+        color: #ffffff !important;
+      }
+      
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 p,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 span,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 h1,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 h2,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 h3,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 h4,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 h5,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 h6,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 a,
+      [class*="elfsight"] p,
+      [class*="elfsight"] span,
+      [class*="elfsight"] h1,
+      [class*="elfsight"] h2,
+      [class*="elfsight"] h3,
+      [class*="elfsight"] h4,
+      [class*="elfsight"] h5,
+      [class*="elfsight"] h6,
+      [class*="elfsight"] a {
+        color: #ffffff !important;
+      }
+    `;
+    document.head.appendChild(style);
   };
 
   // Re-initialize widget when theme changes
@@ -160,7 +231,17 @@ export function InstagramFeed() {
       });
     }
 
-    return () => observer.disconnect();
+    // Also apply styling continuously every 2 seconds
+    const interval = setInterval(() => {
+      if (resolvedTheme === "dark") {
+        applyDarkModeStyling();
+      }
+    }, 2000);
+
+    return () => {
+      observer.disconnect();
+      clearInterval(interval);
+    };
   }, [mounted, scriptLoaded, theme, resolvedTheme]);
 
   // Don't render until mounted to avoid hydration mismatch
