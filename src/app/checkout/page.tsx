@@ -101,7 +101,7 @@ export default function CheckoutPage() {
       })),
       totalAmount: total, // Total amount from cart (this is what Midtrans will use)
 
-      // Shipping address as string (concatenated)
+      // Shipping address as string (concatenated) - using street field as detail
       shippingAddress: `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.postalCode}, ${shippingAddress.country}`,
 
       // Mapped payment method
@@ -205,13 +205,13 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-gray-50 py-4 sm:py-6 lg:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-6 sm:mb-8">
-          <div className="mb-3 sm:mb-4">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+        <div className="mb-4 sm:mb-6 lg:mb-8">
+          <div className="mb-2 sm:mb-3 lg:mb-4">
+            <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900">
               Checkout
             </h1>
           </div>
-          <p className="text-sm sm:text-base text-gray-600">
+          <p className="text-xs sm:text-sm lg:text-base text-gray-600">
             Complete your information to finalize your order
           </p>
         </div>
@@ -228,9 +228,9 @@ export default function CheckoutPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 sm:space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                  <div className="space-y-2 sm:col-span-2">
-                    <Label htmlFor="street">Full Address *</Label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
+                  <div className="space-y-1 sm:space-y-2 sm:col-span-2">
+                    <Label htmlFor="street" className="text-xs sm:text-sm">Full Address *</Label>
                     <Textarea
                       id="street"
                       value={shippingAddress.street}
@@ -239,11 +239,11 @@ export default function CheckoutPage() {
                       }
                       placeholder="Street address, apartment, suite, etc."
                       rows={3}
-                      className="resize-none"
+                      className="resize-none text-xs sm:text-sm"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="phone" className="text-xs sm:text-sm">Phone Number</Label>
                     <Input
                       id="phone"
                       value={shippingAddress.phone}
@@ -251,13 +251,14 @@ export default function CheckoutPage() {
                         handleInputChange("phone", e.target.value)
                       }
                       placeholder="+62 812 3456 7890"
+                      className="text-xs sm:text-sm"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="city">City *</Label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="city" className="text-xs sm:text-sm">City *</Label>
                     <Input
                       id="city"
                       value={shippingAddress.city}
@@ -265,10 +266,11 @@ export default function CheckoutPage() {
                         handleInputChange("city", e.target.value)
                       }
                       placeholder="Jakarta"
+                      className="text-xs sm:text-sm"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="postalCode">Postal Code *</Label>
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="postalCode" className="text-xs sm:text-sm">Postal Code *</Label>
                     <Input
                       id="postalCode"
                       value={shippingAddress.postalCode}
@@ -276,10 +278,11 @@ export default function CheckoutPage() {
                         handleInputChange("postalCode", e.target.value)
                       }
                       placeholder="12345"
+                      className="text-xs sm:text-sm"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="country">Country *</Label>
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="country" className="text-xs sm:text-sm">Country *</Label>
                     <Input
                       id="country"
                       value={shippingAddress.country}
@@ -287,6 +290,7 @@ export default function CheckoutPage() {
                         handleInputChange("country", e.target.value)
                       }
                       placeholder="Indonesia"
+                      className="text-xs sm:text-sm"
                     />
                   </div>
                 </div>
@@ -296,7 +300,7 @@ export default function CheckoutPage() {
             {/* Order Notes */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">
+                <CardTitle className="text-sm sm:text-base">
                   Order Notes (Optional)
                 </CardTitle>
               </CardHeader>
@@ -306,7 +310,7 @@ export default function CheckoutPage() {
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Add any special instructions for your order..."
                   rows={3}
-                  className="resize-none"
+                  className="resize-none text-xs sm:text-sm"
                 />
               </CardContent>
             </Card>
@@ -315,27 +319,27 @@ export default function CheckoutPage() {
           {/* Order Summary */}
           <div className="space-y-4 sm:space-y-6">
             <Card className="sticky top-4 sm:top-6 lg:top-8">
-              <CardHeader className="pb-3 sm:pb-4">
-                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-                  <Package className="h-4 w-4 sm:h-5 sm:w-5" />
+              <CardHeader className="pb-2 sm:pb-3 lg:pb-4">
+                <CardTitle className="flex items-center gap-2 text-sm sm:text-base lg:text-lg">
+                  <Package className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5" />
                   Order Summary
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 sm:space-y-6">
                 {/* Order Items */}
-                <div className="space-y-3 sm:space-y-4">
+                <div className="space-y-2 sm:space-y-3 lg:space-y-4">
                   {cartItems.map((item) => (
                     <div
                       key={item.id}
-                      className="flex items-center gap-3 sm:gap-4"
+                      className="flex items-center gap-2 sm:gap-3 lg:gap-4"
                     >
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                         {item.product.images &&
                         item.product.images.length > 0 ? (
                           <img
                             src={item.product.images[0].url}
                             alt={item.product.name}
-                            className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover"
+                            className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 rounded-lg object-cover"
                             onError={(e) => {
                               e.currentTarget.style.display = "none";
                               const fallback = e.currentTarget
@@ -346,24 +350,24 @@ export default function CheckoutPage() {
                             }}
                           />
                         ) : null}
-                        <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-lg items-center justify-center hidden">
-                          <Package className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gray-100 rounded-lg items-center justify-center hidden">
+                          <Package className="h-4 w-4 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-gray-400" />
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs sm:text-sm font-medium break-words line-clamp-2">
+                        <p className="text-[10px] sm:text-xs lg:text-sm font-medium break-words line-clamp-2">
                           {item.product.name}
                         </p>
                         {(item as any).size && (
-                          <p className="text-xs sm:text-sm text-blue-600 font-medium mt-1">
+                          <p className="text-[10px] sm:text-xs lg:text-sm text-blue-600 font-medium mt-0.5 sm:mt-1">
                             Size: {(item as any).size}
                           </p>
                         )}
-                        <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                        <p className="text-[10px] sm:text-xs lg:text-sm text-gray-500 mt-0.5 sm:mt-1">
                           Qty: {item.quantity}
                         </p>
                       </div>
-                      <div className="text-xs sm:text-sm font-medium text-right">
+                      <div className="text-[10px] sm:text-xs lg:text-sm font-medium text-right">
                         Rp {item.product.price.toLocaleString("id-ID")}
                       </div>
                     </div>
@@ -373,17 +377,17 @@ export default function CheckoutPage() {
                 <Separator />
 
                 {/* Order Total */}
-                <div className="space-y-2 sm:space-y-3">
-                  <div className="flex justify-between text-sm sm:text-base">
+                <div className="space-y-1 sm:space-y-2 lg:space-y-3">
+                  <div className="flex justify-between text-xs sm:text-sm lg:text-base">
                     <span>Subtotal</span>
                     <span>Rp {total.toLocaleString("id-ID")}</span>
                   </div>
-                  <div className="flex justify-between text-sm sm:text-base">
+                  <div className="flex justify-between text-xs sm:text-sm lg:text-base">
                     <span>Shipping</span>
                     <span className="text-green-600">Free</span>
                   </div>
                   <Separator />
-                  <div className="flex justify-between text-base sm:text-lg font-bold">
+                  <div className="flex justify-between text-sm sm:text-base lg:text-lg font-bold">
                     <span>Total</span>
                     <span>Rp {total.toLocaleString("id-ID")}</span>
                   </div>
@@ -417,17 +421,16 @@ export default function CheckoutPage() {
                 <Button
                   onClick={handleCreateOrder}
                   disabled={isLoading || !agreeToTerms}
-                  className="w-full"
-                  size="lg"
+                  className="w-full bg-gray-900 hover:bg-gray-800 text-white text-xs sm:text-sm py-2 sm:py-3"
                 >
                   {isLoading ? (
                     <>
-                      <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2 animate-spin" />
+                      <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 animate-spin" />
                       Processing...
                     </>
                   ) : (
                     <>
-                      <Truck className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                      <Truck className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                       Place Order
                     </>
                   )}

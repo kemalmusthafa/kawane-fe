@@ -106,26 +106,26 @@ export default function AddressesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Addresses</h1>
-          <p className="text-sm text-gray-600">
+          <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Addresses</h1>
+          <p className="text-xs sm:text-sm text-gray-600">
             Manage your shipping addresses
           </p>
         </div>
         <Button
           onClick={handleAddAddress}
           disabled={isCreating}
-          className="bg-gray-900 hover:bg-gray-800 text-white"
+          className="bg-gray-900 hover:bg-gray-800 text-white text-xs sm:text-sm"
         >
           {isCreating ? (
             <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 animate-spin" />
               Adding...
             </>
           ) : (
             <>
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
               Add Address
             </>
           )}
@@ -134,32 +134,32 @@ export default function AddressesPage() {
 
       <div>
         {isLoading ? (
-          <div className="flex justify-center py-8">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-600" />
+          <div className="flex justify-center py-6 sm:py-8">
+            <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-gray-600" />
           </div>
         ) : addresses.length === 0 ? (
           <Card className="border border-gray-200 bg-white rounded-lg">
-            <CardContent className="text-center py-12">
-              <MapPin className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-base font-medium text-gray-900 mb-2">
+            <CardContent className="text-center py-8 sm:py-12">
+              <MapPin className="w-8 h-8 sm:w-12 sm:h-12 text-gray-300 mx-auto mb-3 sm:mb-4" />
+              <h3 className="text-sm sm:text-base font-medium text-gray-900 mb-1 sm:mb-2">
                 No Addresses Found
               </h3>
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
                 You haven't added any addresses yet.
               </p>
               <Button
                 onClick={handleAddAddress}
                 disabled={isCreating}
-                className="bg-gray-900 hover:bg-gray-800 text-white"
+                className="bg-gray-900 hover:bg-gray-800 text-white text-xs sm:text-sm"
               >
                 {isCreating ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 animate-spin" />
                     Adding...
                   </>
                 ) : (
                   <>
-                    <Plus className="h-4 w-4 mr-2" />
+                    <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                     Add Your First Address
                   </>
                 )}
@@ -172,11 +172,11 @@ export default function AddressesPage() {
               ? addresses.map((address: any, index: number) => (
                   <div key={address.id}>
                     <Card className="hover:shadow-lg transition-shadow">
-                      <CardContent className="p-6">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <CardContent className="p-4 sm:p-6">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
                           <div className="flex-1">
-                            <div className="flex items-center gap-4 mb-2">
-                              <h3 className="text-base font-semibold break-all">
+                            <div className="flex items-center gap-2 sm:gap-4 mb-1 sm:mb-2">
+                              <h3 className="text-sm sm:text-base font-semibold break-all">
                                 {address.label || "Address"}
                               </h3>
                               <div className="flex items-center gap-2">
@@ -188,50 +188,50 @@ export default function AddressesPage() {
                                 )} */}
                               </div>
                             </div>
-                            <div className="flex items-center gap-6 text-sm text-gray-600 mb-3">
-                              <div className="flex items-center gap-2">
-                                <MapPin className="h-4 w-4" />
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3">
+                              <div className="flex items-center gap-1 sm:gap-2">
+                                <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
                                 {address.city || "Unknown City"}
                               </div>
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-1 sm:gap-2">
                                 <span className="text-gray-500">•</span>
                                 {address.postalCode || "00000"}
                               </div>
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-1 sm:gap-2">
                                 <span className="text-gray-500">•</span>
                                 {address.province || "Unknown Province"}
                               </div>
                             </div>
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                              <p className="font-medium break-words text-gray-900">
+                            <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                              <p className="font-medium break-words text-gray-900 text-xs sm:text-sm">
                                 {address.detail ||
                                   address.street ||
                                   "No address detail"}
                               </p>
                               {address.phone && (
-                                <p className="text-sm text-gray-600 break-words mt-1">
+                                <p className="text-xs sm:text-sm text-gray-600 break-words mt-1">
                                   Phone: {address.phone}
                                 </p>
                               )}
                             </div>
                           </div>
-                          <div className="flex gap-2">
+                          <div className="flex gap-1 sm:gap-2">
                             <Button
                               onClick={() => handleEditAddress(address.id)}
                               variant="outline"
                               size="sm"
-                              className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                              className="border-gray-300 text-gray-700 hover:bg-gray-50 text-xs sm:text-sm"
                             >
-                              <Edit className="h-4 w-4 mr-2" />
+                              <Edit className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                               Edit
                             </Button>
                             <Button
                               onClick={() => handleDeleteAddress(address.id)}
                               variant="outline"
                               size="sm"
-                              className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                              className="border-gray-300 text-gray-700 hover:bg-gray-50 text-xs sm:text-sm"
                             >
-                              <Trash2 className="h-4 w-4 mr-2" />
+                              <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                               Delete
                             </Button>
                           </div>

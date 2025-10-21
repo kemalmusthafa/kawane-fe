@@ -360,7 +360,9 @@ export function HomeNavigation() {
                         <Link href="/wishlist">
                           <div className="flex items-center">
                             <Heart className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
-                            <span className="text-xs sm:text-sm text-foreground">Wishlist</span>
+                            <span className="text-xs sm:text-sm text-foreground">
+                              Wishlist
+                            </span>
                             {currentUser && wishlistItems > 0 && (
                               <span className="ml-auto bg-primary text-primary-foreground text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center">
                                 {wishlistItems}
@@ -378,7 +380,9 @@ export function HomeNavigation() {
                         <Link href="/cart">
                           <div className="flex items-center">
                             <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
-                            <span className="text-xs sm:text-sm text-foreground">Cart</span>
+                            <span className="text-xs sm:text-sm text-foreground">
+                              Cart
+                            </span>
                             {currentUser && totalItems > 0 && (
                               <span className="ml-auto bg-primary text-primary-foreground text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center">
                                 {totalItems}
@@ -451,7 +455,9 @@ export function HomeNavigation() {
                               onClick={() => setIsMobileMenuOpen(false)}
                             >
                               <Home className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-primary" />
-                              <span className="text-xs sm:text-sm text-foreground">Dashboard</span>
+                              <span className="text-xs sm:text-sm text-foreground">
+                                Dashboard
+                              </span>
                             </Link>
                           </Button>
                         )}
@@ -466,7 +472,9 @@ export function HomeNavigation() {
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
                             <UserIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
-                            <span className="text-xs sm:text-sm text-foreground">Profile</span>
+                            <span className="text-xs sm:text-sm text-foreground">
+                              Profile
+                            </span>
                           </Link>
                         </Button>
                         <Button
@@ -496,7 +504,9 @@ export function HomeNavigation() {
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
                             <UserIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
-                            <span className="text-xs sm:text-sm text-foreground">Sign In</span>
+                            <span className="text-xs sm:text-sm text-foreground">
+                              Sign In
+                            </span>
                           </Link>
                         </Button>
                         <Button
@@ -509,7 +519,9 @@ export function HomeNavigation() {
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
                             <UserPlus className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
-                            <span className="text-xs sm:text-sm text-foreground">Sign Up</span>
+                            <span className="text-xs sm:text-sm text-foreground">
+                              Sign Up
+                            </span>
                           </Link>
                         </Button>
                       </div>
