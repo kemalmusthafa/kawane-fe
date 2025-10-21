@@ -5,12 +5,11 @@ import { useTheme } from "next-themes";
 
 export function InstagramFeed() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const scriptLoadedRef = useRef(false);
-  const widgetInstanceRef = useRef<any>(null);
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
 
-  // Widget ID yang sama untuk light dan dark mode
+  // Widget ID
   const WIDGET_ID = "c8fd5002-bb9d-4039-a80f-3b119ac14fe8";
 
   // Ensure component is mounted before accessing theme
@@ -19,25 +18,38 @@ export function InstagramFeed() {
   }, []);
 
   useEffect(() => {
-    // Load Elfsight script only once
-    if (!scriptLoadedRef.current) {
+    if (!mounted) return;
+
+    // Load Elfsight script
+    const loadScript = () => {
+      // Check if script already exists
+      const existingScript = document.querySelector('script[src="https://elfsightcdn.com/platform.js"]');
+      if (existingScript) {
+        setScriptLoaded(true);
+        initializeWidget();
+        return;
+      }
+
       const script = document.createElement("script");
       script.src = "https://elfsightcdn.com/platform.js";
       script.async = true;
       script.onload = () => {
-        scriptLoadedRef.current = true;
+        setScriptLoaded(true);
         initializeWidget();
       };
+      script.onerror = () => {
+        console.error("Failed to load Elfsight script");
+      };
       document.head.appendChild(script);
-    } else {
-      initializeWidget();
-    }
-  }, []);
+    };
+
+    loadScript();
+  }, [mounted]);
 
   const initializeWidget = () => {
-    if (!mounted || !containerRef.current) return;
+    if (!mounted || !containerRef.current || !scriptLoaded) return;
 
-    // Clear existing content completely
+    // Clear existing content
     containerRef.current.innerHTML = "";
 
     // Create the widget container
@@ -45,44 +57,30 @@ export function InstagramFeed() {
     widgetContainer.className = `elfsight-app-${WIDGET_ID}`;
     widgetContainer.setAttribute("data-elfsight-app-lazy", "");
     
-    // Add theme-specific attributes
-    widgetContainer.setAttribute("data-theme", resolvedTheme || theme || "light");
-    
-    // Add CSS custom properties for theme
-    widgetContainer.style.setProperty("--theme-mode", resolvedTheme || theme || "light");
+    // Add theme information
+    const currentTheme = resolvedTheme || theme || "light";
+    widgetContainer.setAttribute("data-theme", currentTheme);
     
     containerRef.current.appendChild(widgetContainer);
 
-    // Force re-initialization with theme
+    // Initialize the widget
     if (window.Elfsight && window.Elfsight.init) {
-      // Destroy existing instance if any
-      if (widgetInstanceRef.current) {
-        try {
-          widgetInstanceRef.current.destroy?.();
-        } catch (e) {
-          console.log("Widget destroy failed:", e);
-        }
-      }
-      
-      // Initialize new instance
       setTimeout(() => {
         window.Elfsight.init();
-        widgetInstanceRef.current = window.Elfsight;
-      }, 100);
+      }, 200);
     }
   };
 
   // Re-initialize widget when theme changes
   useEffect(() => {
-    if (mounted && scriptLoadedRef.current && containerRef.current) {
-      // Longer delay to ensure theme change is fully applied
+    if (mounted && scriptLoaded && containerRef.current) {
       const timer = setTimeout(() => {
         initializeWidget();
-      }, 300);
+      }, 500);
 
       return () => clearTimeout(timer);
     }
-  }, [theme, resolvedTheme, mounted]);
+  }, [theme, resolvedTheme, mounted, scriptLoaded]);
 
   // Don't render until mounted to avoid hydration mismatch
   if (!mounted) {
@@ -124,15 +122,17 @@ export function InstagramFeed() {
         <div className="max-w-6xl mx-auto">
           <div
             ref={containerRef}
-            className="instagram-feed-container"
+            className="instagram-feed-container min-h-[400px]"
             data-theme={resolvedTheme || theme}
             suppressHydrationWarning
-            style={{
-              // Force theme inheritance
-              colorScheme: resolvedTheme === "dark" ? "dark" : "light",
-            }}
           >
-            {/* Widget will be inserted here */}
+            {!scriptLoaded && (
+              <div className="flex items-center justify-center h-64">
+                <div className="animate-pulse text-muted-foreground">
+                  Loading Instagram feed...
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -145,7 +145,6 @@ declare global {
   interface Window {
     Elfsight: {
       init: () => void;
-      destroy?: () => void;
     };
   }
 }
