@@ -84,7 +84,7 @@ export function FeaturedCategories() {
         <div className="container mx-auto px-6 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-3 sm:mb-4">
-              Shop by Category
+              Shop by Collections
             </h2>
             <p className="text-sm sm:text-base text-red-600">
               Gagal memuat kategori:{" "}
@@ -101,7 +101,7 @@ export function FeaturedCategories() {
       <div className="container mx-auto px-6 sm:px-6 lg:px-8">
         <div className="text-center mb-4 sm:mb-6 lg:mb-8">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-3 sm:mb-4">
-            Shop by Category
+            Shop by Collections
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
             Discover our curated collections across various categories
