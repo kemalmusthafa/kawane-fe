@@ -426,13 +426,6 @@ export function HomeNavigation() {
                       >
                         About
                       </Link>
-                      <Link
-                        href="/help"
-                        className="block py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Help & Support
-                      </Link>
                     </nav>
 
                     {/* User Actions */}

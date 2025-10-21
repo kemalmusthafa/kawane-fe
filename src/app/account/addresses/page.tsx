@@ -108,7 +108,9 @@ export default function AddressesPage() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-4">
         <div>
-          <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Addresses</h1>
+          <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
+            Addresses
+          </h1>
           <p className="text-xs sm:text-sm text-gray-600">
             Manage your shipping addresses
           </p>

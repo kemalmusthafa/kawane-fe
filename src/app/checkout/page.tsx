@@ -230,7 +230,9 @@ export default function CheckoutPage() {
               <CardContent className="space-y-4 sm:space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
                   <div className="space-y-1 sm:space-y-2 sm:col-span-2">
-                    <Label htmlFor="street" className="text-xs sm:text-sm">Full Address *</Label>
+                    <Label htmlFor="street" className="text-xs sm:text-sm">
+                      Full Address *
+                    </Label>
                     <Textarea
                       id="street"
                       value={shippingAddress.street}
@@ -243,7 +245,9 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="space-y-1 sm:space-y-2">
-                    <Label htmlFor="phone" className="text-xs sm:text-sm">Phone Number</Label>
+                    <Label htmlFor="phone" className="text-xs sm:text-sm">
+                      Phone Number
+                    </Label>
                     <Input
                       id="phone"
                       value={shippingAddress.phone}
@@ -258,7 +262,9 @@ export default function CheckoutPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
                   <div className="space-y-1 sm:space-y-2">
-                    <Label htmlFor="city" className="text-xs sm:text-sm">City *</Label>
+                    <Label htmlFor="city" className="text-xs sm:text-sm">
+                      City *
+                    </Label>
                     <Input
                       id="city"
                       value={shippingAddress.city}
@@ -270,7 +276,9 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="space-y-1 sm:space-y-2">
-                    <Label htmlFor="postalCode" className="text-xs sm:text-sm">Postal Code *</Label>
+                    <Label htmlFor="postalCode" className="text-xs sm:text-sm">
+                      Postal Code *
+                    </Label>
                     <Input
                       id="postalCode"
                       value={shippingAddress.postalCode}
@@ -282,7 +290,9 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="space-y-1 sm:space-y-2">
-                    <Label htmlFor="country" className="text-xs sm:text-sm">Country *</Label>
+                    <Label htmlFor="country" className="text-xs sm:text-sm">
+                      Country *
+                    </Label>
                     <Input
                       id="country"
                       value={shippingAddress.country}
