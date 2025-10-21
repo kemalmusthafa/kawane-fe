@@ -58,11 +58,33 @@ export default function AdminOrders() {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [isOrderDetailsOpen, setIsOrderDetailsOpen] = useState(false);
 
+  // Map frontend status values to backend expected values
+  const mapStatusToBackend = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "PENDING";
+      case "shipped":
+        return "SHIPPED";
+      case "delivered":
+        return "COMPLETED";
+      case "CANCELLED":
+        return "CANCELLED";
+      case "paid":
+        return "PAID";
+      case "failed":
+        return "FAILED";
+      case "refunded":
+        return "REFUNDED";
+      default:
+        return status;
+    }
+  };
+
   const { data, isLoading, isSearching, error, refetch } = useAdminOrders({
     search: searchTerm,
-    status: statusFilter === "all" ? undefined : statusFilter,
+    status: statusFilter === "all" ? undefined : mapStatusToBackend(statusFilter),
     paymentStatus:
-      paymentStatusFilter === "all" ? undefined : paymentStatusFilter,
+      paymentStatusFilter === "all" ? undefined : mapStatusToBackend(paymentStatusFilter),
     page: currentPage,
     limit: 5,
     sortBy: "createdAt",
@@ -71,7 +93,7 @@ export default function AdminOrders() {
 
   const getStatusBadge = (status: string) => {
     let variant: "pending" | "completed" | "cancelled" | "default" = "default";
-    
+
     switch (status.toLowerCase()) {
       case "pending":
         variant = "pending";
@@ -86,13 +108,13 @@ export default function AdminOrders() {
       default:
         variant = "default";
     }
-    
+
     return <Badge variant={variant}>{getOrderStatusLabel(status)}</Badge>;
   };
 
   const getPaymentStatusBadge = (status: string) => {
     let variant: "pending" | "completed" | "cancelled" | "default" = "default";
-    
+
     switch (status.toLowerCase()) {
       case "pending":
         variant = "pending";
@@ -108,7 +130,7 @@ export default function AdminOrders() {
       default:
         variant = "default";
     }
-    
+
     return <Badge variant={variant}>{getPaymentStatusLabel(status)}</Badge>;
   };
 
@@ -174,11 +196,17 @@ export default function AdminOrders() {
     if (!confirm("Apakah Anda yakin ingin menghapus order ini?")) return;
 
     try {
-      // Implementasi delete order - akan menggunakan API yang sesuai
-      toast.success("Order berhasil dihapus");
-      refetch(); // Refresh data setelah delete
+      // Since there's no delete endpoint, we'll cancel the order instead
+      const response = await apiClient.updateOrderStatus(orderId, "CANCELLED");
+      if (response.success) {
+        toast.success("Order berhasil dibatalkan");
+        refetch(); // Refresh data setelah cancel
+      } else {
+        toast.error("Gagal membatalkan order");
+      }
     } catch (error: any) {
-      toast.error(error.message || "Gagal menghapus order");
+      console.error("Error cancelling order:", error);
+      toast.error(error.message || "Gagal membatalkan order");
     }
   };
 

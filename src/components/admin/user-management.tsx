@@ -380,18 +380,12 @@ export default function UserManagement() {
                               {user.role}
                             </Badge>
                             {user.isVerified ? (
-                              <Badge
-                                variant="success"
-                                className="text-xs"
-                              >
+                              <Badge variant="success" className="text-xs">
                                 <CheckCircle className="h-3 w-3 mr-1" />
                                 Verified
                               </Badge>
                             ) : (
-                              <Badge
-                                variant="warning"
-                                className="text-xs"
-                              >
+                              <Badge variant="warning" className="text-xs">
                                 <XCircle className="h-3 w-3 mr-1" />
                                 Unverified
                               </Badge>
