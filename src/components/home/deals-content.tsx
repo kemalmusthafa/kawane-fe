@@ -284,52 +284,52 @@ export function DealsContent() {
                     </div>
                   </Link>
 
-                  {/* Deal Badge */}
-                  <div className="absolute top-4 left-4">
+                  {/* Deal Badge - Smaller and more responsive like homepage */}
+                  <div className="absolute top-2 left-2 sm:top-4 sm:left-4">
                     <Badge
                       className={`${
                         deal.isFlashSale ? "bg-orange-500" : "bg-red-500"
-                      } text-white`}
+                      } text-white text-[8px] xs:text-[9px] sm:text-[10px] px-1 py-0.5 sm:px-1.5 sm:py-0.5`}
                     >
-                      <Percent className="w-3 h-3 mr-1" />
+                      <Percent className="w-2 h-2 sm:w-3 sm:h-3 mr-1" />
                       {getDiscountPercentage(deal)}% OFF
                     </Badge>
                   </div>
 
-                  {/* Flash Sale Badge */}
+                  {/* Flash Sale Badge - Smaller and more responsive */}
                   {deal.isFlashSale && (
-                    <div className="absolute top-12 left-4">
-                      <Badge className="bg-orange-600 text-white">
+                    <div className="absolute top-1 left-1 sm:top-2 sm:left-2">
+                      <Badge className="bg-orange-600 text-white text-[8px] xs:text-[9px] sm:text-[10px] px-1 py-0.5 sm:px-1.5 sm:py-0.5">
                         Flash Sale
                       </Badge>
                     </div>
                   )}
 
-                  {/* Multiple images indicator */}
+                  {/* Multiple images indicator - Smaller and more responsive */}
                   {((deal.images && deal.images.length > 1) ||
                     (deal.image && deal.images && deal.images.length > 0)) && (
-                    <div className="absolute top-4 right-4 bg-black/70 text-white px-2 py-1 rounded-full text-xs">
+                    <div className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-black/70 text-white px-1 py-0.5 sm:px-2 sm:py-1 rounded-full text-[8px] xs:text-[9px] sm:text-[10px]">
                       {deal.images ? deal.images.length : 2} images
                     </div>
                   )}
                 </div>
 
-                <div className="p-4 sm:p-6 lg:p-8">
+                <div className="p-2 sm:p-3 md:p-4 lg:p-6">
                   <Link href={`/deals/${deal.id}`}>
-                    <h4 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3 line-clamp-2 hover:text-primary transition-colors">
+                    <h4 className="text-[11px] sm:text-xs md:text-sm font-semibold mb-1 sm:mb-2 line-clamp-2 hover:text-primary transition-colors">
                       {deal.title}
                     </h4>
                   </Link>
 
-                  <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 line-clamp-2">
+                  <p className="text-[9px] sm:text-xs text-gray-600 dark:text-gray-400 mb-1 sm:mb-2 md:mb-3 line-clamp-2">
                     {deal.description ||
                       "Attractive deal with limited offers. Click to see full details!"}
                   </p>
 
-                  <div className="flex items-center space-x-2 mb-3 sm:mb-4">
-                    <Clock className="w-4 h-4 text-orange-500" />
+                  <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2 md:mb-3">
+                    <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500" />
                     <span
-                      className={`text-xs sm:text-sm font-medium ${
+                      className={`text-[9px] sm:text-xs font-medium ${
                         getTimeLeft(deal.endDate) === "Expired"
                           ? "text-red-600"
                           : "text-orange-600"
@@ -339,19 +339,19 @@ export function DealsContent() {
                     </span>
                   </div>
 
-                  <div className="flex items-center space-x-2 mb-3 sm:mb-4">
-                    <span className="text-xs sm:text-sm text-gray-500">
+                  <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2 md:mb-3">
+                    <span className="text-[9px] sm:text-xs text-gray-500 dark:text-gray-400">
                       {deal.type === "PERCENTAGE" || deal.type === "FLASH_SALE"
                         ? `${deal.value}% discount`
                         : `Rp ${deal.value.toLocaleString()} off`}
                     </span>
                   </div>
 
-                  <div className="flex space-x-2">
+                  <div className="flex space-x-1 sm:space-x-2">
                     <AddToDealCartButton
                       deal={deal}
                       productId={deal.dealProducts?.[0]?.productId || ""}
-                      className="flex-1"
+                      className="flex-1 text-[10px] sm:text-xs"
                       size="sm"
                       disabled={getTimeLeft(deal.endDate) === "Expired"}
                     />

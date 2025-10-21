@@ -229,12 +229,19 @@ export const createCheckoutMessage = (cartData: {
   const firstWithId = cartData.items.find((it: any) => (it.product as any)?.id);
   if ((firstWithId as any)?.product?.id) {
     // Check if this item has deal information
-    if ((firstWithId as any).product.deal && (firstWithId as any).product.deal.id) {
+    if (
+      (firstWithId as any).product.deal &&
+      (firstWithId as any).product.deal.id
+    ) {
       // Use deal link instead of product link
-      firstProductLink = `${appUrl}/deals/${(firstWithId as any).product.deal.id}`;
+      firstProductLink = `${appUrl}/deals/${
+        (firstWithId as any).product.deal.id
+      }`;
     } else {
       // Use regular product link
-      firstProductLink = `${appUrl}/products/${(firstWithId as any).product.id}`;
+      firstProductLink = `${appUrl}/products/${
+        (firstWithId as any).product.id
+      }`;
     }
   }
 
