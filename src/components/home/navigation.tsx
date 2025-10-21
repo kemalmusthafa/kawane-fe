@@ -16,6 +16,10 @@ import {
   UserPlus,
   MapPin,
   Bell,
+  Package,
+  Phone,
+  Tag,
+  Info,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -305,7 +309,7 @@ export function HomeNavigation() {
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="w-72 sm:w-80 lg:w-96 p-0 mobile-sidebar"
+                className="w-64 sm:w-72 p-0 mobile-sidebar"
               >
                 <div className="flex flex-col h-full">
                   {/* Header */}
@@ -398,34 +402,62 @@ export function HomeNavigation() {
                       <h3 className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 sm:mb-4">
                         Navigation
                       </h3>
-                      <Link
-                        href="/products"
-                        className="block py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
-                        onClick={() => setIsMobileMenuOpen(false)}
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start hover:bg-accent/50 dark:hover:bg-accent/30 hover:text-foreground dark:hover:text-foreground transition-colors duration-200 py-2 sm:py-3"
+                        asChild
                       >
-                        Products
-                      </Link>
-                      <Link
-                        href="/contact"
-                        className="block py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
-                        onClick={() => setIsMobileMenuOpen(false)}
+                        <Link href="/products" onClick={() => setIsMobileMenuOpen(false)}>
+                          <div className="flex items-center">
+                            <Package className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
+                            <span className="text-xs sm:text-sm text-foreground">
+                              Products
+                            </span>
+                          </div>
+                        </Link>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start hover:bg-accent/50 dark:hover:bg-accent/30 hover:text-foreground dark:hover:text-foreground transition-colors duration-200 py-2 sm:py-3"
+                        asChild
                       >
-                        Contact
-                      </Link>
-                      <Link
-                        href="/deals"
-                        className="block py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
-                        onClick={() => setIsMobileMenuOpen(false)}
+                        <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+                          <div className="flex items-center">
+                            <Phone className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
+                            <span className="text-xs sm:text-sm text-foreground">
+                              Contact
+                            </span>
+                          </div>
+                        </Link>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start hover:bg-accent/50 dark:hover:bg-accent/30 hover:text-foreground dark:hover:text-foreground transition-colors duration-200 py-2 sm:py-3"
+                        asChild
                       >
-                        Deals
-                      </Link>
-                      <Link
-                        href="/about"
-                        className="block py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm font-medium rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors text-foreground"
-                        onClick={() => setIsMobileMenuOpen(false)}
+                        <Link href="/deals" onClick={() => setIsMobileMenuOpen(false)}>
+                          <div className="flex items-center">
+                            <Tag className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
+                            <span className="text-xs sm:text-sm text-foreground">
+                              Deals
+                            </span>
+                          </div>
+                        </Link>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start hover:bg-accent/50 dark:hover:bg-accent/30 hover:text-foreground dark:hover:text-foreground transition-colors duration-200 py-2 sm:py-3"
+                        asChild
                       >
-                        About
-                      </Link>
+                        <Link href="/about" onClick={() => setIsMobileMenuOpen(false)}>
+                          <div className="flex items-center">
+                            <Info className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
+                            <span className="text-xs sm:text-sm text-foreground">
+                              About
+                            </span>
+                          </div>
+                        </Link>
+                      </Button>
                     </nav>
 
                     {/* User Actions */}

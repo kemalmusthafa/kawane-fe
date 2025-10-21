@@ -311,9 +311,9 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                 className="flex-1 text-sm sm:text-base h-10 sm:h-12"
                 disabled={product.stock === 0}
               />
-              <AddToWishlistButton 
-                product={product} 
-                variant="outline" 
+              <AddToWishlistButton
+                product={product}
+                variant="outline"
                 className="flex-1 text-sm sm:text-base h-10 sm:h-12"
               />
             </div>
