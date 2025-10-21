@@ -1089,8 +1089,8 @@ export const useCategories = (params?: {
     queryString.append("includeProducts", params.includeProducts.toString());
 
   const swrKey = queryString.toString()
-    ? `/api/categories?${queryString.toString()}`
-    : `/api/categories`;
+    ? `/categories?${queryString.toString()}`
+    : `/categories`;
 
   const {
     data,
@@ -1150,7 +1150,9 @@ export const useCategories = (params?: {
   // Fix data structure - data from SWR is the response object, not the data property
   // Try different data structures
   let categories = [];
-  if (data?.success && Array.isArray(data.data)) {
+  if (data?.success && data?.data?.categories && Array.isArray(data.data.categories)) {
+    categories = data.data.categories;
+  } else if (data?.success && Array.isArray(data.data)) {
     categories = data.data;
   } else if (Array.isArray(data)) {
     categories = data;

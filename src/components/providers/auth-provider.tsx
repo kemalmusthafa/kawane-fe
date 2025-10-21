@@ -79,7 +79,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // Simplified session fetch - let backend handle token validation
         const response = await apiClient.getSession();
         clearTimeout(timeoutId);
-        
+
         if (response.success && response.data) {
           setUser(response.data);
         } else {
@@ -92,7 +92,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error) {
       if (
         error instanceof Error &&
-        (error.message.includes("Too many requests") || error.message.includes("aborted"))
+        (error.message.includes("Too many requests") ||
+          error.message.includes("aborted"))
       ) {
         if (retryCount < 2) {
           setTimeout(() => {

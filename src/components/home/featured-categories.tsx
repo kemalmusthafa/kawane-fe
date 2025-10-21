@@ -96,6 +96,23 @@ export function FeaturedCategories() {
     );
   }
 
+  if (!categories || categories.length === 0) {
+    return (
+      <section className="py-6 sm:py-6 lg:py-8">
+        <div className="container mx-auto px-6 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-3 sm:mb-4">
+              Shop by Collections
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground">
+              Tidak ada kategori tersedia saat ini
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-6 sm:py-6 lg:py-8">
       <div className="container mx-auto px-6 sm:px-6 lg:px-8">
