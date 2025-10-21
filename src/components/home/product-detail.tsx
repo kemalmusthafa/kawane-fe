@@ -235,7 +235,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                   <button
                     key={sizeItem.id}
                     onClick={() => setSelectedSize(sizeItem.size)}
-                    className={`p-3 sm:p-4 border rounded-lg text-center transition-colors ${
+                    className={`p-3 sm:p-4 lg:p-3 border rounded-lg text-center transition-colors ${
                       selectedSize === sizeItem.size
                         ? "border-blue-500 bg-blue-500 text-white dark:bg-blue-600 dark:text-white"
                         : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
@@ -246,7 +246,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                     }`}
                     disabled={sizeItem.stock === 0}
                   >
-                    <div className="text-sm sm:text-base font-medium">
+                    <div className="text-sm sm:text-base lg:text-sm font-medium">
                       {sizeItem.size}
                     </div>
                   </button>
@@ -308,22 +308,22 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                 quantity={quantity}
                 selectedSize={selectedSize}
                 variant="outline"
-                className="flex-1 text-sm sm:text-base h-10 sm:h-12"
+                className="flex-1 text-sm sm:text-base lg:text-sm h-10 sm:h-12 lg:h-10"
                 disabled={product.stock === 0}
               />
               <AddToWishlistButton
                 product={product}
                 variant="outline"
-                className="flex-1 text-sm sm:text-base h-10 sm:h-12"
+                className="flex-1 text-sm sm:text-base lg:text-sm h-10 sm:h-12 lg:h-10"
               />
             </div>
             <Button
               onClick={handleBuyNow}
               disabled={product.stock === 0}
-              className="w-full text-sm sm:text-base h-10 sm:h-12"
+              className="w-full text-sm sm:text-base lg:text-sm h-10 sm:h-12 lg:h-10"
               size="lg"
             >
-              <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+              <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 lg:w-4 lg:h-4 mr-2" />
               Buy Now
             </Button>
           </div>

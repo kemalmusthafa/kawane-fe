@@ -19,7 +19,7 @@ export function HomeFooter() {
             <h3 className="font-pragmatica font-[700] tracking-[0.02em] text-sm sm:text-base lg:text-lg mb-3 sm:mb-4 bg-gradient-to-r from-foreground to-muted-foreground dark:from-foreground dark:to-primary bg-clip-text text-transparent">
               Kawane Studio
             </h3>
-            <p className="font-pragmatica tracking-[0.01em] leading-relaxed text-xs sm:text-sm lg:text-base text-muted-foreground mb-3 sm:mb-4 flex-1">
+            <p className="font-pragmatica tracking-[0.01em] leading-relaxed text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4 flex-1">
               Premium e-commerce platform offering exceptional quality products
               and service.
             </p>
@@ -68,7 +68,7 @@ export function HomeFooter() {
               <li>
                 <Link
                   href="/products"
-                  className="text-xs sm:text-sm lg:text-base text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors"
                 >
                   Products
                 </Link>
@@ -76,7 +76,7 @@ export function HomeFooter() {
               <li>
                 <Link
                   href="/categories"
-                  className="text-xs sm:text-sm lg:text-base text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors"
                 >
                   Categories
                 </Link>
@@ -84,7 +84,7 @@ export function HomeFooter() {
               <li>
                 <Link
                   href="/deals"
-                  className="text-xs sm:text-sm lg:text-base text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors"
                 >
                   Deals
                 </Link>
@@ -92,7 +92,7 @@ export function HomeFooter() {
               <li>
                 <Link
                   href="/about"
-                  className="text-xs sm:text-sm lg:text-base text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors"
                 >
                   About Us
                 </Link>
@@ -109,7 +109,7 @@ export function HomeFooter() {
               <li>
                 <Link
                   href="/contact"
-                  className="text-xs sm:text-sm lg:text-base text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors"
                 >
                   Contact Us
                 </Link>
@@ -117,7 +117,7 @@ export function HomeFooter() {
               <li>
                 <Link
                   href="/contact"
-                  className="text-xs sm:text-sm lg:text-base text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors"
                 >
                   FAQ
                 </Link>
@@ -133,19 +133,19 @@ export function HomeFooter() {
             <div className="space-y-1.5 sm:space-y-2 flex-1">
               <div className="flex items-center space-x-2">
                 <Mail className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-muted-foreground flex-shrink-0" />
-                <span className="text-xs sm:text-sm lg:text-base text-muted-foreground break-all">
+                <span className="text-sm sm:text-base text-muted-foreground break-all">
                   info@kawane-studio.com
                 </span>
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-muted-foreground flex-shrink-0" />
-                <span className="text-xs sm:text-sm lg:text-base text-muted-foreground">
+                <span className="text-sm sm:text-base text-muted-foreground">
                   +62 21 1234 5678
                 </span>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-muted-foreground flex-shrink-0" />
-                <span className="text-xs sm:text-sm lg:text-base text-muted-foreground">
+                <span className="text-sm sm:text-base text-muted-foreground">
                   Jakarta, Indonesia
                 </span>
               </div>
@@ -154,7 +154,7 @@ export function HomeFooter() {
         </div>
 
         <div className="border-t mt-4 sm:mt-6 pt-4 sm:pt-6 text-center">
-          <p className="font-pragmatica tracking-[0.01em] text-xs sm:text-sm text-muted-foreground whitespace-nowrap">
+          <p className="font-pragmatica tracking-[0.01em] text-sm sm:text-base text-muted-foreground whitespace-nowrap">
             © 2024 Kawane Studio. All rights reserved.
           </p>
         </div>

@@ -407,7 +407,10 @@ export function HomeNavigation() {
                         className="w-full justify-start hover:bg-accent/50 dark:hover:bg-accent/30 hover:text-foreground dark:hover:text-foreground transition-colors duration-200 py-2 sm:py-3"
                         asChild
                       >
-                        <Link href="/products" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Link
+                          href="/products"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
                           <div className="flex items-center">
                             <Package className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
                             <span className="text-xs sm:text-sm text-foreground">
@@ -421,7 +424,10 @@ export function HomeNavigation() {
                         className="w-full justify-start hover:bg-accent/50 dark:hover:bg-accent/30 hover:text-foreground dark:hover:text-foreground transition-colors duration-200 py-2 sm:py-3"
                         asChild
                       >
-                        <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Link
+                          href="/contact"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
                           <div className="flex items-center">
                             <Phone className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
                             <span className="text-xs sm:text-sm text-foreground">
@@ -435,7 +441,10 @@ export function HomeNavigation() {
                         className="w-full justify-start hover:bg-accent/50 dark:hover:bg-accent/30 hover:text-foreground dark:hover:text-foreground transition-colors duration-200 py-2 sm:py-3"
                         asChild
                       >
-                        <Link href="/deals" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Link
+                          href="/deals"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
                           <div className="flex items-center">
                             <Tag className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
                             <span className="text-xs sm:text-sm text-foreground">
@@ -449,7 +458,10 @@ export function HomeNavigation() {
                         className="w-full justify-start hover:bg-accent/50 dark:hover:bg-accent/30 hover:text-foreground dark:hover:text-foreground transition-colors duration-200 py-2 sm:py-3"
                         asChild
                       >
-                        <Link href="/about" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Link
+                          href="/about"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
                           <div className="flex items-center">
                             <Info className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
                             <span className="text-xs sm:text-sm text-foreground">
