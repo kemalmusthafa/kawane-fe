@@ -146,7 +146,7 @@ export function HomeFooter() {
               <div className="flex items-center space-x-2">
                 <MapPin className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-muted-foreground flex-shrink-0" />
                 <span className="text-sm sm:text-base text-muted-foreground">
-                  Jakarta, Indonesia
+                  Bandung, Indonesia
                 </span>
               </div>
             </div>
@@ -155,7 +155,7 @@ export function HomeFooter() {
 
         <div className="border-t mt-4 sm:mt-6 pt-4 sm:pt-6 text-center">
           <p className="font-pragmatica tracking-[0.01em] text-sm sm:text-base text-muted-foreground whitespace-nowrap">
-            © 2024 Kawane Studio. All rights reserved.
+            © 2021 Kawane Studio. All rights reserved.
           </p>
         </div>
       </div>

@@ -43,6 +43,7 @@ import {
   Loader2,
   X,
 } from "lucide-react";
+import { LegacyPagination } from "@/components/ui/pagination";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { useAdminInventory } from "@/hooks/useApi";
@@ -51,14 +52,14 @@ export default function AdminInventoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(10);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const { inventory, total, isLoading, error, updateStock, mutate } =
     useAdminInventory({
-      page,
+      page: currentPage,
       limit,
       search: searchTerm || undefined,
       status: statusFilter !== "all" ? statusFilter : undefined,
@@ -91,8 +92,24 @@ export default function AdminInventoryPage() {
     setIsDetailsOpen(true);
   };
 
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const handleStatusFilterChange = (value: string) => {
+    setStatusFilter(value);
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
+
+  const handleCategoryFilterChange = (value: string) => {
+    setCategoryFilter(value);
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
+
   // Calculate summary statistics
   const totalProducts = total || 0;
+  const totalPages = Math.ceil(totalProducts / limit);
   const inStockProducts =
     inventory?.filter((item) => item.status === "IN_STOCK").length || 0;
   const lowStockProducts =
@@ -218,13 +235,13 @@ export default function AdminInventoryPage() {
                   <Input
                     placeholder="Search inventory..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => handleSearch(e.target.value)}
                     className="pl-10 text-sm"
                   />
                 </div>
               </div>
               <div className="w-full sm:w-48">
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
                   <SelectTrigger className="text-sm">
                     <SelectValue placeholder="Filter by status" />
                   </SelectTrigger>
@@ -239,7 +256,7 @@ export default function AdminInventoryPage() {
               <div className="w-full sm:w-48">
                 <Select
                   value={categoryFilter}
-                  onValueChange={setCategoryFilter}
+                  onValueChange={handleCategoryFilterChange}
                 >
                   <SelectTrigger className="text-sm">
                     <SelectValue placeholder="Filter by category" />
@@ -389,6 +406,21 @@ export default function AdminInventoryPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Pagination */}
+        {inventory && inventory.length > 0 && totalPages > 1 && (
+          <Card>
+            <CardContent className="py-4">
+              <LegacyPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                totalItems={totalProducts}
+                itemsPerPage={limit}
+              />
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Product Details Dialog */}
