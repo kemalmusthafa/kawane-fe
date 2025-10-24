@@ -90,6 +90,39 @@ export function InstagramFeed() {
     const allElements = containerRef.current.querySelectorAll("*");
 
     allElements.forEach((element: any) => {
+      // Remove any white corner boxes or unwanted elements
+      const computedStyle = window.getComputedStyle(element);
+      const elementStyle = element.style;
+      
+      // Check for white background elements that might be corner boxes
+      if (
+        computedStyle.backgroundColor === "white" ||
+        computedStyle.backgroundColor === "rgb(255, 255, 255)" ||
+        elementStyle.backgroundColor === "white" ||
+        elementStyle.backgroundColor === "#fff" ||
+        elementStyle.backgroundColor === "#ffffff" ||
+        elementStyle.backgroundColor === "rgb(255, 255, 255)"
+      ) {
+        // Hide white background elements
+        element.style.setProperty("display", "none", "important");
+        element.style.setProperty("visibility", "hidden", "important");
+        element.style.setProperty("opacity", "0", "important");
+        element.style.setProperty("background-color", "transparent", "important");
+        element.style.setProperty("background", "transparent", "important");
+      }
+
+      // Check for positioned elements that might be corner overlays
+      if (
+        computedStyle.position === "absolute" ||
+        computedStyle.position === "fixed" ||
+        elementStyle.position === "absolute" ||
+        elementStyle.position === "fixed"
+      ) {
+        // Make positioned elements transparent
+        element.style.setProperty("background-color", "transparent", "important");
+        element.style.setProperty("background", "transparent", "important");
+      }
+
       if (currentTheme === "dark") {
         // Force dark background on ALL elements
         element.style.setProperty("background-color", "#000000", "important");
@@ -204,6 +237,51 @@ export function InstagramFeed() {
       [class*="elfsight"] h6,
       [class*="elfsight"] a {
         color: #ffffff !important;
+      }
+      
+      /* Fix for white corner box issue */
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="position: absolute"],
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="position:fixed"],
+      [class*="elfsight"] [style*="position: absolute"],
+      [class*="elfsight"] [style*="position:fixed"] {
+        background-color: transparent !important;
+        background: transparent !important;
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+      }
+      
+      /* Hide any white overlay elements */
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="background-color: white"],
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="background-color: #fff"],
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="background-color: #ffffff"],
+      [class*="elfsight"] [style*="background-color: white"],
+      [class*="elfsight"] [style*="background-color: #fff"],
+      [class*="elfsight"] [style*="background-color: #ffffff"] {
+        background-color: transparent !important;
+        background: transparent !important;
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+      }
+      
+      /* Hide any elements with white background in top-right corner */
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="top: 0"],
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="right: 0"],
+      [class*="elfsight"] [style*="top: 0"],
+      [class*="elfsight"] [style*="right: 0"] {
+        background-color: transparent !important;
+        background: transparent !important;
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+      }
+      
+      /* Force all positioned elements to be transparent */
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 *[style*="position"],
+      [class*="elfsight"] *[style*="position"] {
+        background-color: transparent !important;
+        background: transparent !important;
       }
     `;
     document.head.appendChild(style);
