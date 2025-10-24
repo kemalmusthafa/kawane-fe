@@ -79,7 +79,9 @@ export function CartDrawer() {
       </SheetTrigger>
       <SheetContent side="right" className="w-full sm:w-80 lg:w-96">
         <SheetHeader>
-          <SheetTitle className="text-sm sm:text-base">Shopping Cart</SheetTitle>
+          <SheetTitle className="text-sm sm:text-base">
+            Shopping Cart
+          </SheetTitle>
         </SheetHeader>
 
         <div className="flex flex-col h-full">
@@ -94,7 +96,9 @@ export function CartDrawer() {
                   Silakan login untuk melihat keranjang belanja Anda
                 </p>
                 <Link href="/auth/sign-in" onClick={() => setIsOpen(false)}>
-                  <Button size="sm" className="text-xs sm:text-sm">Login</Button>
+                  <Button size="sm" className="text-xs sm:text-sm">
+                    Login
+                  </Button>
                 </Link>
               </div>
             </div>
@@ -102,14 +106,18 @@ export function CartDrawer() {
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
                 <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 text-muted-foreground mx-auto mb-3 sm:mb-4 animate-spin" />
-                <p className="text-xs sm:text-sm text-muted-foreground">Loading cart...</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Loading cart...
+                </p>
               </div>
             </div>
           ) : error ? (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
                 <ShoppingCart className="h-8 w-8 sm:h-10 sm:w-10 text-red-300 mx-auto mb-3 sm:mb-4" />
-                <p className="text-xs sm:text-sm text-red-600">Error loading cart</p>
+                <p className="text-xs sm:text-sm text-red-600">
+                  Error loading cart
+                </p>
                 <p className="text-xs text-muted-foreground mt-2">
                   {error instanceof Error ? error.message : String(error)}
                 </p>
@@ -119,9 +127,15 @@ export function CartDrawer() {
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
                 <ShoppingCart className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground mx-auto mb-3 sm:mb-4" />
-                <p className="text-xs sm:text-sm text-muted-foreground">Your cart is empty</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Your cart is empty
+                </p>
                 <Link href="/products" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" size="sm" className="mt-3 sm:mt-4 text-xs sm:text-sm">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-3 sm:mt-4 text-xs sm:text-sm"
+                  >
                     Continue Shopping
                   </Button>
                 </Link>
@@ -214,11 +228,19 @@ export function CartDrawer() {
                   <span>Total:</span>
                   <span>Rp {totalAmount?.toLocaleString() || "0"}</span>
                 </div>
-                <Button className="w-full text-xs sm:text-sm" size="sm" onClick={handleCheckout}>
+                <Button
+                  className="w-full text-xs sm:text-sm"
+                  size="sm"
+                  onClick={handleCheckout}
+                >
                   Proceed to Checkout
                 </Button>
                 <Link href="/products" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full text-xs sm:text-sm" size="sm">
+                  <Button
+                    variant="outline"
+                    className="w-full text-xs sm:text-sm"
+                    size="sm"
+                  >
                     Continue Shopping
                   </Button>
                 </Link>
