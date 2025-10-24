@@ -7,6 +7,7 @@ import { AuthProvider } from "@/components/providers/auth-provider";
 import { SWRProvider } from "@/components/providers/swr-provider";
 import { CartProvider } from "@/components/providers/cart-provider-backend";
 import { Toaster } from "@/components/ui/toaster";
+import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const poppins = Poppins({
@@ -91,6 +92,7 @@ export default function RootLayout({
                 <CartProvider>
                   {children}
                   <Toaster />
+                  <SonnerToaster />
                 </CartProvider>
               </AuthProvider>
             </SWRProvider>

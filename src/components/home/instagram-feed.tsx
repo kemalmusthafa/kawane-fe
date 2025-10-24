@@ -93,7 +93,7 @@ export function InstagramFeed() {
       // Remove any white corner boxes or unwanted elements
       const computedStyle = window.getComputedStyle(element);
       const elementStyle = element.style;
-      
+
       // Check for white background elements that might be corner boxes
       if (
         computedStyle.backgroundColor === "white" ||
@@ -107,7 +107,11 @@ export function InstagramFeed() {
         element.style.setProperty("display", "none", "important");
         element.style.setProperty("visibility", "hidden", "important");
         element.style.setProperty("opacity", "0", "important");
-        element.style.setProperty("background-color", "transparent", "important");
+        element.style.setProperty(
+          "background-color",
+          "transparent",
+          "important"
+        );
         element.style.setProperty("background", "transparent", "important");
       }
 
@@ -119,7 +123,11 @@ export function InstagramFeed() {
         elementStyle.position === "fixed"
       ) {
         // Make positioned elements transparent
-        element.style.setProperty("background-color", "transparent", "important");
+        element.style.setProperty(
+          "background-color",
+          "transparent",
+          "important"
+        );
         element.style.setProperty("background", "transparent", "important");
       }
 
