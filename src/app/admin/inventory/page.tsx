@@ -241,7 +241,10 @@ export default function AdminInventoryPage() {
                 </div>
               </div>
               <div className="w-full sm:w-48">
-                <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
+                <Select
+                  value={statusFilter}
+                  onValueChange={handleStatusFilterChange}
+                >
                   <SelectTrigger className="text-sm">
                     <SelectValue placeholder="Filter by status" />
                   </SelectTrigger>
