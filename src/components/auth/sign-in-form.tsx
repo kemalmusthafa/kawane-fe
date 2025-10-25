@@ -70,8 +70,7 @@ export function SignInForm() {
 
   return (
     <Card>
-      <CardHeader>
-      </CardHeader>
+      <CardHeader></CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
           <div className="space-y-2">

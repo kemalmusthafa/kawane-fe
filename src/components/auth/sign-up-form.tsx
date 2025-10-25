@@ -131,8 +131,7 @@ export function SignUpForm() {
 
   return (
     <Card>
-      <CardHeader>
-      </CardHeader>
+      <CardHeader></CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">

@@ -6,12 +6,9 @@ import { Product } from "@/lib/api";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useCart } from "../../hooks/useCart";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
-import { useReviews } from "@/hooks/useReviews";
 import { toast } from "sonner";
 import { AddToCartButton } from "@/components/ui/add-to-cart-button";
 import { AddToWishlistButton } from "@/components/ui/add-to-wishlist-button";
-import { ReviewForm } from "@/components/ui/review-form";
-import { ReviewList } from "@/components/ui/review-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,7 +20,6 @@ import {
   Plus,
   Minus,
   StarIcon,
-  MessageSquare,
   Package,
   Truck,
   Shield,
@@ -43,18 +39,11 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
 
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string>("");
-  const [showReviewForm, setShowReviewForm] = useState(false);
 
   const { isAuthenticated, user } = useAuth();
   const { addItem } = useCart();
   const { requireAuth } = useAuthRedirect();
   const { product, error, isLoading } = useProduct(actualProductId);
-  const {
-    reviews,
-    stats,
-    isLoading: reviewsLoading,
-    submitReview,
-  } = useReviews({ productId: actualProductId });
 
   const handleBuyNow = async () => {
     if (!product) return;
@@ -82,18 +71,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
     requireAuth(buyNowAction);
   };
 
-  const handleSubmitReview = async (review: {
-    rating: number;
-    comment: string;
-  }) => {
-    try {
-      await submitReview(review.rating, review.comment);
-      setShowReviewForm(false);
-    } catch (error) {
-      console.error("Error submitting review:", error);
-      throw error;
-    }
-  };
 
   const renderStars = (rating: number) => {
     return (
@@ -146,11 +123,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
     );
   }
 
-  const averageRating =
-    reviews?.length > 0
-      ? reviews.reduce((sum: number, review: any) => sum + review.rating, 0) /
-        reviews.length
-      : 0;
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
@@ -183,15 +155,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
             </h1>
             <div className="flex items-center space-x-2 sm:space-x-4 mb-3 sm:mb-4">
               <div className="flex items-center space-x-1 sm:space-x-2">
-                {renderStars(stats?.averageRating || 0)}
+                {renderStars(0)}
                 <span className="text-xs sm:text-sm text-gray-600">
-                  {stats?.averageRating
-                    ? stats.averageRating.toFixed(1)
-                    : "0.0"}
+                  0.0
                 </span>
                 <span className="text-xs sm:text-sm text-gray-500">
-                  ({stats?.totalReviews || 0} review
-                  {stats?.totalReviews !== 1 ? "s" : ""})
+                  (0 reviews)
                 </span>
               </div>
               <Badge
@@ -332,72 +301,20 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
-              <span className="text-sm sm:text-base">Free Shipping</span>
+              <span className="text-xs sm:text-sm lg:text-sm">Free Shipping</span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-              <span className="text-sm sm:text-base">Secure Payment</span>
+              <span className="text-xs sm:text-sm lg:text-sm">Secure Payment</span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Package className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
-              <span className="text-sm sm:text-base">Quality Guarantee</span>
+              <span className="text-xs sm:text-sm lg:text-sm">Quality Guarantee</span>
             </div>
           </div>
         </div>
       </div>
 
-      <Separator className="my-6 sm:my-8" />
-
-      {/* Call to Action untuk Review */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-          <div>
-            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1">
-              Share Your Experience
-            </h3>
-            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
-              Help other customers by providing reviews and ratings for this
-              product
-            </p>
-          </div>
-          <Button
-            onClick={() => setShowReviewForm(!showReviewForm)}
-            className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-sm sm:text-base h-10 sm:h-12"
-          >
-            <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-            {isAuthenticated ? "Write Review" : "Login to Review"}
-          </Button>
-        </div>
-      </div>
-
-      {/* Reviews Section */}
-      <div className="space-y-4 sm:space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-          <div>
-            <h2 className="text-lg sm:text-xl font-bold">
-              Reviews ({stats?.totalReviews || 0})
-            </h2>
-          </div>
-        </div>
-
-        {/* Review Form */}
-        {showReviewForm && (
-          <ReviewForm
-            productId={actualProductId}
-            onSubmit={handleSubmitReview}
-            onCancel={() => setShowReviewForm(false)}
-          />
-        )}
-
-        {/* Reviews List */}
-        <ReviewList
-          reviews={reviews}
-          averageRating={stats?.averageRating || 0}
-          totalReviews={stats?.totalReviews || 0}
-          distribution={stats?.distribution}
-          isLoading={reviewsLoading}
-        />
-      </div>
     </div>
   );
 };
