@@ -142,8 +142,10 @@ export function OrderDetails({
     try {
       const result = await onUpdateStatus(order.id, newOrderStatus);
       if (result.success) {
-        toast.success("Order status updated successfully");
+        toast.success(`Order status updated to ${newOrderStatus} successfully`);
         setNewOrderStatus("");
+        // Refresh the order data
+        window.location.reload();
       } else {
         toast.error(result.error || "Failed to update order status");
       }
@@ -161,8 +163,10 @@ export function OrderDetails({
     try {
       const result = await onUpdatePaymentStatus(order.id, newPaymentStatus);
       if (result.success) {
-        toast.success("Payment status updated successfully");
+        toast.success(`Payment status updated to ${newPaymentStatus.toUpperCase()} successfully`);
         setNewPaymentStatus("");
+        // Refresh the order data
+        window.location.reload();
       } else {
         toast.error(result.error || "Failed to update payment status");
       }
@@ -173,23 +177,6 @@ export function OrderDetails({
     }
   };
 
-  const handleManualUpdateOrderStatus = async () => {
-    if (!order) return;
-
-    setIsUpdating(true);
-    try {
-      const result = await onUpdateStatus(order.id, "PAID");
-      if (result.success) {
-        toast.success("Order status updated to PAID successfully");
-      } else {
-        toast.error(result.error || "Failed to update order status");
-      }
-    } catch (error) {
-      toast.error("An unexpected error occurred");
-    } finally {
-      setIsUpdating(false);
-    }
-  };
 
   if (!order) return null;
 
@@ -260,18 +247,11 @@ export function OrderDetails({
                     <SelectValue placeholder="Update order status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="CHECKOUT">Checkout</SelectItem>
-                    <SelectItem value="PAID">Paid</SelectItem>
                     <SelectItem value="PENDING">Pending</SelectItem>
+                    <SelectItem value="PAID">Paid</SelectItem>
                     <SelectItem value="SHIPPED">Shipped</SelectItem>
                     <SelectItem value="COMPLETED">Completed</SelectItem>
                     <SelectItem value="CANCELLED">Cancelled</SelectItem>
-                    <SelectItem value="WHATSAPP_PENDING">
-                      WhatsApp Pending
-                    </SelectItem>
-                    <SelectItem value="WHATSAPP_CONFIRMED">
-                      WhatsApp Confirmed
-                    </SelectItem>
                   </SelectContent>
                 </Select>
                 <Button
@@ -283,18 +263,6 @@ export function OrderDetails({
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
                   Update
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={handleManualUpdateOrderStatus}
-                  disabled={isUpdating}
-                  className="ml-2"
-                >
-                  {isUpdating && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  )}
-                  Mark as PAID
                 </Button>
               </div>
             </div>
@@ -313,10 +281,10 @@ export function OrderDetails({
                     <SelectValue placeholder="Update payment status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="paid">Paid</SelectItem>
-                    <SelectItem value="failed">Failed</SelectItem>
-                    <SelectItem value="refunded">Refunded</SelectItem>
+                    <SelectItem value="PENDING">Pending</SelectItem>
+                    <SelectItem value="SUCCEEDED">Succeeded</SelectItem>
+                    <SelectItem value="FAILED">Failed</SelectItem>
+                    <SelectItem value="CANCELLED">Cancelled</SelectItem>
                   </SelectContent>
                 </Select>
                 <Button
