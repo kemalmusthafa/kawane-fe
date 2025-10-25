@@ -163,7 +163,9 @@ export function OrderDetails({
     try {
       const result = await onUpdatePaymentStatus(order.id, newPaymentStatus);
       if (result.success) {
-        toast.success(`Payment status updated to ${newPaymentStatus.toUpperCase()} successfully`);
+        toast.success(
+          `Payment status updated to ${newPaymentStatus.toUpperCase()} successfully`
+        );
         setNewPaymentStatus("");
         // Refresh the order data
         window.location.reload();
@@ -177,12 +179,11 @@ export function OrderDetails({
     }
   };
 
-
   if (!order) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Package className="h-5 w-5" />
@@ -225,7 +226,7 @@ export function OrderDetails({
                 <Package className="h-4 w-4 text-gray-600" />
                 <span className="font-medium text-sm">Total Amount</span>
               </div>
-              <div className="text-lg font-bold text-green-600">
+              <div className="text-sm font-semibold text-green-600">
                 {formatPrice(order.totalAmount)}
               </div>
             </div>
@@ -235,15 +236,15 @@ export function OrderDetails({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="font-medium">Order Status</span>
+                <span className="font-medium text-sm">Order Status</span>
                 {getStatusBadge(order.status)}
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Select
                   value={newOrderStatus}
                   onValueChange={setNewOrderStatus}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full sm:w-auto">
                     <SelectValue placeholder="Update order status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -258,6 +259,7 @@ export function OrderDetails({
                   size="sm"
                   onClick={handleUpdateOrderStatus}
                   disabled={!newOrderStatus || isUpdating}
+                  className="w-full sm:w-auto"
                 >
                   {isUpdating && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -269,15 +271,15 @@ export function OrderDetails({
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="font-medium">Payment Status</span>
+                <span className="font-medium text-sm">Payment Status</span>
                 {getPaymentStatusBadge(order.paymentStatus)}
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Select
                   value={newPaymentStatus}
                   onValueChange={setNewPaymentStatus}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full sm:w-auto">
                     <SelectValue placeholder="Update payment status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -291,6 +293,7 @@ export function OrderDetails({
                   size="sm"
                   onClick={handleUpdatePaymentStatus}
                   disabled={!newPaymentStatus || isUpdating}
+                  className="w-full sm:w-auto"
                 >
                   {isUpdating && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -306,9 +309,9 @@ export function OrderDetails({
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-gray-600" />
-                <span className="font-medium">Shipping Address</span>
+                <span className="font-medium text-sm">Shipping Address</span>
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg text-sm">
+              <div className="bg-gray-50 p-3 rounded-lg text-sm">
                 <div>{order.shippingAddress.street}</div>
                 <div>
                   {order.shippingAddress.city},{" "}
@@ -321,7 +324,7 @@ export function OrderDetails({
 
           {/* Order Items */}
           <div className="space-y-1">
-            <span className="font-medium">Order Items</span>
+            <span className="font-medium text-sm">Order Items</span>
             <Table className="text-sm">
               <TableHeader>
                 <TableRow>
