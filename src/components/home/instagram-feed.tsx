@@ -48,42 +48,54 @@ export function InstagramFeed() {
     loadScript();
   }, [mounted]);
 
+  // Re-apply styling when theme changes
+  useEffect(() => {
+    if (mounted && scriptLoaded && containerRef.current) {
+      // Small delay to ensure widget is loaded
+      setTimeout(() => {
+        applyThemeStyling();
+      }, 300);
+    }
+  }, [mounted, scriptLoaded, resolvedTheme, theme]);
+
   const initializeWidget = () => {
     if (!mounted || !containerRef.current || !scriptLoaded) return;
 
-    // Clear existing content
-    containerRef.current.innerHTML = "";
+      // Clear existing content
+      containerRef.current.innerHTML = "";
 
-    // Create the widget container
-    const widgetContainer = document.createElement("div");
+      // Create the widget container
+      const widgetContainer = document.createElement("div");
     widgetContainer.className = `elfsight-app-${WIDGET_ID}`;
-    widgetContainer.setAttribute("data-elfsight-app-lazy", "");
+      widgetContainer.setAttribute("data-elfsight-app-lazy", "");
 
     // Add theme information
     const currentTheme = resolvedTheme || theme || "light";
     widgetContainer.setAttribute("data-theme", currentTheme);
 
-    containerRef.current.appendChild(widgetContainer);
+      containerRef.current.appendChild(widgetContainer);
 
-    // Initialize the widget
-    if (window.Elfsight && window.Elfsight.init) {
+      // Initialize the widget
+      if (window.Elfsight && window.Elfsight.init) {
       setTimeout(() => {
         window.Elfsight.init();
-        // Apply dark mode styling after widget loads
-        applyDarkModeStyling();
+        // Apply theme styling after widget loads
+        applyThemeStyling();
       }, 200);
     }
   };
 
-  // Apply dark mode styling to widget
-  const applyDarkModeStyling = () => {
+  // Apply theme styling to widget
+  const applyThemeStyling = () => {
     if (!containerRef.current) return;
 
     const currentTheme = resolvedTheme || theme || "light";
 
-    // Inject CSS for dark mode
+    // Inject CSS for both dark and light mode
     if (currentTheme === "dark") {
       injectDarkModeCSS();
+    } else {
+      injectLightModeCSS();
     }
 
     // Find ALL elements inside the widget container
@@ -191,6 +203,71 @@ export function InstagramFeed() {
         containerRef.current.style.setProperty("color", "#000000", "important");
       }
     }
+  };
+
+  // Inject CSS for light mode
+  const injectLightModeCSS = () => {
+    // Check if CSS already injected
+    const existingStyle = document.getElementById("elfsight-light-mode-css");
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+
+    const style = document.createElement("style");
+    style.id = "elfsight-light-mode-css";
+    style.textContent = `
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 *,
+      [class*="elfsight"] *,
+      [class*="elfsight"] {
+        background-color: #ffffff !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 iframe,
+      [class*="elfsight"] iframe {
+        background-color: #ffffff !important;
+        background: #ffffff !important;
+      }
+      
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 div,
+      [class*="elfsight"] div {
+        background-color: #ffffff !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 p,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 span,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 h1,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 h2,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 h3,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 h4,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 h5,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 h6,
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 a,
+      [class*="elfsight"] p,
+      [class*="elfsight"] span,
+      [class*="elfsight"] h1,
+      [class*="elfsight"] h2,
+      [class*="elfsight"] h3,
+      [class*="elfsight"] h4,
+      [class*="elfsight"] h5,
+      [class*="elfsight"] h6,
+      [class*="elfsight"] a {
+        color: #000000 !important;
+      }
+      
+      /* Ensure widget is visible in light mode */
+      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8,
+      [class*="elfsight"] {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+    `;
+    document.head.appendChild(style);
   };
 
   // Inject CSS for dark mode
@@ -302,7 +379,7 @@ export function InstagramFeed() {
         initializeWidget();
         // Also apply styling after theme change
         setTimeout(() => {
-          applyDarkModeStyling();
+          applyThemeStyling();
         }, 1000);
       }, 500);
 
@@ -317,7 +394,7 @@ export function InstagramFeed() {
     const observer = new MutationObserver(() => {
       // Apply styling when widget content changes
       setTimeout(() => {
-        applyDarkModeStyling();
+        applyThemeStyling();
       }, 100);
     });
 
@@ -332,7 +409,7 @@ export function InstagramFeed() {
     // Also apply styling continuously every 2 seconds
     const interval = setInterval(() => {
       if (resolvedTheme === "dark") {
-        applyDarkModeStyling();
+        applyThemeStyling();
       }
     }, 2000);
 
