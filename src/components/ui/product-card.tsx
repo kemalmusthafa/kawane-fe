@@ -128,7 +128,7 @@ export function ProductCard({
                     onClick={() => setSelectedSize(size.size)}
                     className={`p-1 text-center rounded border transition-colors ${
                       selectedSize === size.size
-                        ? "border-blue-500 bg-blue-500 text-white dark:bg-blue-600 dark:text-white"
+                        ? "border-black bg-black text-white dark:border-blue-500 dark:bg-blue-500 dark:text-white"
                         : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
                     }`}
                   >

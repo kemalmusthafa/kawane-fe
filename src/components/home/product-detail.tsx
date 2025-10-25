@@ -71,7 +71,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
     requireAuth(buyNowAction);
   };
 
-
   const renderStars = (rating: number) => {
     return (
       <div className="flex items-center space-x-1">
@@ -123,7 +122,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
     );
   }
 
-
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Breadcrumb */}
@@ -156,9 +154,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
             <div className="flex items-center space-x-2 sm:space-x-4 mb-3 sm:mb-4">
               <div className="flex items-center space-x-1 sm:space-x-2">
                 {renderStars(0)}
-                <span className="text-xs sm:text-sm text-gray-600">
-                  0.0
-                </span>
+                <span className="text-xs sm:text-sm text-gray-600">0.0</span>
                 <span className="text-xs sm:text-sm text-gray-500">
                   (0 reviews)
                 </span>
@@ -301,20 +297,25 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
-              <span className="text-xs sm:text-sm lg:text-sm">Free Shipping</span>
+              <span className="text-xs sm:text-sm lg:text-sm">
+                Free Shipping
+              </span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-              <span className="text-xs sm:text-sm lg:text-sm">Secure Payment</span>
+              <span className="text-xs sm:text-sm lg:text-sm">
+                Secure Payment
+              </span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Package className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
-              <span className="text-xs sm:text-sm lg:text-sm">Quality Guarantee</span>
+              <span className="text-xs sm:text-sm lg:text-sm">
+                Quality Guarantee
+              </span>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   );
 };
