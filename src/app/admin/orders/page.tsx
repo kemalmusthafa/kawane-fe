@@ -111,7 +111,7 @@ export default function AdminOrders() {
     status: undefined,
     paymentStatus: undefined,
     page: 1,
-    limit: 1000, // Get all orders for summary
+    limit: 100, // Backend limit is 100, get first 100 orders for summary
     sortBy: "createdAt",
     sortOrder: "desc",
   });
@@ -326,7 +326,9 @@ export default function AdminOrders() {
               <ShoppingCart className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{summaryData?.totalItems || 0}</div>
+              <div className="text-2xl font-bold">
+                {summaryData?.totalItems || 0}
+              </div>
               <p className="text-xs text-muted-foreground">
                 +12% from last month
               </p>
@@ -336,14 +338,14 @@ export default function AdminOrders() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Pending</CardTitle>
               <Badge className="bg-yellow-100 text-yellow-800">
-                {summaryData?.orders?.filter((o) => o.status === "pending").length ||
-                  0}
+                {summaryData?.orders?.filter((o) => o.status === "pending")
+                  .length || 0}
               </Badge>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {summaryData?.orders?.filter((o) => o.status === "pending").length ||
-                  0}
+                {summaryData?.orders?.filter((o) => o.status === "pending")
+                  .length || 0}
               </div>
             </CardContent>
           </Card>
@@ -351,14 +353,14 @@ export default function AdminOrders() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Shipped</CardTitle>
               <Badge className="bg-purple-100 text-purple-800">
-                {summaryData?.orders?.filter((o) => o.status === "shipped").length ||
-                  0}
+                {summaryData?.orders?.filter((o) => o.status === "shipped")
+                  .length || 0}
               </Badge>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {summaryData?.orders?.filter((o) => o.status === "shipped").length ||
-                  0}
+                {summaryData?.orders?.filter((o) => o.status === "shipped")
+                  .length || 0}
               </div>
             </CardContent>
           </Card>
@@ -366,14 +368,14 @@ export default function AdminOrders() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Completed</CardTitle>
               <Badge className="bg-green-100 text-green-800">
-                {summaryData?.orders?.filter((o) => o.status === "delivered").length ||
-                  0}
+                {summaryData?.orders?.filter((o) => o.status === "delivered")
+                  .length || 0}
               </Badge>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {summaryData?.orders?.filter((o) => o.status === "delivered").length ||
-                  0}
+                {summaryData?.orders?.filter((o) => o.status === "delivered")
+                  .length || 0}
               </div>
             </CardContent>
           </Card>
