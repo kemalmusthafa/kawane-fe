@@ -211,7 +211,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                     }`}
                     disabled={sizeItem.stock === 0}
                   >
-                    <div className="text-[10px] sm:text-xs font-medium text-white dark:text-white">
+                    <div className="text-[10px] sm:text-xs font-medium">
                       {sizeItem.size}
                     </div>
                   </button>
