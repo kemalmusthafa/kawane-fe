@@ -204,7 +204,15 @@ export default function AdminOrders() {
       }
     } catch (error: any) {
       console.error("Error cancelling order:", error);
-      toast.error(error.message || "Gagal membatalkan order");
+      
+      // Handle specific error cases
+      if (error.message?.includes("Order status is already updated")) {
+        toast.error("Order sudah dalam status yang sama. Tidak bisa diubah.");
+      } else if (error.message?.includes("Order not found")) {
+        toast.error("Order tidak ditemukan.");
+      } else {
+        toast.error(error.message || "Gagal membatalkan order");
+      }
     }
   };
 
