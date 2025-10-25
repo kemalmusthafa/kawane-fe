@@ -121,26 +121,26 @@ export function ProductCard({
                   Size:
                 </span>
               </div>
-              <div className="grid grid-cols-3 gap-1">
-                {availableSizes.slice(0, 6).map((size) => (
+              <div className="grid grid-cols-4 gap-1">
+                {availableSizes.slice(0, 8).map((size) => (
                   <button
                     key={size.id}
                     onClick={() => setSelectedSize(size.size)}
-                    className={`p-1 sm:p-2 text-center rounded border transition-colors ${
+                    className={`p-1 text-center rounded border transition-colors ${
                       selectedSize === size.size
                         ? "border-blue-500 bg-blue-500 text-white dark:bg-blue-600 dark:text-white"
                         : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
                     }`}
                   >
-                    <div className="text-[9px] sm:text-xs font-medium">
+                    <div className="text-[8px] font-medium">
                       {size.size}
                     </div>
                   </button>
                 ))}
               </div>
-              {availableSizes.length > 6 && (
+              {availableSizes.length > 8 && (
                 <p className="text-[8px] sm:text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">
-                  +{availableSizes.length - 6} more
+                  +{availableSizes.length - 8} more
                 </p>
               )}
               {selectedSize && (

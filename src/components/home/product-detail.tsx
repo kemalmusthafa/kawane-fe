@@ -230,12 +230,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
               <h3 className="text-xs sm:text-sm font-semibold mb-2">
                 Select Size
               </h3>
-              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-1.5 sm:gap-2 mb-4 sm:mb-6">
                 {product.sizes.map((sizeItem) => (
                   <button
                     key={sizeItem.id}
                     onClick={() => setSelectedSize(sizeItem.size)}
-                    className={`p-2 sm:p-3 lg:p-3 border rounded-lg text-center transition-colors ${
+                    className={`p-1.5 sm:p-2 border rounded-md text-center transition-colors ${
                       selectedSize === sizeItem.size
                         ? "border-blue-500 bg-blue-500 text-white dark:bg-blue-600 dark:text-white"
                         : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
@@ -246,7 +246,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                     }`}
                     disabled={sizeItem.stock === 0}
                   >
-                    <div className="text-xs sm:text-sm lg:text-sm font-medium">
+                    <div className="text-[10px] sm:text-xs font-medium">
                       {sizeItem.size}
                     </div>
                   </button>
