@@ -211,7 +211,10 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                     }`}
                     disabled={sizeItem.stock === 0}
                   >
-                    <div className="text-[10px] sm:text-xs font-medium">
+                    <div 
+                      className="text-[10px] sm:text-xs font-medium"
+                      style={selectedSize === sizeItem.size ? { color: 'white !important' } : {}}
+                    >
                       {sizeItem.size}
                     </div>
                   </button>

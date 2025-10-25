@@ -132,7 +132,12 @@ export function ProductCard({
                         : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
                     }`}
                   >
-                    <div className="text-[8px] font-medium">{size.size}</div>
+                    <div 
+                      className="text-[8px] font-medium"
+                      style={selectedSize === size.size ? { color: 'white !important' } : {}}
+                    >
+                      {size.size}
+                    </div>
                   </button>
                 ))}
               </div>
