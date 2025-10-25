@@ -73,7 +73,7 @@ export function ProductImageCarousel({
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 shadow-lg"
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 dark:bg-gray-800/80 dark:hover:bg-gray-800 dark:text-white shadow-lg"
                 onClick={handlePrevious}
               >
                 <ChevronLeft className="h-5 w-5" />
@@ -81,7 +81,7 @@ export function ProductImageCarousel({
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 shadow-lg"
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 dark:bg-gray-800/80 dark:hover:bg-gray-800 dark:text-white shadow-lg"
                 onClick={handleNext}
               >
                 <ChevronRight className="h-5 w-5" />
