@@ -93,33 +93,41 @@ export function ImageUpload({
       if (newImageUrls.length > 0) {
         // Success case: show success message
         toast.success(`${newImageUrls.length} image(s) uploaded successfully`);
-        
+
         // Show additional rejections if any
         if (rejectedFiles.length > 0) {
-          const errorMessage = rejectedFiles.length === 1 
-            ? rejectedFiles[0]
-            : `${rejectedFiles.length} files rejected: ${rejectedFiles.slice(0, 2).join(", ")}${rejectedFiles.length > 2 ? "..." : ""}`;
+          const errorMessage =
+            rejectedFiles.length === 1
+              ? rejectedFiles[0]
+              : `${rejectedFiles.length} files rejected: ${rejectedFiles
+                  .slice(0, 2)
+                  .join(", ")}${rejectedFiles.length > 2 ? "..." : ""}`;
           toast.error(errorMessage);
         }
-        
+
         // Show additional failures if any
         if (failedFiles.length > 0) {
-          const errorMessage = failedFiles.length === 1
-            ? `Failed to upload ${failedFiles[0]}`
-            : `Failed to upload ${failedFiles.length} files`;
+          const errorMessage =
+            failedFiles.length === 1
+              ? `Failed to upload ${failedFiles[0]}`
+              : `Failed to upload ${failedFiles.length} files`;
           toast.error(errorMessage);
         }
       } else if (rejectedFiles.length > 0) {
         // Only rejected files - show rejection message
-        const errorMessage = rejectedFiles.length === 1 
-          ? rejectedFiles[0]
-          : `${rejectedFiles.length} files rejected: ${rejectedFiles.slice(0, 2).join(", ")}${rejectedFiles.length > 2 ? "..." : ""}`;
+        const errorMessage =
+          rejectedFiles.length === 1
+            ? rejectedFiles[0]
+            : `${rejectedFiles.length} files rejected: ${rejectedFiles
+                .slice(0, 2)
+                .join(", ")}${rejectedFiles.length > 2 ? "..." : ""}`;
         toast.error(errorMessage);
       } else if (failedFiles.length > 0) {
         // Only failed uploads - show failure message
-        const errorMessage = failedFiles.length === 1
-          ? `Failed to upload ${failedFiles[0]}`
-          : `Failed to upload ${failedFiles.length} files`;
+        const errorMessage =
+          failedFiles.length === 1
+            ? `Failed to upload ${failedFiles[0]}`
+            : `Failed to upload ${failedFiles.length} files`;
         toast.error(errorMessage);
       } else {
         // Fallback for unexpected cases

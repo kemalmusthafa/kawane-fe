@@ -129,6 +129,21 @@ export function ProductForm({
       return;
     }
 
+    // Validate sizes if any are provided
+    if (sizes.length > 0) {
+      for (let i = 0; i < sizes.length; i++) {
+        const sizeItem = sizes[i];
+        if (!sizeItem.size.trim()) {
+          toast.error(`Size ${i + 1} is required`);
+          return;
+        }
+        if (sizeItem.stock < 0) {
+          toast.error(`Stock for size "${sizeItem.size}" cannot be negative`);
+          return;
+        }
+      }
+    }
+
     setIsLoading(true);
 
     try {
