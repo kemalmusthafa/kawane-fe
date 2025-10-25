@@ -128,14 +128,11 @@ export function ProductCard({
                     onClick={() => setSelectedSize(size.size)}
                     className={`p-1 text-center rounded border transition-colors ${
                       selectedSize === size.size
-                        ? "border-black bg-black !text-white dark:border-blue-500 dark:bg-blue-500 dark:text-white"
+                        ? "border-blue-500 bg-blue-500 text-white dark:border-blue-500 dark:bg-blue-500 dark:text-white"
                         : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
                     }`}
                   >
-                    <div 
-                      className="text-[8px] font-medium"
-                      style={selectedSize === size.size ? { color: 'white !important' } : {}}
-                    >
+                    <div className="text-[8px] font-medium">
                       {size.size}
                     </div>
                   </button>

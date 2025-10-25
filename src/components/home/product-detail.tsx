@@ -202,7 +202,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                     onClick={() => setSelectedSize(sizeItem.size)}
                     className={`p-1.5 sm:p-2 border rounded-md text-center transition-colors ${
                       selectedSize === sizeItem.size
-                        ? "border-black bg-black !text-white dark:border-blue-500 dark:bg-blue-500 dark:text-white"
+                        ? "border-blue-500 bg-blue-500 text-white dark:border-blue-500 dark:bg-blue-500 dark:text-white"
                         : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
                     } ${
                       sizeItem.stock === 0
@@ -211,10 +211,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                     }`}
                     disabled={sizeItem.stock === 0}
                   >
-                    <div 
-                      className="text-[10px] sm:text-xs font-medium"
-                      style={selectedSize === sizeItem.size ? { color: 'white !important' } : {}}
-                    >
+                    <div className="text-[10px] sm:text-xs font-medium">
                       {sizeItem.size}
                     </div>
                   </button>
