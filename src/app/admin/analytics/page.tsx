@@ -66,26 +66,41 @@ export default function AdminAnalyticsPage() {
 
     try {
       // Create CSV content for analytics data
-      const headers = [
-        "Metric",
-        "Value",
-        "Growth %",
-        "Period",
-      ];
+      const headers = ["Metric", "Value", "Growth %", "Period"];
 
       const csvData = [
-        ["Total Revenue", formatCurrency(analytics.overview.totalRevenue), `${analytics.overview.revenueGrowth}%`, `${period} days`],
-        ["Total Orders", analytics.overview.totalOrders.toString(), `${analytics.overview.ordersGrowth}%`, `${period} days`],
-        ["Total Customers", analytics.overview.totalCustomers.toString(), `${analytics.overview.customersGrowth}%`, `${period} days`],
-        ["Total Products", analytics.overview.totalProducts.toString(), "0%", `${period} days`],
+        [
+          "Total Revenue",
+          formatCurrency(analytics.overview.totalRevenue),
+          `${analytics.overview.revenueGrowth}%`,
+          `${period} days`,
+        ],
+        [
+          "Total Orders",
+          analytics.overview.totalOrders.toString(),
+          `${analytics.overview.ordersGrowth}%`,
+          `${period} days`,
+        ],
+        [
+          "Total Customers",
+          analytics.overview.totalCustomers.toString(),
+          `${analytics.overview.customersGrowth}%`,
+          `${period} days`,
+        ],
+        [
+          "Total Products",
+          analytics.overview.totalProducts.toString(),
+          "0%",
+          `${period} days`,
+        ],
       ];
 
       // Add sales data
-      const salesData = analytics.salesData.map(item => [
+      const salesData = analytics.salesData.map((item) => [
         `Sales - ${item.month}`,
         formatCurrency(item.sales),
         "0%",
-        `${period} days`
+        `${period} days`,
       ]);
 
       // Add top products data
@@ -93,14 +108,16 @@ export default function AdminAnalyticsPage() {
         `Top Product ${index + 1} - ${product.name}`,
         formatCurrency(product.revenue),
         `${product.sales} units sold`,
-        `${period} days`
+        `${period} days`,
       ]);
 
       const csvContent = [
         headers.join(","),
-        ...csvData.map(row => row.map(cell => `"${cell}"`).join(",")),
-        ...salesData.map(row => row.map(cell => `"${cell}"`).join(",")),
-        ...topProductsData.map(row => row.map(cell => `"${cell}"`).join(",")),
+        ...csvData.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+        ...salesData.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+        ...topProductsData.map((row) =>
+          row.map((cell) => `"${cell}"`).join(",")
+        ),
       ].join("\n");
 
       // Create and download file
@@ -180,9 +197,9 @@ export default function AdminAnalyticsPage() {
                 <SelectItem value="365">Last year</SelectItem>
               </SelectContent>
             </Select>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="text-xs sm:text-sm"
               onClick={handleExport}
               disabled={isExporting || !analytics}
