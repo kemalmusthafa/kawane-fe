@@ -45,7 +45,7 @@ export default function SignInPage() {
             Or{" "}
             <Link
               href="/auth/sign-up"
-              className="font-medium text-primary hover:text-primary/80"
+              className="font-bold text-primary hover:text-primary/80"
             >
               create a new account
             </Link>
