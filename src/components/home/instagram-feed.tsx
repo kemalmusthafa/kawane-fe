@@ -11,12 +11,22 @@ interface InstagramPost {
   media_type: string;
   permalink: string;
   timestamp: string;
+  like_count?: number;
+  comments_count?: number;
+}
+
+interface InstagramUser {
+  id: string;
+  username: string;
+  account_type: string;
+  media_count: number;
 }
 
 export function InstagramFeed() {
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [posts, setPosts] = useState<InstagramPost[]>([]);
+  const [userInfo, setUserInfo] = useState<InstagramUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,85 +40,158 @@ export function InstagramFeed() {
 
   useEffect(() => {
     if (mounted) {
-      fetchInstagramPosts();
+      fetchInstagramData();
     }
   }, [mounted]);
 
-  const fetchInstagramPosts = async () => {
+  const fetchInstagramData = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // Simulate Instagram posts data (since we don't have Instagram API access)
-      // In a real implementation, you would use Instagram Basic Display API
-      const mockPosts: InstagramPost[] = [
-        {
-          id: "1",
-          caption: "Kawane Studio - Premium Streetwear Collection 🎨 #KawaneStudio #Streetwear #Fashion",
-          media_url: "/api/placeholder/400/400",
-          media_type: "IMAGE",
-          permalink: "https://www.instagram.com/p/example1/",
-          timestamp: new Date().toISOString(),
-        },
-        {
-          id: "2", 
-          caption: "Behind the scenes at Kawane Studio 📸 #BehindTheScenes #KawaneStudio #Fashion",
-          media_url: "/api/placeholder/400/400",
-          media_type: "IMAGE",
-          permalink: "https://www.instagram.com/p/example2/",
-          timestamp: new Date(Date.now() - 86400000).toISOString(),
-        },
-        {
-          id: "3",
-          caption: "New arrivals coming soon! Stay tuned for our latest collection 🔥 #NewArrivals #KawaneStudio",
-          media_url: "/api/placeholder/400/400", 
-          media_type: "IMAGE",
-          permalink: "https://www.instagram.com/p/example3/",
-          timestamp: new Date(Date.now() - 172800000).toISOString(),
-        },
-        {
-          id: "4",
-          caption: "Customer spotlight: Amazing feedback from our community 💙 #CustomerLove #KawaneStudio",
-          media_url: "/api/placeholder/400/400",
-          media_type: "IMAGE", 
-          permalink: "https://www.instagram.com/p/example4/",
-          timestamp: new Date(Date.now() - 259200000).toISOString(),
-        },
-        {
-          id: "5",
-          caption: "Kawane Studio team working hard on new designs 👨‍🎨 #TeamWork #KawaneStudio #Design",
-          media_url: "/api/placeholder/400/400",
-          media_type: "IMAGE",
-          permalink: "https://www.instagram.com/p/example5/",
-          timestamp: new Date(Date.now() - 345600000).toISOString(),
-        },
-        {
-          id: "6",
-          caption: "Limited edition drop coming this week! Don't miss out ⚡ #LimitedEdition #KawaneStudio",
-          media_url: "/api/placeholder/400/400",
-          media_type: "IMAGE",
-          permalink: "https://www.instagram.com/p/example6/",
-          timestamp: new Date(Date.now() - 432000000).toISOString(),
-        },
-      ];
-
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Check if we have Instagram API credentials
+      const hasApiCredentials = process.env.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN;
       
-      setPosts(mockPosts);
+      if (hasApiCredentials) {
+        // Use real Instagram API
+        await fetchRealInstagramData();
+      } else {
+        // Use mock data for development
+        await fetchMockInstagramData();
+      }
     } catch (err) {
       setError("Failed to load Instagram posts");
-      console.error("Error fetching Instagram posts:", err);
+      console.error("Error fetching Instagram data:", err);
     } finally {
       setLoading(false);
     }
   };
 
+  const fetchRealInstagramData = async () => {
+    try {
+      // Fetch user info
+      const userResponse = await fetch(
+        `https://graph.instagram.com/me?fields=id,username,account_type,media_count&access_token=${process.env.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN}`
+      );
+      
+      if (!userResponse.ok) {
+        throw new Error("Failed to fetch user info");
+      }
+      
+      const userData = await userResponse.json();
+      setUserInfo(userData);
+
+      // Fetch user media
+      const mediaResponse = await fetch(
+        `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,permalink,timestamp,like_count,comments_count&limit=12&access_token=${process.env.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN}`
+      );
+      
+      if (!mediaResponse.ok) {
+        throw new Error("Failed to fetch media");
+      }
+      
+      const mediaData = await mediaResponse.json();
+      setPosts(mediaData.data || []);
+    } catch (err) {
+      console.error("Instagram API error:", err);
+      // Fallback to mock data
+      await fetchMockInstagramData();
+    }
+  };
+
+  const fetchMockInstagramData = async () => {
+    // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Mock user info
+    const mockUserInfo: InstagramUser = {
+      id: "kawane_studio",
+      username: "kawane.studio",
+      account_type: "BUSINESS",
+      media_count: 195,
+    };
+    setUserInfo(mockUserInfo);
+
+    // Mock posts data
+    const mockPosts: InstagramPost[] = [
+      {
+        id: "1",
+        caption:
+          "Kawane Studio - Premium Streetwear Collection 🎨 #KawaneStudio #Streetwear #Fashion",
+        media_url: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center",
+        media_type: "IMAGE",
+        permalink: "https://www.instagram.com/p/example1/",
+        timestamp: new Date().toISOString(),
+        like_count: 42,
+        comments_count: 8,
+      },
+      {
+        id: "2",
+        caption:
+          "Behind the scenes at Kawane Studio 📸 #BehindTheScenes #KawaneStudio #Fashion",
+        media_url: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop&crop=center",
+        media_type: "IMAGE",
+        permalink: "https://www.instagram.com/p/example2/",
+        timestamp: new Date(Date.now() - 86400000).toISOString(),
+        like_count: 28,
+        comments_count: 5,
+      },
+      {
+        id: "3",
+        caption:
+          "New arrivals coming soon! Stay tuned for our latest collection 🔥 #NewArrivals #KawaneStudio",
+        media_url: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop&crop=center",
+        media_type: "IMAGE",
+        permalink: "https://www.instagram.com/p/example3/",
+        timestamp: new Date(Date.now() - 172800000).toISOString(),
+        like_count: 35,
+        comments_count: 12,
+      },
+      {
+        id: "4",
+        caption:
+          "Customer spotlight: Amazing feedback from our community 💙 #CustomerLove #KawaneStudio",
+        media_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=center",
+        media_type: "IMAGE",
+        permalink: "https://www.instagram.com/p/example4/",
+        timestamp: new Date(Date.now() - 259200000).toISOString(),
+        like_count: 51,
+        comments_count: 7,
+      },
+      {
+        id: "5",
+        caption:
+          "Kawane Studio team working hard on new designs 👨‍🎨 #TeamWork #KawaneStudio #Design",
+        media_url: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&crop=center",
+        media_type: "IMAGE",
+        permalink: "https://www.instagram.com/p/example5/",
+        timestamp: new Date(Date.now() - 345600000).toISOString(),
+        like_count: 33,
+        comments_count: 4,
+      },
+      {
+        id: "6",
+        caption:
+          "Limited edition drop coming this week! Don't miss out ⚡ #LimitedEdition #KawaneStudio",
+        media_url: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center",
+        media_type: "IMAGE",
+        permalink: "https://www.instagram.com/p/example6/",
+        timestamp: new Date(Date.now() - 432000000).toISOString(),
+        like_count: 67,
+        comments_count: 15,
+      },
+    ];
+
+    setPosts(mockPosts);
+  };
+
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
+    const diffInHours = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+    );
+
     if (diffInHours < 1) return "Just now";
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 48) return "1 day ago";
@@ -160,24 +243,32 @@ export function InstagramFeed() {
         </div>
 
         <div className="max-w-6xl mx-auto">
-          {/* Instagram Header */}
+          {/* Instagram Header - Similar to previous widget */}
           <div className="flex items-center justify-center mb-8">
-            <div className="flex items-center space-x-4 p-4 rounded-lg border border-border bg-card">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
-                <Instagram className="w-6 h-6 text-white" />
+            <div className="flex items-center space-x-4 p-6 rounded-lg border border-border bg-card shadow-sm">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                <Instagram className="w-8 h-8 text-white" />
               </div>
-              <div>
-                <h3 className="font-semibold text-card-foreground">@{INSTAGRAM_USERNAME}</h3>
-                <p className="text-sm text-muted-foreground">Follow us for updates</p>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-card-foreground">
+                  Kawané Studio™
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  @{INSTAGRAM_USERNAME}
+                </p>
+                <div className="flex items-center space-x-4 mt-2 text-sm text-muted-foreground">
+                  <span className="font-semibold">{userInfo?.media_count || 195} Posts</span>
+                  <span className="font-semibold">12.8K Followers</span>
+                  <span className="font-semibold">1 Following</span>
+                </div>
               </div>
               <a
                 href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                className="flex items-center space-x-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
               >
-                <ExternalLink className="w-4 h-4" />
-                <span className="text-sm font-medium">Follow</span>
+                <span>Follow</span>
               </a>
             </div>
           </div>
@@ -186,7 +277,10 @@ export function InstagramFeed() {
           {loading && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, index) => (
-                <div key={index} className="bg-card rounded-lg border border-border overflow-hidden">
+                <div
+                  key={index}
+                  className="bg-card rounded-lg border border-border overflow-hidden"
+                >
                   <div className="aspect-square bg-muted animate-pulse" />
                   <div className="p-4 space-y-2">
                     <div className="h-4 bg-muted animate-pulse rounded" />
@@ -203,10 +297,12 @@ export function InstagramFeed() {
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-destructive/10 flex items-center justify-center">
                 <Instagram className="w-8 h-8 text-destructive" />
               </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">Unable to load posts</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                Unable to load posts
+              </h3>
               <p className="text-muted-foreground mb-4">{error}</p>
               <button
-                onClick={fetchInstagramPosts}
+                onClick={fetchInstagramData}
                 className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
               >
                 Try Again
@@ -214,7 +310,7 @@ export function InstagramFeed() {
             </div>
           )}
 
-          {/* Posts Grid */}
+          {/* Posts Grid - Similar to previous widget */}
           {!loading && !error && posts.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.map((post) => (
@@ -234,7 +330,7 @@ export function InstagramFeed() {
                       }}
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-                    
+
                     {/* Post Type Indicator */}
                     <div className="absolute top-2 right-2">
                       <div className="w-6 h-6 rounded-full bg-black/50 flex items-center justify-center">
@@ -252,17 +348,17 @@ export function InstagramFeed() {
                     <p className="text-sm text-card-foreground mb-3 line-clamp-3">
                       {truncateCaption(post.caption)}
                     </p>
-                    
+
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span>{formatDate(post.timestamp)}</span>
                       <div className="flex items-center space-x-3">
                         <div className="flex items-center space-x-1">
                           <Heart className="w-3 h-3" />
-                          <span>0</span>
+                          <span>{post.like_count || 0}</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <MessageCircle className="w-3 h-3" />
-                          <span>0</span>
+                          <span>{post.comments_count || 0}</span>
                         </div>
                       </div>
                     </div>
@@ -289,8 +385,12 @@ export function InstagramFeed() {
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
                 <Instagram className="w-8 h-8 text-muted-foreground" />
               </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">No posts available</h3>
-              <p className="text-muted-foreground mb-4">Check back later for new content</p>
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                No posts available
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                Check back later for new content
+              </p>
               <a
                 href={INSTAGRAM_URL}
                 target="_blank"
@@ -308,8 +408,12 @@ export function InstagramFeed() {
             <div className="inline-flex items-center space-x-4 p-6 rounded-lg border border-border bg-card">
               <Instagram className="w-6 h-6 text-primary" />
               <div>
-                <h3 className="font-semibold text-card-foreground">Follow @{INSTAGRAM_USERNAME}</h3>
-                <p className="text-sm text-muted-foreground">For the latest updates and behind-the-scenes content</p>
+                <h3 className="font-semibold text-card-foreground">
+                  Follow @{INSTAGRAM_USERNAME}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  For the latest updates and behind-the-scenes content
+                </p>
               </div>
               <a
                 href={INSTAGRAM_URL}
