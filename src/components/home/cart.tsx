@@ -43,18 +43,20 @@ export const Cart: React.FC = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center py-12">
-          <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">
-            Login Required
-          </h2>
-          <p className="text-sm text-gray-600 mb-6">
-            Please login to view your shopping cart
-          </p>
-          <Link href="/auth/sign-in">
-            <Button size="sm">Login</Button>
-          </Link>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              Login Required
+            </h2>
+            <p className="text-sm text-gray-600 mb-6">
+              Please login to view your shopping cart
+            </p>
+            <Link href="/auth/sign-in">
+              <Button size="sm">Login</Button>
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -92,15 +94,17 @@ export const Cart: React.FC = () => {
 
   if (isLoading && items.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center py-12">
-          <Loader2 className="w-16 h-16 text-gray-300 mx-auto mb-4 animate-spin" />
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">
-            Loading Cart...
-          </h2>
-          <p className="text-sm text-gray-600 mb-6">
-            Loading your shopping cart data
-          </p>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <Loader2 className="w-16 h-16 text-gray-300 mx-auto mb-4 animate-spin" />
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              Loading Cart...
+            </h2>
+            <p className="text-sm text-gray-600 mb-6">
+              Loading your shopping cart data
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -108,18 +112,20 @@ export const Cart: React.FC = () => {
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center py-12">
-          <ShoppingCart className="w-16 h-16 text-red-300 mx-auto mb-4" />
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">
-            Error Loading Cart
-          </h2>
-          <p className="text-sm text-red-600 mb-6">
-            {error instanceof Error ? error.message : String(error)}
-          </p>
-          <Button size="sm" onClick={() => window.location.reload()}>
-            Try Again
-          </Button>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <ShoppingCart className="w-16 h-16 text-red-300 mx-auto mb-4" />
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              Error Loading Cart
+            </h2>
+            <p className="text-sm text-red-600 mb-6">
+              {error instanceof Error ? error.message : String(error)}
+            </p>
+            <Button size="sm" onClick={() => window.location.reload()}>
+              Try Again
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -127,21 +133,23 @@ export const Cart: React.FC = () => {
 
   if (items.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center py-12">
-          <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">
-            Empty Cart
-          </h2>
-          <p className="text-sm text-gray-600 mb-6">
-            Add some products to your cart
-          </p>
-          <Link href="/products">
-            <Button size="sm">
-              <Package className="w-4 h-4 mr-2" />
-              View Products
-            </Button>
-          </Link>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              Empty Cart
+            </h2>
+            <p className="text-sm text-gray-600 mb-6">
+              Add some products to your cart
+            </p>
+            <Link href="/products">
+              <Button size="sm">
+                <Package className="w-4 h-4 mr-2" />
+                View Products
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     );

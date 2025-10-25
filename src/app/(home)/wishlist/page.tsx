@@ -42,18 +42,20 @@ export default function WishlistPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
-        <div className="text-center py-8 sm:py-12 lg:py-16">
-          <Heart className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-gray-300 mx-auto mb-3 sm:mb-4" />
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
-            Login Required
-          </h2>
-          <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-4 sm:mb-6 lg:mb-8">
-            Silakan login untuk melihat wishlist Anda
-          </p>
-          <Link href="/auth/sign-in">
-            <Button className="text-xs sm:text-sm">Login</Button>
-          </Link>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
+          <div className="text-center">
+            <Heart className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-gray-300 mx-auto mb-3 sm:mb-4" />
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
+              Login Required
+            </h2>
+            <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-4 sm:mb-6 lg:mb-8">
+              Silakan login untuk melihat wishlist Anda
+            </p>
+            <Link href="/auth/sign-in">
+              <Button className="text-xs sm:text-sm">Login</Button>
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -61,15 +63,17 @@ export default function WishlistPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
-        <div className="text-center py-8 sm:py-12 lg:py-16">
-          <Loader2 className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-gray-300 mx-auto mb-3 sm:mb-4 animate-spin" />
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
-            Loading Wishlist...
-          </h2>
-          <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-4 sm:mb-6 lg:mb-8">
-            Memuat daftar wishlist Anda
-          </p>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
+          <div className="text-center">
+            <Loader2 className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-gray-300 mx-auto mb-3 sm:mb-4 animate-spin" />
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
+              Loading Wishlist...
+            </h2>
+            <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-4 sm:mb-6 lg:mb-8">
+              Memuat daftar wishlist Anda
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -77,21 +81,23 @@ export default function WishlistPage() {
 
   if (error) {
     return (
-      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
-        <div className="text-center py-8 sm:py-12 lg:py-16">
-          <Heart className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-red-300 mx-auto mb-3 sm:mb-4" />
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
-            Error Loading Wishlist
-          </h2>
-          <p className="text-xs sm:text-sm lg:text-base text-red-600 mb-4 sm:mb-6 lg:mb-8">
-            {error instanceof Error ? error.message : String(error)}
-          </p>
-          <Button
-            onClick={() => window.location.reload()}
-            className="text-xs sm:text-sm"
-          >
-            Coba Lagi
-          </Button>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
+          <div className="text-center">
+            <Heart className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-red-300 mx-auto mb-3 sm:mb-4" />
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
+              Error Loading Wishlist
+            </h2>
+            <p className="text-xs sm:text-sm lg:text-base text-red-600 mb-4 sm:mb-6 lg:mb-8">
+              {error instanceof Error ? error.message : String(error)}
+            </p>
+            <Button
+              onClick={() => window.location.reload()}
+              className="text-xs sm:text-sm"
+            >
+              Coba Lagi
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -99,21 +105,23 @@ export default function WishlistPage() {
 
   if (!wishlist || wishlist.length === 0) {
     return (
-      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
-        <div className="text-center py-8 sm:py-12 lg:py-16">
-          <Heart className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-gray-300 mx-auto mb-3 sm:mb-4" />
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
-            Wishlist Kosong
-          </h2>
-          <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-4 sm:mb-6 lg:mb-8">
-            Tambahkan produk ke wishlist Anda
-          </p>
-          <Link href="/products">
-            <Button className="text-xs sm:text-sm">
-              <Package className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-              Lihat Products
-            </Button>
-          </Link>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
+          <div className="text-center">
+            <Heart className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-gray-300 mx-auto mb-3 sm:mb-4" />
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
+              Wishlist Kosong
+            </h2>
+            <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-4 sm:mb-6 lg:mb-8">
+              Tambahkan produk ke wishlist Anda
+            </p>
+            <Link href="/products">
+              <Button className="text-xs sm:text-sm">
+                <Package className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                Lihat Products
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     );

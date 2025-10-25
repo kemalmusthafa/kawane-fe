@@ -389,7 +389,6 @@ export function HomeNavigation() {
                           </div>
                         </Link>
                       </Button>
-
                     </div>
 
                     {/* Navigation Links */}
