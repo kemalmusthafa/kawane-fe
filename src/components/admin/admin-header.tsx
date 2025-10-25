@@ -16,7 +16,7 @@ import { useAuth } from "@/components/providers/auth-provider";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdminSearchBar } from "./admin-search-bar";
-import { NotificationDropdown } from "./notification-dropdown";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { SimpleAvatar } from "@/components/ui/simple-avatar";
 
 interface AdminHeaderProps {
@@ -70,10 +70,8 @@ export function AdminHeader({ onMenuClick }: AdminHeaderProps) {
             <Search className="h-5 w-5" />
           </Button>
 
-          {/* Notifications */}
-          <div className="notification-dropdown">
-            <NotificationDropdown />
-          </div>
+          {/* Theme Toggle */}
+          <ThemeToggle />
 
           {/* User menu */}
           <div className="admin-header-dropdown">
