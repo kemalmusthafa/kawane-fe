@@ -30,12 +30,14 @@ Panduan lengkap untuk setup Instagram Basic Display API untuk mendapatkan posts 
 ### 3. Configure Instagram Basic Display
 
 1. **Valid OAuth Redirect URIs**:
+
    ```
    https://kawane-fe.vercel.app/auth/instagram/callback
    http://localhost:3000/auth/instagram/callback
    ```
 
 2. **Deauthorize Callback URL**:
+
    ```
    https://kawane-fe.vercel.app/auth/instagram/deauthorize
    ```
@@ -48,6 +50,7 @@ Panduan lengkap untuk setup Instagram Basic Display API untuk mendapatkan posts 
 ### 4. Get App Credentials
 
 1. Di **App Settings** > **Basic**:
+
    - **App ID**: Copy ini
    - **App Secret**: Copy ini
 
@@ -68,6 +71,7 @@ Panduan lengkap untuk setup Instagram Basic Display API untuk mendapatkan posts 
 #### Method 2: Using Instagram Basic Display API
 
 1. Buka URL ini (replace dengan App ID Anda):
+
    ```
    https://api.instagram.com/oauth/authorize?client_id=YOUR_APP_ID&redirect_uri=YOUR_REDIRECT_URI&scope=user_profile,user_media&response_type=code
    ```
@@ -89,16 +93,19 @@ NEXT_PUBLIC_INSTAGRAM_APP_SECRET="your-app-secret"
 ## 🔄 API Endpoints
 
 ### Get User Info
+
 ```
 GET https://graph.instagram.com/me?fields=id,username,account_type,media_count&access_token=ACCESS_TOKEN
 ```
 
 ### Get User Media
+
 ```
 GET https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,permalink,timestamp,like_count,comments_count&limit=12&access_token=ACCESS_TOKEN
 ```
 
 ### Get Media Details
+
 ```
 GET https://graph.instagram.com/MEDIA_ID?fields=id,caption,media_type,media_url,permalink,timestamp,like_count,comments_count&access_token=ACCESS_TOKEN
 ```
@@ -110,6 +117,7 @@ Widget sudah siap untuk menggunakan Instagram API. Cukup tambahkan environment v
 ### Fallback System
 
 Widget memiliki sistem fallback:
+
 1. **Primary**: Instagram Basic Display API (jika credentials tersedia)
 2. **Fallback**: Mock data dengan gambar dari Unsplash
 
@@ -131,10 +139,12 @@ Widget memiliki sistem fallback:
 ### Common Issues
 
 1. **"Invalid Access Token"**:
+
    - Check token validity
    - Regenerate token jika expired
 
 2. **"Rate Limit Exceeded"**:
+
    - Implement caching
    - Reduce API calls frequency
 
@@ -145,6 +155,7 @@ Widget memiliki sistem fallback:
 ### Debug Mode
 
 Enable debug mode di environment:
+
 ```env
 NEXT_PUBLIC_DEBUG_MODE=true
 NEXT_PUBLIC_VERBOSE_LOGGING=true

@@ -51,7 +51,7 @@ export function InstagramFeed() {
 
       // Check if we have Instagram API credentials
       const hasApiCredentials = process.env.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN;
-      
+
       if (hasApiCredentials) {
         // Use real Instagram API
         await fetchRealInstagramData();
@@ -73,11 +73,11 @@ export function InstagramFeed() {
       const userResponse = await fetch(
         `https://graph.instagram.com/me?fields=id,username,account_type,media_count&access_token=${process.env.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN}`
       );
-      
+
       if (!userResponse.ok) {
         throw new Error("Failed to fetch user info");
       }
-      
+
       const userData = await userResponse.json();
       setUserInfo(userData);
 
@@ -85,11 +85,11 @@ export function InstagramFeed() {
       const mediaResponse = await fetch(
         `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,permalink,timestamp,like_count,comments_count&limit=12&access_token=${process.env.NEXT_PUBLIC_INSTAGRAM_ACCESS_TOKEN}`
       );
-      
+
       if (!mediaResponse.ok) {
         throw new Error("Failed to fetch media");
       }
-      
+
       const mediaData = await mediaResponse.json();
       setPosts(mediaData.data || []);
     } catch (err) {
@@ -118,7 +118,8 @@ export function InstagramFeed() {
         id: "1",
         caption:
           "Kawane Studio - Premium Streetwear Collection 🎨 #KawaneStudio #Streetwear #Fashion",
-        media_url: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center",
+        media_url:
+          "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center",
         media_type: "IMAGE",
         permalink: "https://www.instagram.com/p/example1/",
         timestamp: new Date().toISOString(),
@@ -129,7 +130,8 @@ export function InstagramFeed() {
         id: "2",
         caption:
           "Behind the scenes at Kawane Studio 📸 #BehindTheScenes #KawaneStudio #Fashion",
-        media_url: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop&crop=center",
+        media_url:
+          "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop&crop=center",
         media_type: "IMAGE",
         permalink: "https://www.instagram.com/p/example2/",
         timestamp: new Date(Date.now() - 86400000).toISOString(),
@@ -140,7 +142,8 @@ export function InstagramFeed() {
         id: "3",
         caption:
           "New arrivals coming soon! Stay tuned for our latest collection 🔥 #NewArrivals #KawaneStudio",
-        media_url: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop&crop=center",
+        media_url:
+          "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop&crop=center",
         media_type: "IMAGE",
         permalink: "https://www.instagram.com/p/example3/",
         timestamp: new Date(Date.now() - 172800000).toISOString(),
@@ -151,7 +154,8 @@ export function InstagramFeed() {
         id: "4",
         caption:
           "Customer spotlight: Amazing feedback from our community 💙 #CustomerLove #KawaneStudio",
-        media_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=center",
+        media_url:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=center",
         media_type: "IMAGE",
         permalink: "https://www.instagram.com/p/example4/",
         timestamp: new Date(Date.now() - 259200000).toISOString(),
@@ -162,7 +166,8 @@ export function InstagramFeed() {
         id: "5",
         caption:
           "Kawane Studio team working hard on new designs 👨‍🎨 #TeamWork #KawaneStudio #Design",
-        media_url: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&crop=center",
+        media_url:
+          "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&crop=center",
         media_type: "IMAGE",
         permalink: "https://www.instagram.com/p/example5/",
         timestamp: new Date(Date.now() - 345600000).toISOString(),
@@ -173,7 +178,8 @@ export function InstagramFeed() {
         id: "6",
         caption:
           "Limited edition drop coming this week! Don't miss out ⚡ #LimitedEdition #KawaneStudio",
-        media_url: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center",
+        media_url:
+          "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center",
         media_type: "IMAGE",
         permalink: "https://www.instagram.com/p/example6/",
         timestamp: new Date(Date.now() - 432000000).toISOString(),
@@ -257,7 +263,9 @@ export function InstagramFeed() {
                   @{INSTAGRAM_USERNAME}
                 </p>
                 <div className="flex items-center space-x-4 mt-2 text-sm text-muted-foreground">
-                  <span className="font-semibold">{userInfo?.media_count || 195} Posts</span>
+                  <span className="font-semibold">
+                    {userInfo?.media_count || 195} Posts
+                  </span>
                   <span className="font-semibold">12.8K Followers</span>
                   <span className="font-semibold">1 Following</span>
                 </div>

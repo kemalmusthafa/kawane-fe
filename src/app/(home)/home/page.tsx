@@ -6,7 +6,6 @@ import { LookbookCarousel } from "@/components/home/lookbook-carousel";
 import { FeaturedCategories } from "@/components/home/featured-categories";
 import { BestSellers } from "@/components/home/best-sellers";
 import { NewArrivals } from "@/components/home/new-arrivals";
-import { InstagramFeed } from "@/components/home/instagram-feed";
 import { NewsletterSignup } from "@/components/home/newsletter-signup";
 
 const containerVariants = {
@@ -67,12 +66,6 @@ export default function HomePage() {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <NewsletterSignup />
-        </motion.div>
-        <motion.div
-          variants={sectionVariants}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <InstagramFeed />
         </motion.div>
       </div>
     </motion.div>
