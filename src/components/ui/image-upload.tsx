@@ -39,19 +39,21 @@ export function ImageUpload({
 
     try {
       const newImageUrls: string[] = [];
+      const rejectedFiles: string[] = [];
+      const failedFiles: string[] = [];
 
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
 
         // Validate file type
         if (!file.type.startsWith("image/")) {
-          toast.error(`${file.name} is not an image file`);
+          rejectedFiles.push(`${file.name} (not an image file)`);
           continue;
         }
 
         // Validate file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
-          toast.error(`${file.name} is too large. Maximum size is 5MB`);
+          rejectedFiles.push(`${file.name} (file must be under 5MB)`);
           continue;
         }
 
@@ -74,15 +76,43 @@ export function ImageUpload({
         );
 
         if (!response.ok) {
-          throw new Error(`Failed to upload ${file.name}`);
+          failedFiles.push(file.name);
+          continue;
         }
 
         const data = await response.json();
         newImageUrls.push(data.data.url);
       }
 
-      onImagesChange([...images, ...newImageUrls]);
-      toast.success(`${newImageUrls.length} image(s) uploaded successfully`);
+      // Update images if any were successfully uploaded
+      if (newImageUrls.length > 0) {
+        onImagesChange([...images, ...newImageUrls]);
+      }
+
+      // Show appropriate toast messages
+      if (newImageUrls.length > 0) {
+        toast.success(`${newImageUrls.length} image(s) uploaded successfully`);
+      }
+
+      if (rejectedFiles.length > 0) {
+        const errorMessage = rejectedFiles.length === 1 
+          ? rejectedFiles[0]
+          : `${rejectedFiles.length} files rejected: ${rejectedFiles.slice(0, 2).join(", ")}${rejectedFiles.length > 2 ? "..." : ""}`;
+        toast.error(errorMessage);
+      }
+
+      if (failedFiles.length > 0) {
+        const errorMessage = failedFiles.length === 1
+          ? `Failed to upload ${failedFiles[0]}`
+          : `Failed to upload ${failedFiles.length} files`;
+        toast.error(errorMessage);
+      }
+
+      // If no files were successfully uploaded and there were rejections, show specific message
+      if (newImageUrls.length === 0 && rejectedFiles.length > 0) {
+        toast.error("No images uploaded. Please check file requirements.");
+      }
+
     } catch (error) {
       toast.error("Failed to upload images");
     } finally {

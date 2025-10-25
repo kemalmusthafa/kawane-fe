@@ -33,7 +33,7 @@ export function LookbookImageUpload({
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("Ukuran file harus kurang dari 5MB");
+      toast.error("File must be under 5MB");
       return;
     }
 
