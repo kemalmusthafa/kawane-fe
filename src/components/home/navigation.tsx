@@ -300,6 +300,20 @@ export function HomeNavigation() {
               <Search className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
 
+            {/* Mobile Cart */}
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="/cart">
+                <div className="relative">
+                  <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
+                  {currentUser && totalItems > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                      {totalItems}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            </Button>
+
             {/* Mobile Menu */}
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
@@ -376,25 +390,6 @@ export function HomeNavigation() {
                         </Link>
                       </Button>
 
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start hover:bg-accent/50 dark:hover:bg-accent/30 hover:text-foreground dark:hover:text-foreground transition-colors duration-200 py-2 sm:py-3"
-                        asChild
-                      >
-                        <Link href="/cart">
-                          <div className="flex items-center">
-                            <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3 text-muted-foreground" />
-                            <span className="text-xs sm:text-sm text-foreground">
-                              Cart
-                            </span>
-                            {currentUser && totalItems > 0 && (
-                              <span className="ml-auto bg-primary text-primary-foreground text-[10px] sm:text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center">
-                                {totalItems}
-                              </span>
-                            )}
-                          </div>
-                        </Link>
-                      </Button>
                     </div>
 
                     {/* Navigation Links */}
