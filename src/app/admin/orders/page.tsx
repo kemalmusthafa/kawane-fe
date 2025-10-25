@@ -547,6 +547,7 @@ export default function AdminOrders() {
           order={selectedOrder}
           onUpdateStatus={handleUpdateOrderStatus}
           onUpdatePaymentStatus={handleUpdatePaymentStatus}
+          onRefetch={refetch}
         />
       </motion.div>
     </motion.div>

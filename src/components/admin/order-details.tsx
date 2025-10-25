@@ -69,6 +69,7 @@ interface OrderDetailsProps {
     orderId: string,
     status: string
   ) => Promise<{ success: boolean; error?: string }>;
+  onRefetch?: () => void;
 }
 
 export function OrderDetails({
@@ -77,8 +78,10 @@ export function OrderDetails({
   order,
   onUpdateStatus,
   onUpdatePaymentStatus,
+  onRefetch,
 }: OrderDetailsProps) {
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [isUpdatingOrderStatus, setIsUpdatingOrderStatus] = useState(false);
+  const [isUpdatingPaymentStatus, setIsUpdatingPaymentStatus] = useState(false);
   const [newOrderStatus, setNewOrderStatus] = useState("");
   const [newPaymentStatus, setNewPaymentStatus] = useState("");
 
@@ -138,28 +141,30 @@ export function OrderDetails({
   const handleUpdateOrderStatus = async () => {
     if (!order || !newOrderStatus) return;
 
-    setIsUpdating(true);
+    setIsUpdatingOrderStatus(true);
     try {
       const result = await onUpdateStatus(order.id, newOrderStatus);
       if (result.success) {
         toast.success(`Order status updated to ${newOrderStatus} successfully`);
         setNewOrderStatus("");
-        // Refresh the order data
-        window.location.reload();
+        // Trigger real-time update without page refresh
+        if (onRefetch) {
+          onRefetch();
+        }
       } else {
         toast.error(result.error || "Failed to update order status");
       }
     } catch (error) {
       toast.error("An unexpected error occurred");
     } finally {
-      setIsUpdating(false);
+      setIsUpdatingOrderStatus(false);
     }
   };
 
   const handleUpdatePaymentStatus = async () => {
     if (!order || !newPaymentStatus) return;
 
-    setIsUpdating(true);
+    setIsUpdatingPaymentStatus(true);
     try {
       const result = await onUpdatePaymentStatus(order.id, newPaymentStatus);
       if (result.success) {
@@ -167,15 +172,17 @@ export function OrderDetails({
           `Payment status updated to ${newPaymentStatus.toUpperCase()} successfully`
         );
         setNewPaymentStatus("");
-        // Refresh the order data
-        window.location.reload();
+        // Trigger real-time update without page refresh
+        if (onRefetch) {
+          onRefetch();
+        }
       } else {
         toast.error(result.error || "Failed to update payment status");
       }
     } catch (error) {
       toast.error("An unexpected error occurred");
     } finally {
-      setIsUpdating(false);
+      setIsUpdatingPaymentStatus(false);
     }
   };
 
@@ -258,10 +265,10 @@ export function OrderDetails({
                 <Button
                   size="sm"
                   onClick={handleUpdateOrderStatus}
-                  disabled={!newOrderStatus || isUpdating}
+                  disabled={!newOrderStatus || isUpdatingOrderStatus}
                   className="w-full sm:w-auto"
                 >
-                  {isUpdating && (
+                  {isUpdatingOrderStatus && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
                   Update
@@ -292,10 +299,10 @@ export function OrderDetails({
                 <Button
                   size="sm"
                   onClick={handleUpdatePaymentStatus}
-                  disabled={!newPaymentStatus || isUpdating}
+                  disabled={!newPaymentStatus || isUpdatingPaymentStatus}
                   className="w-full sm:w-auto"
                 >
-                  {isUpdating && (
+                  {isUpdatingPaymentStatus && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
                   Update
