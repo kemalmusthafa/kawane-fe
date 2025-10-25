@@ -107,10 +107,10 @@ export function ProductFilters({
 
         <Separator />
 
-        {/* Categories */}
+        {/* Collections */}
         <div>
           <Label className="text-xs sm:text-sm font-medium mb-2 sm:mb-3 block">
-            Categories
+            Collections
           </Label>
           <div className="space-y-2 max-h-48 overflow-y-auto">
             {categories?.map((category: Category) => (

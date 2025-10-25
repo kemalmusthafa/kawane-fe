@@ -29,11 +29,11 @@ export function NewsletterSignup() {
         >
           <Mail className="h-16 w-16 mx-auto mb-6 text-primary-foreground/80" />
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4">
             Stay Updated
           </h2>
 
-          <p className="text-lg sm:text-xl text-primary-foreground/80 mb-8">
+          <p className="text-base sm:text-lg lg:text-xl text-primary-foreground/80 mb-8">
             Subscribe to our newsletter for exclusive deals, new product alerts,
             and insider tips.
           </p>
@@ -65,10 +65,10 @@ export function NewsletterSignup() {
               animate={{ opacity: 1, scale: 1 }}
               className="bg-white/10 rounded-lg p-6"
             >
-              <p className="text-lg sm:text-xl font-medium">
+              <p className="text-base sm:text-lg lg:text-xl font-medium">
                 🎉 Thank you for subscribing!
               </p>
-              <p className="text-base text-primary-foreground/80 mt-2">
+              <p className="text-sm sm:text-base lg:text-lg text-primary-foreground/80 mt-2">
                 You'll receive our next newsletter soon.
               </p>
             </motion.div>
