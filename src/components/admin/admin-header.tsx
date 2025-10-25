@@ -29,7 +29,7 @@ export function AdminHeader({ onMenuClick }: AdminHeaderProps) {
 
   const handleLogout = async () => {
     await logout();
-    window.location.href = "/admin/login";
+    window.location.href = "/auth/sign-in";
   };
 
   return (
