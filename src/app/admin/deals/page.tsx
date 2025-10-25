@@ -107,7 +107,10 @@ export default function AdminDealsPage() {
         !dealData.productName ||
         !dealData.productPrice
       ) {
-        adminToast.general.error("Validation failed", "Please fill in all required fields");
+        adminToast.general.error(
+          "Validation failed",
+          "Please fill in all required fields"
+        );
         return;
       }
 
