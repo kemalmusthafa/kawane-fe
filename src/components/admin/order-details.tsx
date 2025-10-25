@@ -195,7 +195,7 @@ export function OrderDetails({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Package className="h-5 w-5" />
@@ -203,10 +203,10 @@ export function OrderDetails({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Order Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="bg-gray-50 p-3 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <User className="h-4 w-4 text-gray-600" />
                 <span className="font-medium text-sm">Customer</span>
@@ -217,7 +217,7 @@ export function OrderDetails({
               </div>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="bg-gray-50 p-3 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <Calendar className="h-4 w-4 text-gray-600" />
                 <span className="font-medium text-sm">Order Date</span>
@@ -233,7 +233,7 @@ export function OrderDetails({
               </div>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="bg-gray-50 p-3 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <Package className="h-4 w-4 text-gray-600" />
                 <span className="font-medium text-sm">Total Amount</span>
@@ -245,7 +245,7 @@ export function OrderDetails({
           </div>
 
           {/* Status Management */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="font-medium">Order Status</span>
@@ -352,9 +352,9 @@ export function OrderDetails({
           )}
 
           {/* Order Items */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <span className="font-medium">Order Items</span>
-            <Table>
+            <Table className="text-sm">
               <TableHeader>
                 <TableRow>
                   <TableHead>Product</TableHead>
