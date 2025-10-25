@@ -42,18 +42,22 @@ export default function WishlistPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-rose-100 dark:from-gray-900 dark:to-gray-800">
         <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
-          <div className="text-center">
-            <Heart className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-gray-300 mx-auto mb-3 sm:mb-4" />
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
+          <div className="text-center bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-md mx-auto">
+            <div className="w-20 h-20 bg-pink-100 dark:bg-pink-900 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Heart className="w-10 h-10 text-pink-600 dark:text-pink-400" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
               Login Required
             </h2>
-            <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-4 sm:mb-6 lg:mb-8">
+            <p className="text-base text-gray-600 dark:text-gray-300 mb-6">
               Silakan login untuk melihat wishlist Anda
             </p>
             <Link href="/auth/sign-in">
-              <Button className="text-xs sm:text-sm">Login</Button>
+              <Button className="w-full bg-pink-600 hover:bg-pink-700 text-white">
+                Login
+              </Button>
             </Link>
           </div>
         </div>
@@ -63,14 +67,16 @@ export default function WishlistPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-rose-100 dark:from-gray-900 dark:to-gray-800">
         <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
-          <div className="text-center">
-            <Loader2 className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-gray-300 mx-auto mb-3 sm:mb-4 animate-spin" />
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
+          <div className="text-center bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-md mx-auto">
+            <div className="w-20 h-20 bg-pink-100 dark:bg-pink-900 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Loader2 className="w-10 h-10 text-pink-600 dark:text-pink-400 animate-spin" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
               Loading Wishlist...
             </h2>
-            <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-4 sm:mb-6 lg:mb-8">
+            <p className="text-base text-gray-600 dark:text-gray-300 mb-6">
               Memuat daftar wishlist Anda
             </p>
           </div>
@@ -81,19 +87,21 @@ export default function WishlistPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-rose-100 dark:from-gray-900 dark:to-gray-800">
         <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
-          <div className="text-center">
-            <Heart className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-red-300 mx-auto mb-3 sm:mb-4" />
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
+          <div className="text-center bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-md mx-auto">
+            <div className="w-20 h-20 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Heart className="w-10 h-10 text-red-600 dark:text-red-400" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
               Error Loading Wishlist
             </h2>
-            <p className="text-xs sm:text-sm lg:text-base text-red-600 mb-4 sm:mb-6 lg:mb-8">
+            <p className="text-base text-red-600 dark:text-red-400 mb-6">
               {error instanceof Error ? error.message : String(error)}
             </p>
             <Button
               onClick={() => window.location.reload()}
-              className="text-xs sm:text-sm"
+              className="w-full bg-red-600 hover:bg-red-700 text-white"
             >
               Coba Lagi
             </Button>
@@ -105,19 +113,21 @@ export default function WishlistPage() {
 
   if (!wishlist || wishlist.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-rose-100 dark:from-gray-900 dark:to-gray-800">
         <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
-          <div className="text-center">
-            <Heart className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-gray-300 mx-auto mb-3 sm:mb-4" />
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
+          <div className="text-center bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-md mx-auto">
+            <div className="w-20 h-20 bg-pink-100 dark:bg-pink-900 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Heart className="w-10 h-10 text-pink-600 dark:text-pink-400" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
               Wishlist Kosong
             </h2>
-            <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-4 sm:mb-6 lg:mb-8">
+            <p className="text-base text-gray-600 dark:text-gray-300 mb-6">
               Tambahkan produk ke wishlist Anda
             </p>
             <Link href="/products">
-              <Button className="text-xs sm:text-sm">
-                <Package className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <Button className="w-full bg-pink-600 hover:bg-pink-700 text-white">
+                <Package className="w-4 h-4 mr-2" />
                 Lihat Products
               </Button>
             </Link>
