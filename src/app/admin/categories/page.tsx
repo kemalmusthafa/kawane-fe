@@ -26,6 +26,7 @@ import { CategoryForm } from "@/components/admin/category-form";
 import { apiClient } from "@/lib/api";
 import { useCategories } from "@/hooks/useApi";
 import { toast } from "sonner";
+import { adminToast } from "@/utils/admin-toast";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -46,15 +47,19 @@ export default function AdminCategoriesPage() {
   const handleDeleteCategory = async (categoryId: string) => {
     if (!confirm("Are you sure you want to delete this category?")) return;
 
+    // Find the category to get its name
+    const category = categories.find((cat: any) => cat.id === categoryId);
+    const categoryName = category?.name || "Category";
+
     try {
       await apiClient.request(`/categories/${categoryId}`, {
         method: "DELETE",
       });
-      toast.success("Category deleted successfully");
+      adminToast.category.delete(categoryName);
       mutateCategories();
     } catch (error: any) {
       console.error("Error deleting category:", error);
-      toast.error(error.message || "Failed to delete category");
+      adminToast.category.deleteError(error.message);
     }
   };
 

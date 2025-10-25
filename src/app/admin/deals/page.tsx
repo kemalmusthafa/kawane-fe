@@ -52,6 +52,7 @@ import { isValidImageUrl } from "@/utils/image-validation";
 import Image from "next/image";
 import { DealsSkeleton } from "@/components/admin/deals-skeleton";
 import { toast } from "sonner";
+import { adminToast } from "@/utils/admin-toast";
 import { MultipleBannerManagement } from "@/components/admin/multiple-banner-management";
 import { DealImageCarousel } from "@/components/ui/deal-image-carousel";
 
@@ -106,7 +107,7 @@ export default function AdminDealsPage() {
         !dealData.productName ||
         !dealData.productPrice
       ) {
-        toast.error("Please fill in all required fields");
+        adminToast.general.error("Validation failed", "Please fill in all required fields");
         return;
       }
 

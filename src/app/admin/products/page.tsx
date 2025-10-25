@@ -34,6 +34,7 @@ import {
   ImageIcon,
 } from "lucide-react";
 import { toast } from "sonner";
+import { adminToast } from "@/utils/admin-toast";
 import { ProductForm } from "@/components/admin/product-form";
 import { ConfirmationDialog } from "@/components/admin/confirmation-dialog";
 import { CategoryForm } from "@/components/admin/category-form";
@@ -125,10 +126,10 @@ export default function AdminProducts() {
 
     const result = await deleteProduct(deleteConfirm.product.id);
     if (result.success) {
-      toast.success("Product deleted successfully");
+      adminToast.product.delete(deleteConfirm.product.name);
       setDeleteConfirm({ isOpen: false, product: null });
     } else {
-      toast.error(result.error || "Failed to delete product");
+      adminToast.product.deleteError(result.error);
     }
   };
 
@@ -170,7 +171,7 @@ export default function AdminProducts() {
 
   const handleExport = () => {
     if (!data?.products || data.products.length === 0) {
-      toast.error("No products to export");
+      adminToast.product.exportError();
       return;
     }
 
@@ -213,7 +214,7 @@ export default function AdminProducts() {
     link.click();
     document.body.removeChild(link);
 
-    toast.success("Products exported successfully");
+    adminToast.product.exportSuccess(data.products.length);
   };
 
   if (!hasAccess) {

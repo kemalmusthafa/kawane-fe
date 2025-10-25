@@ -39,6 +39,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
+import { adminToast } from "@/utils/admin-toast";
 import { OrderDetails } from "@/components/admin/order-details";
 import { LegacyPagination } from "@/components/ui/pagination";
 import {
@@ -153,16 +154,16 @@ export default function AdminOrders() {
     try {
       const response = await apiClient.updateOrderStatus(orderId, status);
       if (response.success) {
-        toast.success("Order status updated successfully");
+        adminToast.order.updateStatus(orderId, status);
         refetch(); // Refresh the orders list
         return { success: true };
       } else {
-        toast.error("Failed to update order status");
+        adminToast.order.updateStatusError();
         return { success: false, error: "Failed to update order status" };
       }
     } catch (error: any) {
       console.error("Error updating order status:", error);
-      toast.error(error.message || "Failed to update order status");
+      adminToast.order.updateStatusError(error.message);
       return {
         success: false,
         error: error.message || "Failed to update order status",

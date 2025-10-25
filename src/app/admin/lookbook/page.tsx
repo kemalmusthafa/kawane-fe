@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { adminToast } from "@/utils/admin-toast";
 import {
   Plus,
   Edit,
@@ -115,22 +116,22 @@ export default function LookbookManagement() {
           formData
         );
         if (response.success) {
-          toast.success("Lookbook photo successfully updated");
+          adminToast.lookbook.update(editingPhoto.title || "Lookbook photo");
           fetchPhotos();
           resetForm();
         } else {
-          toast.error(response.message || "Failed to update lookbook photo");
+          adminToast.lookbook.updateError(response.message);
         }
       } else {
         // Create new photo
         const response = await apiClient.post("/lookbook", formData);
 
         if (response.success) {
-          toast.success("Lookbook photo successfully created");
+          adminToast.lookbook.create(formData.title || "Lookbook photo");
           fetchPhotos();
           resetForm();
         } else {
-          toast.error(response.message || "Failed to create lookbook photo");
+          adminToast.lookbook.createError(response.message);
         }
       }
     } catch (error: any) {
