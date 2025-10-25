@@ -61,22 +61,22 @@ export function InstagramFeed() {
   const initializeWidget = () => {
     if (!mounted || !containerRef.current || !scriptLoaded) return;
 
-      // Clear existing content
-      containerRef.current.innerHTML = "";
+    // Clear existing content
+    containerRef.current.innerHTML = "";
 
-      // Create the widget container
-      const widgetContainer = document.createElement("div");
+    // Create the widget container
+    const widgetContainer = document.createElement("div");
     widgetContainer.className = `elfsight-app-${WIDGET_ID}`;
-      widgetContainer.setAttribute("data-elfsight-app-lazy", "");
+    widgetContainer.setAttribute("data-elfsight-app-lazy", "");
 
     // Add theme information
     const currentTheme = resolvedTheme || theme || "light";
     widgetContainer.setAttribute("data-theme", currentTheme);
 
-      containerRef.current.appendChild(widgetContainer);
+    containerRef.current.appendChild(widgetContainer);
 
-      // Initialize the widget
-      if (window.Elfsight && window.Elfsight.init) {
+    // Initialize the widget
+    if (window.Elfsight && window.Elfsight.init) {
       setTimeout(() => {
         window.Elfsight.init();
         // Apply theme styling after widget loads
@@ -96,112 +96,6 @@ export function InstagramFeed() {
       injectDarkModeCSS();
     } else {
       injectLightModeCSS();
-    }
-
-    // Find ALL elements inside the widget container
-    const allElements = containerRef.current.querySelectorAll("*");
-
-    allElements.forEach((element: any) => {
-      // Remove any white corner boxes or unwanted elements
-      const computedStyle = window.getComputedStyle(element);
-      const elementStyle = element.style;
-
-      // Check for white background elements that might be corner boxes
-      if (
-        computedStyle.backgroundColor === "white" ||
-        computedStyle.backgroundColor === "rgb(255, 255, 255)" ||
-        elementStyle.backgroundColor === "white" ||
-        elementStyle.backgroundColor === "#fff" ||
-        elementStyle.backgroundColor === "#ffffff" ||
-        elementStyle.backgroundColor === "rgb(255, 255, 255)"
-      ) {
-        // Hide white background elements
-        element.style.setProperty("display", "none", "important");
-        element.style.setProperty("visibility", "hidden", "important");
-        element.style.setProperty("opacity", "0", "important");
-        element.style.setProperty(
-          "background-color",
-          "transparent",
-          "important"
-        );
-        element.style.setProperty("background", "transparent", "important");
-      }
-
-      // Check for positioned elements that might be corner overlays
-      if (
-        computedStyle.position === "absolute" ||
-        computedStyle.position === "fixed" ||
-        elementStyle.position === "absolute" ||
-        elementStyle.position === "fixed"
-      ) {
-        // Make positioned elements transparent
-        element.style.setProperty(
-          "background-color",
-          "transparent",
-          "important"
-        );
-        element.style.setProperty("background", "transparent", "important");
-      }
-
-      if (currentTheme === "dark") {
-        // Force dark background on ALL elements
-        element.style.setProperty("background-color", "#000000", "important");
-        element.style.setProperty("background", "#000000", "important");
-        element.style.setProperty("color", "#ffffff", "important");
-
-        // Override any existing styles
-        element.style.backgroundColor = "#000000 !important";
-        element.style.color = "#ffffff !important";
-
-        // Handle specific widget elements
-        if (element.classList.toString().includes("elfsight")) {
-          element.style.setProperty("background-color", "#000000", "important");
-          element.style.setProperty("color", "#ffffff", "important");
-        }
-
-        // Handle iframe elements
-        if (element.tagName === "IFRAME") {
-          element.style.setProperty("background-color", "#000000", "important");
-        }
-
-        // Handle div elements
-        if (element.tagName === "DIV") {
-          element.style.setProperty("background-color", "#000000", "important");
-          element.style.setProperty("color", "#ffffff", "important");
-        }
-
-        // Handle text elements
-        if (
-          ["P", "SPAN", "H1", "H2", "H3", "H4", "H5", "H6", "A"].includes(
-            element.tagName
-          )
-        ) {
-          element.style.setProperty("color", "#ffffff", "important");
-        }
-      } else {
-        // Light mode
-        element.style.setProperty("background-color", "#ffffff", "important");
-        element.style.setProperty("color", "#000000", "important");
-      }
-    });
-
-    // Also style the container itself
-    if (containerRef.current) {
-      if (currentTheme === "dark") {
-        containerRef.current.style.setProperty(
-          "background-color",
-          "#000000",
-          "important"
-        );
-        containerRef.current.style.setProperty("color", "#ffffff", "important");
-      } else {
-        containerRef.current.style.setProperty(
-          "background-color",
-          "#ffffff",
-          "important"
-        );
-        containerRef.current.style.setProperty("color", "#000000", "important");
-      }
     }
   };
 
@@ -323,103 +217,10 @@ export function InstagramFeed() {
       [class*="elfsight"] a {
         color: #ffffff !important;
       }
-      
-      /* Fix for white corner box issue */
-      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="position: absolute"],
-      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="position:fixed"],
-      [class*="elfsight"] [style*="position: absolute"],
-      [class*="elfsight"] [style*="position:fixed"] {
-        background-color: transparent !important;
-        background: transparent !important;
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-      }
-      
-      /* Hide any white overlay elements */
-      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="background-color: white"],
-      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="background-color: #fff"],
-      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="background-color: #ffffff"],
-      [class*="elfsight"] [style*="background-color: white"],
-      [class*="elfsight"] [style*="background-color: #fff"],
-      [class*="elfsight"] [style*="background-color: #ffffff"] {
-        background-color: transparent !important;
-        background: transparent !important;
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-      }
-      
-      /* Hide any elements with white background in top-right corner */
-      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="top: 0"],
-      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 [style*="right: 0"],
-      [class*="elfsight"] [style*="top: 0"],
-      [class*="elfsight"] [style*="right: 0"] {
-        background-color: transparent !important;
-        background: transparent !important;
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-      }
-      
-      /* Force all positioned elements to be transparent */
-      .elfsight-app-c8fd5002-bb9d-4039-a80f-3b119ac14fe8 *[style*="position"],
-      [class*="elfsight"] *[style*="position"] {
-        background-color: transparent !important;
-        background: transparent !important;
-      }
     `;
     document.head.appendChild(style);
   };
 
-  // Re-initialize widget when theme changes
-  useEffect(() => {
-    if (mounted && scriptLoaded && containerRef.current) {
-      const timer = setTimeout(() => {
-        initializeWidget();
-        // Also apply styling after theme change
-        setTimeout(() => {
-          applyThemeStyling();
-        }, 1000);
-      }, 500);
-
-      return () => clearTimeout(timer);
-    }
-  }, [theme, resolvedTheme, mounted, scriptLoaded]);
-
-  // Monitor widget changes and apply styling
-  useEffect(() => {
-    if (!mounted || !scriptLoaded) return;
-
-    const observer = new MutationObserver(() => {
-      // Apply styling when widget content changes
-      setTimeout(() => {
-        applyThemeStyling();
-      }, 100);
-    });
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-      });
-    }
-
-    // Also apply styling continuously every 2 seconds
-    const interval = setInterval(() => {
-      if (resolvedTheme === "dark") {
-        applyThemeStyling();
-      }
-    }, 2000);
-
-    return () => {
-      observer.disconnect();
-      clearInterval(interval);
-    };
-  }, [mounted, scriptLoaded, theme, resolvedTheme]);
-
-  // Don't render until mounted to avoid hydration mismatch
   if (!mounted) {
     return (
       <section className="py-16 bg-background">
@@ -433,10 +234,11 @@ export function InstagramFeed() {
               and customer stories
             </p>
           </div>
+
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-center h-64">
               <div className="animate-pulse text-muted-foreground">
-                Loading...
+                Loading Instagram feed...
               </div>
             </div>
           </div>
@@ -465,10 +267,14 @@ export function InstagramFeed() {
             data-theme={resolvedTheme || theme}
             suppressHydrationWarning
             style={{
-              // Force dark mode styling
+              // Force theme styling
               ...(resolvedTheme === "dark" && {
                 backgroundColor: "#000000",
                 color: "#ffffff",
+              }),
+              ...(resolvedTheme === "light" && {
+                backgroundColor: "#ffffff",
+                color: "#000000",
               }),
             }}
           >
