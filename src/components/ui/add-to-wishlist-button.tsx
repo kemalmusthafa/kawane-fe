@@ -6,6 +6,7 @@ import { Product } from "@/lib/api";
 import { Heart, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
+import { toastNotifications } from "@/utils/toast";
 
 interface AddToWishlistButtonProps {
   product: Product;
@@ -39,14 +40,14 @@ export const AddToWishlistButton: React.FC<AddToWishlistButtonProps> = ({
       try {
         setIsToggling(true);
         await toggleWishlist(product.id);
-        toast.success(
-          isInWishlist(product.id)
-            ? "Removed from wishlist"
-            : "Added to wishlist"
-        );
+        if (isInWishlist(product.id)) {
+          toastNotifications.success.removeFromWishlist(product.name);
+        } else {
+          toastNotifications.success.addToWishlist(product.name);
+        }
       } catch (error) {
         console.error("Error toggling wishlist:", error);
-        toast.error("Failed to update wishlist");
+        toastNotifications.error.addToWishlist();
       } finally {
         setIsToggling(false);
       }

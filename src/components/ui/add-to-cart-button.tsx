@@ -6,6 +6,7 @@ import { Product } from "@/lib/api";
 import { Plus, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
+import { toastNotifications } from "@/utils/toast";
 
 interface AddToCartButtonProps {
   product: Product;
@@ -41,7 +42,7 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
 
     // Check if product has sizes and size is selected
     if (product.sizes && product.sizes.length > 0 && !selectedSize) {
-      toast.error("Please select a size first");
+      toastNotifications.warning.selectSize();
       return;
     }
 
@@ -50,10 +51,10 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
         setIsAdding(true);
 
         await addItem(product.id, quantity, selectedSize);
-        toast.success("Product added to cart");
+        toastNotifications.success.addToCart(product.name);
       } catch (error) {
         console.error("Error adding to cart:", error);
-        toast.error("Failed to add product to cart");
+        toastNotifications.error.addToCart();
       } finally {
         setIsAdding(false);
       }

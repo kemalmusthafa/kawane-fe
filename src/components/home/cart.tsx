@@ -6,6 +6,7 @@ import { CartItemState } from "../../types/cart";
 import { useAuth } from "@/components/providers/auth-provider";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { toastNotifications } from "@/utils/toast";
 import { id } from "date-fns/locale";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -72,12 +73,12 @@ export const Cart: React.FC = () => {
 
   const handleCheckout = () => {
     if (!isAuthenticated) {
-      toast.error("Please login first to checkout");
+      toastNotifications.warning.loginRequired();
       return;
     }
 
     if (items.length === 0) {
-      toast.error("Cart is empty");
+      toastNotifications.warning.cartEmpty();
       return;
     }
 
