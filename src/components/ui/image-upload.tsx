@@ -89,50 +89,41 @@ export function ImageUpload({
         onImagesChange([...images, ...newImageUrls]);
       }
 
-      // Show appropriate toast messages - only one message per scenario
+      // Show appropriate toast messages - prevent conflicting messages
       if (newImageUrls.length > 0) {
         // Success case: show success message
         toast.success(`${newImageUrls.length} image(s) uploaded successfully`);
         
-        // If there were also rejections, show them as additional info
+        // Show additional rejections if any
         if (rejectedFiles.length > 0) {
-          const errorMessage =
-            rejectedFiles.length === 1
-              ? rejectedFiles[0]
-              : `${rejectedFiles.length} files rejected: ${rejectedFiles
-                  .slice(0, 2)
-                  .join(", ")}${rejectedFiles.length > 2 ? "..." : ""}`;
+          const errorMessage = rejectedFiles.length === 1 
+            ? rejectedFiles[0]
+            : `${rejectedFiles.length} files rejected: ${rejectedFiles.slice(0, 2).join(", ")}${rejectedFiles.length > 2 ? "..." : ""}`;
           toast.error(errorMessage);
         }
         
-        // If there were also upload failures, show them
+        // Show additional failures if any
         if (failedFiles.length > 0) {
-          const errorMessage =
-            failedFiles.length === 1
-              ? `Failed to upload ${failedFiles[0]}`
-              : `Failed to upload ${failedFiles.length} files`;
+          const errorMessage = failedFiles.length === 1
+            ? `Failed to upload ${failedFiles[0]}`
+            : `Failed to upload ${failedFiles.length} files`;
           toast.error(errorMessage);
         }
+      } else if (rejectedFiles.length > 0) {
+        // Only rejected files - show rejection message
+        const errorMessage = rejectedFiles.length === 1 
+          ? rejectedFiles[0]
+          : `${rejectedFiles.length} files rejected: ${rejectedFiles.slice(0, 2).join(", ")}${rejectedFiles.length > 2 ? "..." : ""}`;
+        toast.error(errorMessage);
+      } else if (failedFiles.length > 0) {
+        // Only failed uploads - show failure message
+        const errorMessage = failedFiles.length === 1
+          ? `Failed to upload ${failedFiles[0]}`
+          : `Failed to upload ${failedFiles.length} files`;
+        toast.error(errorMessage);
       } else {
-        // No successful uploads - show appropriate error message
-        if (rejectedFiles.length > 0) {
-          const errorMessage =
-            rejectedFiles.length === 1
-              ? rejectedFiles[0]
-              : `${rejectedFiles.length} files rejected: ${rejectedFiles
-                  .slice(0, 2)
-                  .join(", ")}${rejectedFiles.length > 2 ? "..." : ""}`;
-          toast.error(errorMessage);
-        } else if (failedFiles.length > 0) {
-          const errorMessage =
-            failedFiles.length === 1
-              ? `Failed to upload ${failedFiles[0]}`
-              : `Failed to upload ${failedFiles.length} files`;
-          toast.error(errorMessage);
-        } else {
-          // Fallback for unexpected cases
-          toast.error("No images uploaded. Please check file requirements.");
-        }
+        // Fallback for unexpected cases
+        toast.error("No images uploaded. Please check file requirements.");
       }
     } catch (error) {
       toast.error("Failed to upload images");
