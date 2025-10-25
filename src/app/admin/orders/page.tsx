@@ -75,6 +75,22 @@ export default function AdminOrders() {
     }
   };
 
+  // Map frontend payment status values to backend expected values
+  const mapPaymentStatusToBackend = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "PENDING";
+      case "paid":
+        return "SUCCEEDED";
+      case "failed":
+        return "FAILED";
+      case "refunded":
+        return "CANCELLED";
+      default:
+        return status;
+    }
+  };
+
   const { data, isLoading, isSearching, error, refetch } = useAdminOrders({
     search: searchTerm,
     status:
@@ -82,9 +98,20 @@ export default function AdminOrders() {
     paymentStatus:
       paymentStatusFilter === "all"
         ? undefined
-        : mapStatusToBackend(paymentStatusFilter),
+        : mapPaymentStatusToBackend(paymentStatusFilter),
     page: currentPage,
     limit: 5,
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  });
+
+  // Get summary data without filters for accurate statistics
+  const { data: summaryData } = useAdminOrders({
+    search: "",
+    status: undefined,
+    paymentStatus: undefined,
+    page: 1,
+    limit: 1000, // Get all orders for summary
     sortBy: "createdAt",
     sortOrder: "desc",
   });
@@ -299,7 +326,7 @@ export default function AdminOrders() {
               <ShoppingCart className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{data?.totalItems || 0}</div>
+              <div className="text-2xl font-bold">{summaryData?.totalItems || 0}</div>
               <p className="text-xs text-muted-foreground">
                 +12% from last month
               </p>
@@ -309,13 +336,13 @@ export default function AdminOrders() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Pending</CardTitle>
               <Badge className="bg-yellow-100 text-yellow-800">
-                {data?.orders?.filter((o) => o.status === "pending").length ||
+                {summaryData?.orders?.filter((o) => o.status === "pending").length ||
                   0}
               </Badge>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {data?.orders?.filter((o) => o.status === "pending").length ||
+                {summaryData?.orders?.filter((o) => o.status === "pending").length ||
                   0}
               </div>
             </CardContent>
@@ -324,13 +351,13 @@ export default function AdminOrders() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Shipped</CardTitle>
               <Badge className="bg-purple-100 text-purple-800">
-                {data?.orders?.filter((o) => o.status === "shipped").length ||
+                {summaryData?.orders?.filter((o) => o.status === "shipped").length ||
                   0}
               </Badge>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {data?.orders?.filter((o) => o.status === "shipped").length ||
+                {summaryData?.orders?.filter((o) => o.status === "shipped").length ||
                   0}
               </div>
             </CardContent>
@@ -339,13 +366,13 @@ export default function AdminOrders() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Completed</CardTitle>
               <Badge className="bg-green-100 text-green-800">
-                {data?.orders?.filter((o) => o.status === "delivered").length ||
+                {summaryData?.orders?.filter((o) => o.status === "delivered").length ||
                   0}
               </Badge>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {data?.orders?.filter((o) => o.status === "delivered").length ||
+                {summaryData?.orders?.filter((o) => o.status === "delivered").length ||
                   0}
               </div>
             </CardContent>
