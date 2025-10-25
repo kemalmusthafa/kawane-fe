@@ -30,6 +30,7 @@ import { useAdminAnalytics } from "@/hooks/useApi";
 
 export default function AdminAnalyticsPage() {
   const [period, setPeriod] = useState("30");
+  const [isExporting, setIsExporting] = useState(false);
 
   const { analytics, isLoading, error, mutate } = useAdminAnalytics({
     period: period,
@@ -52,6 +53,77 @@ export default function AdminAnalyticsPage() {
         return <Badge variant="pending">Pending</Badge>;
       default:
         return <Badge variant="default">{status}</Badge>;
+    }
+  };
+
+  const handleExport = () => {
+    if (!analytics) {
+      alert("No analytics data available to export");
+      return;
+    }
+
+    setIsExporting(true);
+
+    try {
+      // Create CSV content for analytics data
+      const headers = [
+        "Metric",
+        "Value",
+        "Growth %",
+        "Period",
+      ];
+
+      const csvData = [
+        ["Total Revenue", formatCurrency(analytics.overview.totalRevenue), `${analytics.overview.revenueGrowth}%`, `${period} days`],
+        ["Total Orders", analytics.overview.totalOrders.toString(), `${analytics.overview.ordersGrowth}%`, `${period} days`],
+        ["Total Customers", analytics.overview.totalCustomers.toString(), `${analytics.overview.customersGrowth}%`, `${period} days`],
+        ["Total Products", analytics.overview.totalProducts.toString(), "0%", `${period} days`],
+      ];
+
+      // Add sales data
+      const salesData = analytics.salesData.map(item => [
+        `Sales - ${item.month}`,
+        formatCurrency(item.sales),
+        "0%",
+        `${period} days`
+      ]);
+
+      // Add top products data
+      const topProductsData = analytics.topProducts.map((product, index) => [
+        `Top Product ${index + 1} - ${product.name}`,
+        formatCurrency(product.revenue),
+        `${product.sales} units sold`,
+        `${period} days`
+      ]);
+
+      const csvContent = [
+        headers.join(","),
+        ...csvData.map(row => row.map(cell => `"${cell}"`).join(",")),
+        ...salesData.map(row => row.map(cell => `"${cell}"`).join(",")),
+        ...topProductsData.map(row => row.map(cell => `"${cell}"`).join(",")),
+      ].join("\n");
+
+      // Create and download file
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute(
+        "download",
+        `analytics_${period}days_${new Date().toISOString().split("T")[0]}.csv`
+      );
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      alert("Analytics data exported successfully!");
+    } catch (error) {
+      console.error("Error exporting analytics:", error);
+      alert("Failed to export analytics data. Please try again.");
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -108,9 +180,21 @@ export default function AdminAnalyticsPage() {
                 <SelectItem value="365">Last year</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="outline" size="sm" className="text-xs sm:text-sm">
-              <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-              <span className="hidden sm:inline">Export</span>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="text-xs sm:text-sm"
+              onClick={handleExport}
+              disabled={isExporting || !analytics}
+            >
+              {isExporting ? (
+                <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 animate-spin" />
+              ) : (
+                <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              )}
+              <span className="hidden sm:inline">
+                {isExporting ? "Exporting..." : "Export"}
+              </span>
             </Button>
           </div>
         </div>
