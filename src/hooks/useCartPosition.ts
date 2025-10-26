@@ -46,11 +46,16 @@ export const useCartPosition = () => {
         cartElement = document.querySelector(selector);
         if (cartElement) {
           // Additional validation: make sure it's actually a cart element
-          const hasShoppingCartIcon = cartElement.querySelector('svg[class*="shopping-cart"]');
-          const hasCartHref = cartElement.getAttribute('href')?.includes('cart');
-          const hasCartText = cartElement.textContent?.toLowerCase().includes('cart') || 
-                             cartElement.textContent?.toLowerCase().includes('keranjang');
-          
+          const hasShoppingCartIcon = cartElement.querySelector(
+            'svg[class*="shopping-cart"]'
+          );
+          const hasCartHref = cartElement
+            .getAttribute("href")
+            ?.includes("cart");
+          const hasCartText =
+            cartElement.textContent?.toLowerCase().includes("cart") ||
+            cartElement.textContent?.toLowerCase().includes("keranjang");
+
           if (hasShoppingCartIcon || hasCartHref || hasCartText) {
             break;
           } else {
@@ -78,17 +83,23 @@ export const useCartPosition = () => {
             element.textContent?.toLowerCase().includes("cart") ||
             element.textContent?.toLowerCase().includes("keranjang");
           const hasCartHref = element.getAttribute("href")?.includes("cart");
-          
+
           // Exclude theme toggle buttons and other non-cart elements
-          const isThemeToggle = element.querySelector('svg[class*="sun"]') || 
-                               element.querySelector('svg[class*="moon"]') ||
-                               element.querySelector('svg[class*="theme"]');
-          const isUserButton = element.querySelector('svg[class*="user"]') ||
-                              element.querySelector('svg[class*="profile"]');
+          const isThemeToggle =
+            element.querySelector('svg[class*="sun"]') ||
+            element.querySelector('svg[class*="moon"]') ||
+            element.querySelector('svg[class*="theme"]');
+          const isUserButton =
+            element.querySelector('svg[class*="user"]') ||
+            element.querySelector('svg[class*="profile"]');
           const isHeartButton = element.querySelector('svg[class*="heart"]');
-          
-          if ((hasBadge || hasCartText || hasCartHref) && 
-              !isThemeToggle && !isUserButton && !isHeartButton) {
+
+          if (
+            (hasBadge || hasCartText || hasCartHref) &&
+            !isThemeToggle &&
+            !isUserButton &&
+            !isHeartButton
+          ) {
             cartElement = element;
             break;
           }
@@ -97,12 +108,23 @@ export const useCartPosition = () => {
     }
 
     if (cartElement) {
-      const rect = cartElement.getBoundingClientRect();
+      // Try to get the ShoppingCart SVG icon position for more accurate targeting
+      const shoppingCartIcon = cartElement.querySelector('svg[class*="shopping-cart"]');
+      let targetElement = cartElement;
+      
+      if (shoppingCartIcon) {
+        targetElement = shoppingCartIcon as Element;
+        console.log("🎯 Using ShoppingCart SVG icon for position calculation");
+      } else {
+        console.log("🎯 Using cart element wrapper for position calculation");
+      }
+      
+      const rect = targetElement.getBoundingClientRect();
       const position = {
         x: rect.left + rect.width / 2,
         y: rect.top + rect.height / 2,
       };
-      console.log('🎯 Cart element found:', cartElement, 'Position:', position);
+      console.log("🎯 Cart element found:", cartElement, "Target element:", targetElement, "Position:", position);
       setCartPosition(position);
     } else {
       // Fallback position (top-right corner)
@@ -110,7 +132,10 @@ export const useCartPosition = () => {
         x: window.innerWidth - 60,
         y: 60,
       };
-      console.log('⚠️ Cart element not found, using fallback:', fallbackPosition);
+      console.log(
+        "⚠️ Cart element not found, using fallback:",
+        fallbackPosition
+      );
       setCartPosition(fallbackPosition);
     }
   }, []);

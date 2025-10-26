@@ -30,7 +30,11 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
     y: cartPosition.y,
   };
 
-  console.log('🎬 Animation positions:', { startPosition, targetPosition, cartPosition });
+  console.log("🎬 Animation positions:", {
+    startPosition,
+    targetPosition,
+    cartPosition,
+  });
 
   return (
     <AnimatePresence>
