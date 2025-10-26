@@ -105,6 +105,14 @@ export default function AdminOrders() {
     sortOrder: "desc",
   });
 
+  // Debug logging for filters
+  console.log("🔍 Filter Debug:", {
+    statusFilter,
+    paymentStatusFilter,
+    mappedStatus: statusFilter === "all" ? undefined : mapStatusToBackend(statusFilter),
+    mappedPaymentStatus: paymentStatusFilter === "all" ? undefined : mapPaymentStatusToBackend(paymentStatusFilter),
+  });
+
   // Get summary data without filters for accurate statistics
   // Use multiple pages to get comprehensive data for summary
   const { data: summaryData } = useAdminOrders({
@@ -138,11 +146,24 @@ export default function AdminOrders() {
     const baseOrders = summaryData.orders || [];
     const page2Orders = summaryDataPage2?.orders || [];
 
-    return {
+    const combined = {
       ...summaryData,
       orders: [...baseOrders, ...page2Orders],
       totalItems: summaryData.totalItems, // Keep original total
     };
+
+    // Debug logging for summary data
+    console.log("📊 Summary Data Debug:", {
+      baseOrdersCount: baseOrders.length,
+      page2OrdersCount: page2Orders.length,
+      combinedOrdersCount: combined.orders.length,
+      pendingCount: combined.orders.filter(o => o.status === "pending").length,
+      shippedCount: combined.orders.filter(o => o.status === "shipped").length,
+      completedCount: combined.orders.filter(o => o.status === "delivered").length,
+      allStatuses: combined.orders.map(o => o.status),
+    });
+
+    return combined;
   }, [summaryData, summaryDataPage2]);
 
   const getStatusBadge = (status: string) => {
