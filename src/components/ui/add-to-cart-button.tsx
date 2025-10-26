@@ -56,9 +56,11 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   const { addItem, isLoading, isInCart, getItemQuantity } = useCart();
   const { requireAuth } = useAuthRedirect();
   const [isAdding, setIsAdding] = useState(false);
-  
+
   // Try to get animation context, fallback to no animation if not available
-  let triggerAnimation: ((productId: string, imageUrl: string, productName: string) => void) | null = null;
+  let triggerAnimation:
+    | ((productId: string, imageUrl: string, productName: string) => void)
+    | null = null;
   try {
     const animationContext = useAddToCartAnimationContext();
     triggerAnimation = animationContext.triggerAnimation;
@@ -81,16 +83,17 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
         setIsAdding(true);
 
         await addItem(product.id, quantity, selectedSize);
-        
+
         // Trigger animation if enabled and product has image
-        if (enableAnimation && triggerAnimation && product.images && product.images.length > 0) {
-          triggerAnimation(
-            product.id,
-            product.images[0].url,
-            product.name
-          );
+        if (
+          enableAnimation &&
+          triggerAnimation &&
+          product.images &&
+          product.images.length > 0
+        ) {
+          triggerAnimation(product.id, product.images[0].url, product.name);
         }
-        
+
         toastNotifications.success.addToCart(product.name);
       } catch (error) {
         console.error("Error adding to cart:", error);

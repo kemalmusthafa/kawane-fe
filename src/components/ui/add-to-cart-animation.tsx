@@ -18,6 +18,18 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
   productName,
   cartPosition = { x: 0, y: 0 },
 }) => {
+  // Calculate starting position (center of screen)
+  const startPosition = {
+    x: typeof window !== 'undefined' ? window.innerWidth / 2 : 0,
+    y: typeof window !== 'undefined' ? window.innerHeight / 2 : 0,
+  };
+
+  // Calculate target position (cart icon)
+  const targetPosition = {
+    x: cartPosition.x,
+    y: cartPosition.y,
+  };
+
   return (
     <AnimatePresence>
       {isAnimating && imageUrl && (
@@ -25,13 +37,15 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
           {/* Flying Product Image */}
           <motion.div
             initial={{
+              x: startPosition.x,
+              y: startPosition.y,
               scale: 1,
               opacity: 1,
               rotate: 0,
             }}
             animate={{
-              x: cartPosition.x,
-              y: cartPosition.y,
+              x: targetPosition.x,
+              y: targetPosition.y,
               scale: 0.3,
               opacity: 0.8,
               rotate: 360,
@@ -46,8 +60,6 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
             }}
             className="fixed z-50 pointer-events-none"
             style={{
-              left: "50%",
-              top: "50%",
               transform: "translate(-50%, -50%)",
             }}
           >
@@ -73,8 +85,9 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
             }}
             className="fixed z-50 pointer-events-none"
             style={{
-              left: cartPosition.x + 20,
-              top: cartPosition.y + 20,
+              left: targetPosition.x,
+              top: targetPosition.y,
+              transform: "translate(-50%, -50%)",
             }}
           >
             <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
@@ -90,8 +103,9 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
             transition={{ delay: 0.4, duration: 0.3 }}
             className="fixed z-50 pointer-events-none"
             style={{
-              left: cartPosition.x + 20,
-              top: cartPosition.y + 20,
+              left: targetPosition.x,
+              top: targetPosition.y,
+              transform: "translate(-50%, -50%)",
             }}
           >
             {[...Array(6)].map((_, i) => (

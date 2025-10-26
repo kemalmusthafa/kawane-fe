@@ -180,7 +180,7 @@ export function HomeNavigation() {
             </Button>
 
             <Button variant="ghost" size="icon" asChild>
-              <Link href="/cart">
+              <Link href="/cart" data-testid="cart-icon">
                 <div className="relative">
                   <ShoppingCart className="h-5 w-5" />
                   {currentUser && totalItems > 0 && (
@@ -302,7 +302,7 @@ export function HomeNavigation() {
 
             {/* Mobile Cart */}
             <Button variant="ghost" size="icon" asChild>
-              <Link href="/cart">
+              <Link href="/cart" data-testid="cart-icon">
                 <div className="relative">
                   <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
                   {currentUser && totalItems > 0 && (

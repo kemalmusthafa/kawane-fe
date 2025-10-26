@@ -8,59 +8,87 @@ interface CartPosition {
 }
 
 export const useCartPosition = () => {
-  const [cartPosition, setCartPosition] = useState<CartPosition>({ x: 0, y: 0 });
+  const [cartPosition, setCartPosition] = useState<CartPosition>({
+    x: 0,
+    y: 0,
+  });
 
   const updateCartPosition = useCallback(() => {
-    // Try to find cart icon in different possible locations
+    // More specific selectors for cart icon detection
     const cartSelectors = [
+      // Specific cart button with ShoppingCart icon
+      'button:has(svg[class*="shopping-cart"])',
+      'a:has(svg[class*="shopping-cart"])',
+      // Cart button with relative positioning (for badge)
+      'button:has(.relative):has(svg[class*="shopping-cart"])',
+      'a:has(.relative):has(svg[class*="shopping-cart"])',
+      // Cart button with badge
+      'button:has(.absolute):has(svg[class*="shopping-cart"])',
+      'a:has(.absolute):has(svg[class*="shopping-cart"])',
+      // Generic cart selectors
       '[data-testid="cart-icon"]',
       '[aria-label*="cart" i]',
       '[aria-label*="keranjang" i]',
       'button[class*="cart"]',
       'a[href*="cart"]',
-      // Common cart icon patterns
+      // SVG patterns
       'svg[class*="shopping-cart"]',
-      'button:has(svg[class*="shopping-cart"])',
-      // Fallback to any element with cart-related classes
+      'svg[class*="cart"]',
+      // Class patterns
       '.cart-icon',
       '#cart-icon',
     ];
 
     let cartElement: Element | null = null;
 
+    // First try specific selectors
     for (const selector of cartSelectors) {
-      cartElement = document.querySelector(selector);
-      if (cartElement) break;
+      try {
+        cartElement = document.querySelector(selector);
+        if (cartElement) {
+          break;
+        }
+      } catch (error) {
+        // Skip invalid selectors
+        continue;
+      }
     }
 
-    // If not found, try to find by icon content
+    // If not found, try to find by icon content and structure
     if (!cartElement) {
-      const allElements = document.querySelectorAll('button, a, div');
+      const allElements = document.querySelectorAll('button, a');
       for (const element of allElements) {
-        if (
-          element.textContent?.toLowerCase().includes('cart') ||
-          element.textContent?.toLowerCase().includes('keranjang') ||
-          element.querySelector('svg[class*="shopping-cart"]') ||
-          element.querySelector('svg[class*="cart"]')
-        ) {
-          cartElement = element;
-          break;
+        // Check if element contains ShoppingCart icon
+        const shoppingCartIcon = element.querySelector('svg[class*="shopping-cart"]');
+        if (shoppingCartIcon) {
+          // Additional check: make sure it's likely a cart button
+          const hasBadge = element.querySelector('.absolute, .relative');
+          const hasCartText = element.textContent?.toLowerCase().includes('cart') || 
+                             element.textContent?.toLowerCase().includes('keranjang');
+          const hasCartHref = element.getAttribute('href')?.includes('cart');
+          
+          if (hasBadge || hasCartText || hasCartHref) {
+            cartElement = element;
+            break;
+          }
         }
       }
     }
 
     if (cartElement) {
       const rect = cartElement.getBoundingClientRect();
-      setCartPosition({
+      const position = {
         x: rect.left + rect.width / 2,
         y: rect.top + rect.height / 2,
-      });
+      };
+      setCartPosition(position);
     } else {
       // Fallback position (top-right corner)
-      setCartPosition({
+      const fallbackPosition = {
         x: window.innerWidth - 60,
         y: 60,
-      });
+      };
+      setCartPosition(fallbackPosition);
     }
   }, []);
 
@@ -73,8 +101,8 @@ export const useCartPosition = () => {
       setTimeout(updateCartPosition, 100);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [updateCartPosition]);
 
   return { cartPosition, updateCartPosition };
