@@ -1368,10 +1368,6 @@ export const useAdminShipments = (params?: {
 }) => {
   const { isAuthenticated, user } = useAuth();
 
-  console.log("🔍 useAdminShipments auth check:", {
-    isAuthenticated,
-    user: user?.email,
-  });
 
   const { data, error, isLoading, mutate } = useSWR(
     isAuthenticated
@@ -1383,9 +1379,7 @@ export const useAdminShipments = (params?: {
         ).toString()}`
       : null,
     useCallback(async () => {
-      console.log("🔍 useAdminShipments fetching with params:", params);
       const response = await apiClient.getShipments(params);
-      console.log("📦 useAdminShipments response:", response);
       return response;
     }, [params]),
     {

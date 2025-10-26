@@ -44,7 +44,6 @@ import {
   Calendar,
   Clock,
   Loader2,
-  RefreshCw,
   User,
 } from "lucide-react";
 import { format } from "date-fns";
@@ -53,13 +52,14 @@ import { useAdminShipments } from "@/hooks/useApi";
 import ShipmentStats from "@/components/admin/shipment-stats";
 import CreateShipmentForm from "@/components/admin/create-shipment-form";
 import EditShipmentForm from "@/components/admin/edit-shipment-form";
+import { LegacyPagination } from "@/components/ui/pagination";
 
 export default function AdminShipmentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [carrierFilter, setCarrierFilter] = useState("all");
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const [itemsPerPage] = useState(10);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -70,6 +70,11 @@ export default function AdminShipmentsPage() {
   const {
     shipments,
     total,
+    page: currentPage,
+    limit,
+    totalPages,
+    hasNextPage,
+    hasPrevPage,
     isLoading,
     error,
     createShipment,
@@ -78,17 +83,13 @@ export default function AdminShipmentsPage() {
     mutate,
   } = useAdminShipments({
     page,
-    limit,
+    limit: itemsPerPage,
     search: searchTerm || undefined,
     status: statusFilter !== "all" ? statusFilter : undefined,
     carrier: carrierFilter !== "all" ? carrierFilter : undefined,
   });
 
   // Force refresh function to sync with backend
-  const forceRefresh = () => {
-    console.log("🔄 Force refreshing shipments data...");
-    mutate();
-  };
 
   const getStatusBadge = (orderStatus: string) => {
     switch (orderStatus) {
@@ -125,6 +126,11 @@ export default function AdminShipmentsPage() {
   const handleCarrierFilterChange = (value: string) => {
     setCarrierFilter(value);
     setPage(1); // Reset to first page when filtering
+  };
+
+  // Handle page change
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
   };
 
   // Handle shipment actions
@@ -230,17 +236,6 @@ export default function AdminShipmentsPage() {
             </p>
           </div>
           <div className="flex items-center space-x-3">
-            <Button
-              variant="outline"
-              onClick={forceRefresh}
-              disabled={isLoading}
-              title="Refresh data"
-            >
-              <RefreshCw
-                className={`w-4 h-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
-              />
-              Refresh
-            </Button>
             <Dialog
               open={isCreateDialogOpen}
               onOpenChange={setIsCreateDialogOpen}
@@ -475,6 +470,21 @@ export default function AdminShipmentsPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Pagination */}
+        {shipments && shipments.length > 0 && totalPages > 1 && (
+          <Card>
+            <CardContent className="py-4">
+              <LegacyPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                totalItems={total}
+                itemsPerPage={itemsPerPage}
+              />
+            </CardContent>
+          </Card>
+        )}
       </motion.div>
 
       {/* View Shipment Dialog */}
@@ -485,6 +495,9 @@ export default function AdminShipmentsPage() {
               <Truck className="h-5 w-5" />
               Shipment Details - {selectedShipment?.trackingNo}
             </DialogTitle>
+            <DialogDescription>
+              View detailed information about this shipment.
+            </DialogDescription>
           </DialogHeader>
           {selectedShipment && (
             <div className="space-y-4">
@@ -529,7 +542,9 @@ export default function AdminShipmentsPage() {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Package className="h-4 w-4 text-gray-600" />
-                  <span className="font-medium text-sm">Shipment Information</span>
+                  <span className="font-medium text-sm">
+                    Shipment Information
+                  </span>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg text-sm">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -578,14 +593,18 @@ export default function AdminShipmentsPage() {
                     <div>
                       <span className="text-gray-600">Status:</span>
                       <div>
-                        {getStatusBadge(selectedShipment.order?.status || "PENDING")}
+                        {getStatusBadge(
+                          selectedShipment.order?.status || "PENDING"
+                        )}
                       </div>
                     </div>
                     <div className="sm:col-span-2">
                       <span className="text-gray-600">Total Amount:</span>
                       <div className="font-semibold text-green-600">
                         Rp{" "}
-                        {selectedShipment.order?.totalAmount?.toLocaleString("id-ID") || 0}
+                        {selectedShipment.order?.totalAmount?.toLocaleString(
+                          "id-ID"
+                        ) || 0}
                       </div>
                     </div>
                   </div>
@@ -640,7 +659,10 @@ export default function AdminShipmentsPage() {
             </div>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsViewDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsViewDialogOpen(false)}
+            >
               Close
             </Button>
           </DialogFooter>
@@ -655,6 +677,9 @@ export default function AdminShipmentsPage() {
               <Edit className="h-5 w-5" />
               Edit Shipment
             </DialogTitle>
+            <DialogDescription>
+              Update shipment information.
+            </DialogDescription>
           </DialogHeader>
           {selectedShipment && (
             <EditShipmentForm
