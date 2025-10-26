@@ -130,13 +130,17 @@ export default function AdminOrders() {
 
   // Combine summary data from multiple pages for better statistics
   const combinedSummaryData = useMemo(() => {
-    if (!summaryData?.orders || !summaryDataPage2?.orders) {
-      return summaryData;
+    // Use summaryData as base, add page2 data if available
+    if (!summaryData?.orders) {
+      return null;
     }
+    
+    const baseOrders = summaryData.orders || [];
+    const page2Orders = summaryDataPage2?.orders || [];
     
     return {
       ...summaryData,
-      orders: [...summaryData.orders, ...summaryDataPage2.orders],
+      orders: [...baseOrders, ...page2Orders],
       totalItems: summaryData.totalItems, // Keep original total
     };
   }, [summaryData, summaryDataPage2]);
@@ -363,14 +367,16 @@ export default function AdminOrders() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Pending</CardTitle>
               <Badge className="bg-yellow-100 text-yellow-800">
-                {combinedSummaryData?.orders?.filter((o) => o.status === "pending")
-                  .length || 0}
+                {combinedSummaryData?.orders?.filter(
+                  (o) => o.status === "pending"
+                ).length || 0}
               </Badge>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {combinedSummaryData?.orders?.filter((o) => o.status === "pending")
-                  .length || 0}
+                {combinedSummaryData?.orders?.filter(
+                  (o) => o.status === "pending"
+                ).length || 0}
               </div>
             </CardContent>
           </Card>
@@ -378,14 +384,16 @@ export default function AdminOrders() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Shipped</CardTitle>
               <Badge className="bg-purple-100 text-purple-800">
-                {combinedSummaryData?.orders?.filter((o) => o.status === "shipped")
-                  .length || 0}
+                {combinedSummaryData?.orders?.filter(
+                  (o) => o.status === "shipped"
+                ).length || 0}
               </Badge>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {combinedSummaryData?.orders?.filter((o) => o.status === "shipped")
-                  .length || 0}
+                {combinedSummaryData?.orders?.filter(
+                  (o) => o.status === "shipped"
+                ).length || 0}
               </div>
             </CardContent>
           </Card>
@@ -393,14 +401,16 @@ export default function AdminOrders() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Completed</CardTitle>
               <Badge className="bg-green-100 text-green-800">
-                {combinedSummaryData?.orders?.filter((o) => o.status === "delivered")
-                  .length || 0}
+                {combinedSummaryData?.orders?.filter(
+                  (o) => o.status === "delivered"
+                ).length || 0}
               </Badge>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {combinedSummaryData?.orders?.filter((o) => o.status === "delivered")
-                  .length || 0}
+                {combinedSummaryData?.orders?.filter(
+                  (o) => o.status === "delivered"
+                ).length || 0}
               </div>
             </CardContent>
           </Card>
