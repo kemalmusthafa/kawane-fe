@@ -393,10 +393,6 @@ export const useAdminOrders = (params?: {
 }) => {
   const { isAuthenticated, user } = useAuth();
 
-  console.log("🔍 useAdminOrders auth check:", {
-    isAuthenticated,
-    user: user?.email,
-  });
 
   const queryString = useMemo(() => {
     const qs = new URLSearchParams();
@@ -417,9 +413,7 @@ export const useAdminOrders = (params?: {
     useCallback(async () => {
       if (!isAuthenticated) return null;
       try {
-        console.log("🔍 useAdminOrders fetching with params:", params);
         const response = await apiClient.getAdminOrders(params);
-        console.log("📦 useAdminOrders response:", response);
         return response;
       } catch (error) {
         console.error("Error fetching admin orders:", error);
