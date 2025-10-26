@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { SWRProvider } from "@/components/providers/swr-provider";
 import { CartProvider } from "@/components/providers/cart-provider-backend";
+import { AddToCartAnimationProvider } from "@/components/providers/add-to-cart-animation-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -90,9 +91,11 @@ export default function RootLayout({
             <SWRProvider>
               <AuthProvider>
                 <CartProvider>
-                  {children}
-                  <Toaster />
-                  <SonnerToaster />
+                  <AddToCartAnimationProvider>
+                    {children}
+                    <Toaster />
+                    <SonnerToaster />
+                  </AddToCartAnimationProvider>
                 </CartProvider>
               </AuthProvider>
             </SWRProvider>

@@ -716,7 +716,9 @@ export default function OrderDetailPage() {
                     </div>
                     <Separator className="my-4" />
                     <div className="flex justify-between text-sm md:text-base font-bold">
-                      <span className="text-sm md:text-base text-gray-900 dark:text-gray-100">Total</span>
+                      <span className="text-sm md:text-base text-gray-900 dark:text-gray-100">
+                        Total
+                      </span>
                       <span className="text-sm md:text-base text-gray-900 dark:text-gray-100">
                         Rp {order.totalAmount.toLocaleString("id-ID")}
                       </span>
