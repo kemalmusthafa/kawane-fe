@@ -48,7 +48,6 @@ export default function AdminOrders() {
   const { hasAccess } = useAdminAccess();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [paymentStatusFilter, setPaymentStatusFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [isOrderDetailsOpen, setIsOrderDetailsOpen] = useState(false);
@@ -75,61 +74,18 @@ export default function AdminOrders() {
     }
   };
 
-  // Map frontend payment status values to backend expected values
-  const mapPaymentStatusToBackend = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "PENDING";
-      case "paid":
-        return "SUCCEEDED";
-      case "failed":
-        return "FAILED";
-      case "refunded":
-        return "CANCELLED";
-      default:
-        return status;
-    }
-  };
 
   const { data, isLoading, isSearching, error, refetch } = useAdminOrders({
     search: searchTerm,
     status:
       statusFilter === "all" ? undefined : mapStatusToBackend(statusFilter),
-    paymentStatus:
-      paymentStatusFilter === "all"
-        ? undefined
-        : mapPaymentStatusToBackend(paymentStatusFilter),
+    paymentStatus: undefined,
     page: currentPage,
     limit: 5,
     sortBy: "createdAt",
     sortOrder: "desc",
   });
 
-  // Debug logging for filters
-  console.log("🔍 Filter Debug:", {
-    statusFilter,
-    paymentStatusFilter,
-    mappedStatus:
-      statusFilter === "all" ? undefined : mapStatusToBackend(statusFilter),
-    mappedPaymentStatus:
-      paymentStatusFilter === "all"
-        ? undefined
-        : mapPaymentStatusToBackend(paymentStatusFilter),
-  });
-
-  // Debug logging for filtered data
-  console.log("📋 Filtered Data Debug:", {
-    totalOrders: data?.orders?.length || 0,
-    orders:
-      data?.orders?.map((o) => ({
-        id: o.id,
-        status: o.status,
-        paymentStatus: (o as any).payment?.status || "N/A",
-      })) || [],
-    paymentStatuses:
-      data?.orders?.map((o) => (o as any).payment?.status).filter(Boolean) ||
-      [],
-  });
 
   // Get summary data without filters for accurate statistics
   // Use multiple pages to get comprehensive data for summary
@@ -170,22 +126,6 @@ export default function AdminOrders() {
       totalItems: summaryData.totalItems, // Keep original total
     };
 
-    // Debug logging for summary data
-    console.log("📊 Summary Data Debug:", {
-      baseOrdersCount: baseOrders.length,
-      page2OrdersCount: page2Orders.length,
-      combinedOrdersCount: combined.orders.length,
-      pendingCount: combined.orders.filter(
-        (o) => (o as any).status === "PENDING"
-      ).length,
-      shippedCount: combined.orders.filter(
-        (o) => (o as any).status === "SHIPPED"
-      ).length,
-      completedCount: combined.orders.filter(
-        (o) => (o as any).status === "COMPLETED"
-      ).length,
-      allStatuses: combined.orders.map((o) => (o as any).status),
-    });
 
     return combined;
   }, [summaryData, summaryDataPage2]);
@@ -309,9 +249,7 @@ export default function AdminOrders() {
         return;
       }
 
-      console.log("🗑️ Attempting to DELETE order:", orderId);
       const response = await apiClient.deleteOrder(orderId);
-      console.log("📦 DELETE response:", response);
 
       if (response.success) {
         toast.success("Order deleted successfully");
@@ -345,10 +283,6 @@ export default function AdminOrders() {
     setCurrentPage(1); // Reset to first page when filtering
   };
 
-  const handlePaymentStatusFilterChange = (value: string) => {
-    setPaymentStatusFilter(value);
-    setCurrentPage(1); // Reset to first page when filtering
-  };
 
   if (!hasAccess) {
     return null; // AdminGuard will handle this
@@ -522,28 +456,6 @@ export default function AdminOrders() {
                     </SelectContent>
                   </Select>
                 </div>
-
-                <div className="flex-1 sm:flex-none">
-                  <Select
-                    value={paymentStatusFilter}
-                    onValueChange={handlePaymentStatusFilterChange}
-                  >
-                    <SelectTrigger className="w-full sm:w-[160px] lg:w-[180px]">
-                      <SelectValue placeholder="Filter by Payment" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Payment</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="paid">Paid</SelectItem>
-                      <SelectItem value="failed">Failed</SelectItem>
-                      <SelectItem value="refunded">Refunded</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <Button variant="outline" className="w-full sm:w-auto">
-                  Export
-                </Button>
               </div>
             </div>
           </CardContent>
