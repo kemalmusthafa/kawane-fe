@@ -109,25 +109,25 @@ export default function EditShipmentForm({
     <form onSubmit={handleSubmit} className="space-y-6 font-pragmatica">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <Truck className="w-5 h-5 mr-2" />
+          <CardTitle className="flex items-center text-sm font-semibold">
+            <Truck className="w-4 h-4 mr-2" />
             Edit Shipment Information
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Order Information (Read-only) */}
           <div className="p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-semibold mb-2 text-gray-700">
+            <h3 className="text-xs font-semibold mb-2 text-gray-700">
               Order Information
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               <div>
                 <span className="text-gray-600">Order ID:</span>
-                <span className="ml-2 font-mono">{shipment?.orderId}</span>
+                <span className="ml-2 font-mono font-medium">{shipment?.orderId}</span>
               </div>
               <div>
                 <span className="text-gray-600">Customer:</span>
-                <span className="ml-2">
+                <span className="ml-2 font-medium">
                   {shipment?.order?.user?.name || "N/A"}
                 </span>
               </div>
@@ -193,7 +193,7 @@ export default function EditShipmentForm({
           {/* Cost and Estimated Days */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="cost">Shipping Cost (Rp)</Label>
+              <Label htmlFor="cost" className="text-xs font-medium">Shipping Cost (Rp)</Label>
               <Input
                 id="cost"
                 type="number"
@@ -202,10 +202,11 @@ export default function EditShipmentForm({
                 placeholder="0"
                 min="0"
                 step="1000"
+                className="text-xs"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="estimatedDays">Estimated Days *</Label>
+              <Label htmlFor="estimatedDays" className="text-xs font-medium">Estimated Days *</Label>
               <Input
                 id="estimatedDays"
                 type="number"
@@ -217,19 +218,21 @@ export default function EditShipmentForm({
                 min="1"
                 max="30"
                 required
+                className="text-xs"
               />
             </div>
           </div>
 
           {/* Notes */}
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes</Label>
+            <Label htmlFor="notes" className="text-xs font-medium">Notes</Label>
             <Textarea
               id="notes"
               value={formData.notes}
               onChange={(e) => handleInputChange("notes", e.target.value)}
               placeholder="Additional notes about the shipment"
               rows={3}
+              className="text-xs"
             />
           </div>
         </CardContent>

@@ -93,21 +93,23 @@ export default function CreateShipmentForm({
   // Filter orders that are ready for shipment (PAID status and no existing shipment)
   const availableOrders =
     orders?.filter((order: any) => {
-      // ✅ FIXED: More flexible filtering with proper enum values
+      // ✅ FIXED: Use payment.status instead of paymentStatus
+      const paymentStatus = order.payment?.status || order.paymentStatus;
+      
       const isReadyForShipment =
         order.status === "PAID" ||
         order.status === "COMPLETED" ||
         order.status === "SHIPPED" ||
         (order.status === "PENDING" &&
-          (order.paymentStatus === "SUCCEEDED" ||
-            order.paymentStatus === "PAID"));
+          (paymentStatus === "SUCCEEDED" ||
+            paymentStatus === "PAID"));
 
       const hasNoShipment = !order.shipment;
 
       console.log("🔍 Order filtering:", {
         orderId: order.id,
         status: order.status,
-        paymentStatus: (order as any).paymentStatus,
+        paymentStatus: paymentStatus,
         hasShipment: !!order.shipment,
         isReadyForShipment,
         hasNoShipment,
@@ -124,8 +126,8 @@ export default function CreateShipmentForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <Truck className="w-5 h-5 mr-2" />
+        <CardTitle className="flex items-center text-sm font-semibold">
+          <Truck className="w-4 h-4 mr-2" />
           Create New Shipment
         </CardTitle>
       </CardHeader>
@@ -133,18 +135,18 @@ export default function CreateShipmentForm({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="orderId">Order ID *</Label>
+              <Label htmlFor="orderId" className="text-xs font-medium">Order ID *</Label>
               <Select
                 value={formData.orderId}
                 onValueChange={(value) => handleInputChange("orderId", value)}
                 required
               >
-                <SelectTrigger>
+                <SelectTrigger className="text-xs">
                   <SelectValue placeholder="Select an order" />
                 </SelectTrigger>
                 <SelectContent>
                   {availableOrders.map((order: any) => (
-                    <SelectItem key={order.id} value={order.id}>
+                    <SelectItem key={order.id} value={order.id} className="text-xs">
                       {order.id} - {order.user?.name} - Rp{" "}
                       {order.totalAmount.toLocaleString("id-ID")}
                     </SelectItem>
@@ -152,7 +154,7 @@ export default function CreateShipmentForm({
                 </SelectContent>
               </Select>
               {availableOrders.length === 0 && (
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 mt-1">
                   No orders ready for shipment
                 </p>
               )}
@@ -204,7 +206,7 @@ export default function CreateShipmentForm({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="trackingNo">Tracking Number</Label>
+              <Label htmlFor="trackingNo" className="text-xs font-medium">Tracking Number</Label>
               <Input
                 id="trackingNo"
                 placeholder="Enter tracking number"
@@ -212,11 +214,12 @@ export default function CreateShipmentForm({
                 onChange={(e) =>
                   handleInputChange("trackingNo", e.target.value)
                 }
+                className="text-xs"
               />
             </div>
 
             <div>
-              <Label htmlFor="cost">Shipping Cost (Rp)</Label>
+              <Label htmlFor="cost" className="text-xs font-medium">Shipping Cost (Rp)</Label>
               <Input
                 id="cost"
                 type="number"
@@ -224,12 +227,13 @@ export default function CreateShipmentForm({
                 value={formData.cost}
                 onChange={(e) => handleInputChange("cost", e.target.value)}
                 min="0"
+                className="text-xs"
               />
             </div>
           </div>
 
           <div>
-            <Label htmlFor="estimatedDays">Estimated Delivery Days</Label>
+            <Label htmlFor="estimatedDays" className="text-xs font-medium">Estimated Delivery Days</Label>
             <Input
               id="estimatedDays"
               type="number"
@@ -239,17 +243,19 @@ export default function CreateShipmentForm({
                 handleInputChange("estimatedDays", e.target.value)
               }
               min="1"
+              className="text-xs"
             />
           </div>
 
           <div>
-            <Label htmlFor="notes">Notes</Label>
+            <Label htmlFor="notes" className="text-xs font-medium">Notes</Label>
             <Textarea
               id="notes"
               placeholder="Additional notes..."
               value={formData.notes}
               onChange={(e) => handleInputChange("notes", e.target.value)}
               rows={3}
+              className="text-xs"
             />
           </div>
 

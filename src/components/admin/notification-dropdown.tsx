@@ -361,7 +361,6 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
               </div>
             )}
           </ScrollArea>
-
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

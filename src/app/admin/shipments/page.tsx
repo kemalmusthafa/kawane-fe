@@ -249,10 +249,10 @@ export default function AdminShipmentsPage() {
                   Add Shipment
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Add New Shipment</DialogTitle>
-                  <DialogDescription>
+                  <DialogTitle className="text-lg font-semibold">Add New Shipment</DialogTitle>
+                  <DialogDescription className="text-sm text-gray-600">
                     Create a new shipment record for an order.
                   </DialogDescription>
                 </DialogHeader>
@@ -475,10 +475,10 @@ export default function AdminShipmentsPage() {
 
       {/* View Shipment Dialog */}
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Shipment Details</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-lg font-semibold">Shipment Details</DialogTitle>
+            <DialogDescription className="text-sm text-gray-600">
               View detailed information about this shipment.
             </DialogDescription>
           </DialogHeader>
@@ -486,31 +486,31 @@ export default function AdminShipmentsPage() {
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="font-semibold mb-3">Shipment Information</h3>
+                  <h3 className="text-sm font-semibold mb-3 text-gray-800">Shipment Information</h3>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Tracking Number:</span>
-                      <span className="font-mono">
+                      <span className="text-xs text-gray-600">Tracking Number:</span>
+                      <span className="text-xs font-mono font-medium">
                         {selectedShipment.trackingNo}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Courier:</span>
-                      <span>{selectedShipment.courier}</span>
+                      <span className="text-xs text-gray-600">Courier:</span>
+                      <span className="text-xs font-medium">{selectedShipment.courier}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Cost:</span>
-                      <span>
+                      <span className="text-xs text-gray-600">Cost:</span>
+                      <span className="text-xs font-medium">
                         Rp {selectedShipment.cost?.toLocaleString("id-ID") || 0}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Estimated Days:</span>
-                      <span>{selectedShipment.estimatedDays} days</span>
+                      <span className="text-xs text-gray-600">Estimated Days:</span>
+                      <span className="text-xs font-medium">{selectedShipment.estimatedDays} days</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Created:</span>
-                      <span>
+                      <span className="text-xs text-gray-600">Created:</span>
+                      <span className="text-xs font-medium">
                         {format(
                           new Date(selectedShipment.createdAt),
                           "dd MMM yyyy HH:mm",
@@ -523,33 +523,35 @@ export default function AdminShipmentsPage() {
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-3">Order Information</h3>
+                  <h3 className="text-sm font-semibold mb-3 text-gray-800">Order Information</h3>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Order ID:</span>
-                      <span className="font-mono text-sm">
+                      <span className="text-xs text-gray-600">Order ID:</span>
+                      <span className="text-xs font-mono font-medium">
                         {selectedShipment.orderId}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Customer:</span>
-                      <span>{selectedShipment.order?.user?.name || "N/A"}</span>
+                      <span className="text-xs text-gray-600">Customer:</span>
+                      <span className="text-xs font-medium">{selectedShipment.order?.user?.name || "N/A"}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Email:</span>
-                      <span className="text-sm">
+                      <span className="text-xs text-gray-600">Email:</span>
+                      <span className="text-xs font-medium">
                         {selectedShipment.order?.user?.email || "N/A"}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Status:</span>
-                      {getStatusBadge(
-                        selectedShipment.order?.status || "PENDING"
-                      )}
+                      <span className="text-xs text-gray-600">Status:</span>
+                      <div className="text-xs">
+                        {getStatusBadge(
+                          selectedShipment.order?.status || "PENDING"
+                        )}
+                      </div>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Total Amount:</span>
-                      <span>
+                      <span className="text-xs text-gray-600">Total Amount:</span>
+                      <span className="text-xs font-medium">
                         Rp{" "}
                         {selectedShipment.order?.totalAmount?.toLocaleString(
                           "id-ID"
@@ -562,7 +564,7 @@ export default function AdminShipmentsPage() {
               {selectedShipment.order?.items &&
                 selectedShipment.order.items.length > 0 && (
                   <div>
-                    <h3 className="font-semibold mb-3">Order Items</h3>
+                    <h3 className="text-sm font-semibold mb-3 text-gray-800">Order Items</h3>
                     <div className="space-y-2">
                       {selectedShipment.order.items.map(
                         (item: any, index: number) => (
@@ -571,23 +573,23 @@ export default function AdminShipmentsPage() {
                             className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
                           >
                             <div>
-                              <div className="font-medium">
+                              <div className="text-xs font-medium">
                                 {item.product?.name || "Unknown Product"}
                               </div>
-                              <div className="text-sm text-gray-600">
+                              <div className="text-xs text-gray-600">
                                 SKU: {item.product?.sku || "N/A"} | Qty:{" "}
                                 {item.quantity}
                                 {item.size && ` | Size: ${item.size}`}
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="font-medium">
+                              <div className="text-xs font-medium">
                                 Rp{" "}
                                 {(item.price * item.quantity).toLocaleString(
                                   "id-ID"
                                 )}
                               </div>
-                              <div className="text-sm text-gray-600">
+                              <div className="text-xs text-gray-600">
                                 Rp {item.price.toLocaleString("id-ID")} each
                               </div>
                             </div>
@@ -604,10 +606,10 @@ export default function AdminShipmentsPage() {
 
       {/* Edit Shipment Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Edit Shipment</DialogTitle>
-            <DialogDescription>Update shipment information.</DialogDescription>
+            <DialogTitle className="text-lg font-semibold">Edit Shipment</DialogTitle>
+            <DialogDescription className="text-sm text-gray-600">Update shipment information.</DialogDescription>
           </DialogHeader>
           {selectedShipment && (
             <EditShipmentForm
