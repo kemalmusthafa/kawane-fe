@@ -14,29 +14,28 @@ export const useCartPosition = () => {
   });
 
   const updateCartPosition = useCallback(() => {
-    // More specific selectors for cart icon detection
+    // More specific selectors for cart icon detection - prioritize data attribute
     const cartSelectors = [
-      // Specific cart button with ShoppingCart icon
-      'button:has(svg[class*="shopping-cart"])',
-      'a:has(svg[class*="shopping-cart"])',
-      // Cart button with relative positioning (for badge)
-      'button:has(.relative):has(svg[class*="shopping-cart"])',
-      'a:has(.relative):has(svg[class*="shopping-cart"])',
-      // Cart button with badge
-      'button:has(.absolute):has(svg[class*="shopping-cart"])',
-      'a:has(.absolute):has(svg[class*="shopping-cart"])',
-      // Generic cart selectors
+      // Most reliable: data attribute
       '[data-testid="cart-icon"]',
-      '[aria-label*="cart" i]',
-      '[aria-label*="keranjang" i]',
-      'button[class*="cart"]',
+      // Cart button with ShoppingCart icon and href="/cart"
+      'a[href="/cart"]:has(svg[class*="shopping-cart"])',
+      'button:has(svg[class*="shopping-cart"]):has(a[href="/cart"])',
+      // Cart button with ShoppingCart icon and badge
+      'a:has(svg[class*="shopping-cart"]):has(.absolute)',
+      'button:has(svg[class*="shopping-cart"]):has(.absolute)',
+      // Cart button with ShoppingCart icon and relative positioning
+      'a:has(svg[class*="shopping-cart"]):has(.relative)',
+      'button:has(svg[class*="shopping-cart"]):has(.relative)',
+      // Generic cart selectors (less reliable)
       'a[href*="cart"]',
+      'button[class*="cart"]',
       // SVG patterns
       'svg[class*="shopping-cart"]',
       'svg[class*="cart"]',
       // Class patterns
-      '.cart-icon',
-      '#cart-icon',
+      ".cart-icon",
+      "#cart-icon",
     ];
 
     let cartElement: Element | null = null;
@@ -46,7 +45,17 @@ export const useCartPosition = () => {
       try {
         cartElement = document.querySelector(selector);
         if (cartElement) {
-          break;
+          // Additional validation: make sure it's actually a cart element
+          const hasShoppingCartIcon = cartElement.querySelector('svg[class*="shopping-cart"]');
+          const hasCartHref = cartElement.getAttribute('href')?.includes('cart');
+          const hasCartText = cartElement.textContent?.toLowerCase().includes('cart') || 
+                             cartElement.textContent?.toLowerCase().includes('keranjang');
+          
+          if (hasShoppingCartIcon || hasCartHref || hasCartText) {
+            break;
+          } else {
+            cartElement = null; // Reset if validation fails
+          }
         }
       } catch (error) {
         // Skip invalid selectors
@@ -56,18 +65,30 @@ export const useCartPosition = () => {
 
     // If not found, try to find by icon content and structure
     if (!cartElement) {
-      const allElements = document.querySelectorAll('button, a');
+      const allElements = document.querySelectorAll("button, a");
       for (const element of allElements) {
         // Check if element contains ShoppingCart icon
-        const shoppingCartIcon = element.querySelector('svg[class*="shopping-cart"]');
+        const shoppingCartIcon = element.querySelector(
+          'svg[class*="shopping-cart"]'
+        );
         if (shoppingCartIcon) {
           // Additional check: make sure it's likely a cart button
-          const hasBadge = element.querySelector('.absolute, .relative');
-          const hasCartText = element.textContent?.toLowerCase().includes('cart') || 
-                             element.textContent?.toLowerCase().includes('keranjang');
-          const hasCartHref = element.getAttribute('href')?.includes('cart');
+          const hasBadge = element.querySelector(".absolute, .relative");
+          const hasCartText =
+            element.textContent?.toLowerCase().includes("cart") ||
+            element.textContent?.toLowerCase().includes("keranjang");
+          const hasCartHref = element.getAttribute("href")?.includes("cart");
           
-          if (hasBadge || hasCartText || hasCartHref) {
+          // Exclude theme toggle buttons and other non-cart elements
+          const isThemeToggle = element.querySelector('svg[class*="sun"]') || 
+                               element.querySelector('svg[class*="moon"]') ||
+                               element.querySelector('svg[class*="theme"]');
+          const isUserButton = element.querySelector('svg[class*="user"]') ||
+                              element.querySelector('svg[class*="profile"]');
+          const isHeartButton = element.querySelector('svg[class*="heart"]');
+          
+          if ((hasBadge || hasCartText || hasCartHref) && 
+              !isThemeToggle && !isUserButton && !isHeartButton) {
             cartElement = element;
             break;
           }
@@ -81,6 +102,7 @@ export const useCartPosition = () => {
         x: rect.left + rect.width / 2,
         y: rect.top + rect.height / 2,
       };
+      console.log('🎯 Cart element found:', cartElement, 'Position:', position);
       setCartPosition(position);
     } else {
       // Fallback position (top-right corner)
@@ -88,6 +110,7 @@ export const useCartPosition = () => {
         x: window.innerWidth - 60,
         y: 60,
       };
+      console.log('⚠️ Cart element not found, using fallback:', fallbackPosition);
       setCartPosition(fallbackPosition);
     }
   }, []);

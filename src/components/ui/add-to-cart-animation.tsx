@@ -20,8 +20,8 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
 }) => {
   // Calculate starting position (center of screen)
   const startPosition = {
-    x: typeof window !== 'undefined' ? window.innerWidth / 2 : 0,
-    y: typeof window !== 'undefined' ? window.innerHeight / 2 : 0,
+    x: typeof window !== "undefined" ? window.innerWidth / 2 : 0,
+    y: typeof window !== "undefined" ? window.innerHeight / 2 : 0,
   };
 
   // Calculate target position (cart icon)
@@ -29,6 +29,8 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
     x: cartPosition.x,
     y: cartPosition.y,
   };
+
+  console.log('🎬 Animation positions:', { startPosition, targetPosition, cartPosition });
 
   return (
     <AnimatePresence>
