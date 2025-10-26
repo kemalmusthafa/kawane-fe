@@ -282,9 +282,9 @@ export default function InventoryManagement() {
                       </div>
                       <div>
                         <h3 className="font-semibold">{product.name}</h3>
-                        <p className="text-sm text-gray-600">
+                        <div className="text-sm text-gray-600 whitespace-pre-line">
                           {product.description}
-                        </p>
+                        </div>
                         <div className="flex items-center space-x-2 mt-1">
                           <span className="text-sm font-medium">
                             Stock: {product.stock}

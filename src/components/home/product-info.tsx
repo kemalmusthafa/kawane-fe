@@ -74,9 +74,9 @@ export function ProductInfo() {
       </div>
 
       {/* Description */}
-      <p className="text-muted-foreground leading-relaxed">
+      <div className="text-muted-foreground leading-relaxed whitespace-pre-line">
         {product.description}
-      </p>
+      </div>
 
       {/* Quantity Selector */}
       <div className="flex items-center space-x-4">

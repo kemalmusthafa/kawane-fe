@@ -595,7 +595,9 @@ function CreateDealForm({
   });
 
   // Size management state
-  const [sizes, setSizes] = useState<Array<{ size: string; stock: number }>>([]);
+  const [sizes, setSizes] = useState<Array<{ size: string; stock: number }>>(
+    []
+  );
   const [customSizeInput, setCustomSizeInput] = useState("");
 
   // Size options
@@ -1093,10 +1095,7 @@ function CreateDealForm({
                         </SelectTrigger>
                         <SelectContent>
                           {sizeOptions.map((option) => (
-                            <SelectItem
-                              key={option.value}
-                              value={option.value}
-                            >
+                            <SelectItem key={option.value} value={option.value}>
                               {option.label}
                             </SelectItem>
                           ))}

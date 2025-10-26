@@ -128,9 +128,9 @@ export function ProductView({ product, isOpen, onClose }: ProductViewProps) {
                     <label className="text-sm font-medium text-muted-foreground">
                       Description
                     </label>
-                    <p className="text-sm">
+                    <div className="text-sm whitespace-pre-line">
                       {product.description || "No description available"}
-                    </p>
+                    </div>
                   </div>
                 </div>
               </CardContent>

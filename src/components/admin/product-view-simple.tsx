@@ -122,9 +122,9 @@ export function ProductViewSimple({
                 <label className="text-sm font-medium text-muted-foreground">
                   Description
                 </label>
-                <p className="text-sm mt-1">
+                <div className="text-sm mt-1 whitespace-pre-line">
                   {product.description || "No description available"}
-                </p>
+                </div>
               </div>
             </CardContent>
           </Card>

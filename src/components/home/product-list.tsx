@@ -285,7 +285,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                 <CardTitle className="text-sm font-medium line-clamp-2 group-hover:text-primary transition-colors">
                   {product.name}
                 </CardTitle>
-                <CardDescription className="line-clamp-2">
+                <CardDescription className="line-clamp-2 whitespace-pre-line">
                   {product.description}
                 </CardDescription>
               </CardHeader>

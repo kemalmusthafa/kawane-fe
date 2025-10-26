@@ -185,9 +185,9 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
             <h3 className="text-xs sm:text-sm font-semibold mb-2">
               Description
             </h3>
-            <p className="text-xs sm:text-sm text-gray-600">
+            <div className="text-xs sm:text-sm text-gray-600 whitespace-pre-line">
               {product.description}
-            </p>
+            </div>
           </div>
 
           {product.sizes && product.sizes.length > 0 && (
