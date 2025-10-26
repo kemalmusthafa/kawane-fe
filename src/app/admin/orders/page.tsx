@@ -109,8 +109,26 @@ export default function AdminOrders() {
   console.log("🔍 Filter Debug:", {
     statusFilter,
     paymentStatusFilter,
-    mappedStatus: statusFilter === "all" ? undefined : mapStatusToBackend(statusFilter),
-    mappedPaymentStatus: paymentStatusFilter === "all" ? undefined : mapPaymentStatusToBackend(paymentStatusFilter),
+    mappedStatus:
+      statusFilter === "all" ? undefined : mapStatusToBackend(statusFilter),
+    mappedPaymentStatus:
+      paymentStatusFilter === "all"
+        ? undefined
+        : mapPaymentStatusToBackend(paymentStatusFilter),
+  });
+
+  // Debug logging for filtered data
+  console.log("📋 Filtered Data Debug:", {
+    totalOrders: data?.orders?.length || 0,
+    orders:
+      data?.orders?.map((o) => ({
+        id: o.id,
+        status: o.status,
+        paymentStatus: (o as any).payment?.status || "N/A",
+      })) || [],
+    paymentStatuses:
+      data?.orders?.map((o) => (o as any).payment?.status).filter(Boolean) ||
+      [],
   });
 
   // Get summary data without filters for accurate statistics
@@ -157,10 +175,16 @@ export default function AdminOrders() {
       baseOrdersCount: baseOrders.length,
       page2OrdersCount: page2Orders.length,
       combinedOrdersCount: combined.orders.length,
-      pendingCount: combined.orders.filter(o => o.status === "pending").length,
-      shippedCount: combined.orders.filter(o => o.status === "shipped").length,
-      completedCount: combined.orders.filter(o => o.status === "delivered").length,
-      allStatuses: combined.orders.map(o => o.status),
+      pendingCount: combined.orders.filter(
+        (o) => (o as any).status === "PENDING"
+      ).length,
+      shippedCount: combined.orders.filter(
+        (o) => (o as any).status === "SHIPPED"
+      ).length,
+      completedCount: combined.orders.filter(
+        (o) => (o as any).status === "COMPLETED"
+      ).length,
+      allStatuses: combined.orders.map((o) => (o as any).status),
     });
 
     return combined;
@@ -407,14 +431,14 @@ export default function AdminOrders() {
               <CardTitle className="text-sm font-medium">Pending</CardTitle>
               <Badge className="bg-yellow-100 text-yellow-800">
                 {combinedSummaryData?.orders?.filter(
-                  (o) => o.status === "pending"
+                  (o) => (o as any).status === "PENDING"
                 ).length || 0}
               </Badge>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
                 {combinedSummaryData?.orders?.filter(
-                  (o) => o.status === "pending"
+                  (o) => (o as any).status === "PENDING"
                 ).length || 0}
               </div>
             </CardContent>
@@ -424,14 +448,14 @@ export default function AdminOrders() {
               <CardTitle className="text-sm font-medium">Shipped</CardTitle>
               <Badge className="bg-purple-100 text-purple-800">
                 {combinedSummaryData?.orders?.filter(
-                  (o) => o.status === "shipped"
+                  (o) => (o as any).status === "SHIPPED"
                 ).length || 0}
               </Badge>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
                 {combinedSummaryData?.orders?.filter(
-                  (o) => o.status === "shipped"
+                  (o) => (o as any).status === "SHIPPED"
                 ).length || 0}
               </div>
             </CardContent>
@@ -441,14 +465,14 @@ export default function AdminOrders() {
               <CardTitle className="text-sm font-medium">Completed</CardTitle>
               <Badge className="bg-green-100 text-green-800">
                 {combinedSummaryData?.orders?.filter(
-                  (o) => o.status === "delivered"
+                  (o) => (o as any).status === "COMPLETED"
                 ).length || 0}
               </Badge>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
                 {combinedSummaryData?.orders?.filter(
-                  (o) => o.status === "delivered"
+                  (o) => (o as any).status === "COMPLETED"
                 ).length || 0}
               </div>
             </CardContent>
