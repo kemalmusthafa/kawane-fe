@@ -105,22 +105,8 @@ export default function CreateShipmentForm({
 
       const hasNoShipment = !order.shipment;
 
-      console.log("🔍 Order filtering:", {
-        orderId: order.id,
-        status: order.status,
-        paymentStatus: paymentStatus,
-        hasShipment: !!order.shipment,
-        isReadyForShipment,
-        hasNoShipment,
-        willInclude: isReadyForShipment && hasNoShipment,
-      });
-
       return isReadyForShipment && hasNoShipment;
     }) || [];
-
-  // ✅ DEBUG: Log orders for debugging
-  console.log("All orders:", orders);
-  console.log("Available orders for shipment:", availableOrders);
 
   return (
     <Card>

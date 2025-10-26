@@ -472,12 +472,12 @@ export default function AdminShipmentsPage() {
         </Card>
 
         {/* Pagination */}
-        {shipments && shipments.length > 0 && totalPages > 1 && (
+        {shipments && shipments.length > 0 && (
           <Card>
             <CardContent className="py-4">
               <LegacyPagination
                 currentPage={currentPage}
-                totalPages={totalPages}
+                totalPages={totalPages || 1}
                 onPageChange={handlePageChange}
                 totalItems={total}
                 itemsPerPage={itemsPerPage}
@@ -677,9 +677,7 @@ export default function AdminShipmentsPage() {
               <Edit className="h-5 w-5" />
               Edit Shipment
             </DialogTitle>
-            <DialogDescription>
-              Update shipment information.
-            </DialogDescription>
+            <DialogDescription>Update shipment information.</DialogDescription>
           </DialogHeader>
           {selectedShipment && (
             <EditShipmentForm

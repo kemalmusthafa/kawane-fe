@@ -1368,7 +1368,6 @@ export const useAdminShipments = (params?: {
 }) => {
   const { isAuthenticated, user } = useAuth();
 
-
   const { data, error, isLoading, mutate } = useSWR(
     isAuthenticated
       ? `/shipments?${new URLSearchParams(
