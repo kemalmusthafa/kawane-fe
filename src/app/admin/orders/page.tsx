@@ -249,17 +249,17 @@ export default function AdminOrders() {
   const handleDeleteOrder = async (orderId: string) => {
     if (
       !confirm(
-        "Apakah Anda yakin ingin menghapus order ini? Tindakan ini tidak dapat dibatalkan."
+        "Are you sure you want to delete this order? This action cannot be undone."
       )
     )
       return;
 
     try {
-      // Check if order is cancelled first
+      // Check if order can be deleted (allow pending orders to be deleted)
       const order = data?.orders?.find((o) => o.id === orderId);
-      if (order && order.status !== "cancelled") {
+      if (order && order.status === "delivered") {
         toast.error(
-          "Hanya order yang sudah dibatalkan yang dapat dihapus. Silakan batalkan order terlebih dahulu."
+          "Delivered orders cannot be deleted. Please cancel the order first."
         );
         return;
       }
@@ -267,12 +267,12 @@ export default function AdminOrders() {
       console.log("🗑️ Attempting to DELETE order:", orderId);
       const response = await apiClient.deleteOrder(orderId);
       console.log("📦 DELETE response:", response);
-      
+
       if (response.success) {
-        toast.success("Order berhasil dihapus");
-        refetch(); // Refresh data setelah delete
+        toast.success("Order deleted successfully");
+        refetch(); // Refresh data after delete
       } else {
-        toast.error("Gagal menghapus order");
+        toast.error("Failed to delete order");
       }
     } catch (error: any) {
       console.error("Error deleting order:", error);
@@ -280,12 +280,12 @@ export default function AdminOrders() {
       // Handle specific error cases
       if (error.message?.includes("Only cancelled orders can be deleted")) {
         toast.error(
-          "Hanya order yang sudah dibatalkan yang dapat dihapus. Silakan batalkan order terlebih dahulu."
+          "Only cancelled orders can be deleted. Please cancel the order first."
         );
       } else if (error.message?.includes("Order not found")) {
-        toast.error("Order tidak ditemukan.");
+        toast.error("Order not found.");
       } else {
-        toast.error(error.message || "Gagal menghapus order");
+        toast.error(error.message || "Failed to delete order");
       }
     }
   };
