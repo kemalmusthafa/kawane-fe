@@ -13,7 +13,6 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import Link from "next/link";
 import { toast } from "sonner";
 
 interface NotificationDropdownProps {
@@ -308,15 +307,14 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                         : "hover:bg-accent"
                     }`}
                   >
-                    <Link
-                      href={notification.url || "/admin/notifications"}
+                    <div
                       onClick={() =>
                         handleNotificationClick(
                           notification.id,
                           notification.isRead
                         )
                       }
-                      className="flex items-start space-x-2.5 w-full"
+                      className="flex items-start space-x-2.5 w-full cursor-pointer"
                     >
                       <div
                         className={`flex-shrink-0 mt-0.5 ${getNotificationColor(
@@ -357,26 +355,13 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                           </Badge>
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   </DropdownMenuItem>
                 ))}
               </div>
             )}
           </ScrollArea>
 
-          {recentNotifications.length > 0 && (
-            <>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link
-                  href="/admin/notifications"
-                  className="flex items-center justify-center w-full py-2.5 text-xs font-semibold text-card-foreground hover:text-primary transition-colors"
-                >
-                  View all notifications
-                </Link>
-              </DropdownMenuItem>
-            </>
-          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

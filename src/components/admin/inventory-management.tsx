@@ -94,7 +94,7 @@ export default function InventoryManagement() {
         toast.error("Failed to adjust stock");
       }
     } catch (error) {
-        toast.error("Failed to adjust stock");
+      toast.error("Failed to adjust stock");
     }
   };
 
