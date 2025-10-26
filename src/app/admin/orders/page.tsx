@@ -74,7 +74,6 @@ export default function AdminOrders() {
     }
   };
 
-
   const { data, isLoading, isSearching, error, refetch } = useAdminOrders({
     search: searchTerm,
     status:
@@ -85,7 +84,6 @@ export default function AdminOrders() {
     sortBy: "createdAt",
     sortOrder: "desc",
   });
-
 
   // Get summary data without filters for accurate statistics
   // Use multiple pages to get comprehensive data for summary
@@ -125,7 +123,6 @@ export default function AdminOrders() {
       orders: [...baseOrders, ...page2Orders],
       totalItems: summaryData.totalItems, // Keep original total
     };
-
 
     return combined;
   }, [summaryData, summaryDataPage2]);
@@ -282,7 +279,6 @@ export default function AdminOrders() {
     setStatusFilter(value);
     setCurrentPage(1); // Reset to first page when filtering
   };
-
 
   if (!hasAccess) {
     return null; // AdminGuard will handle this

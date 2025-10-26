@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -590,10 +590,78 @@ function CreateDealForm({
     productName: "",
     productDescription: "",
     productPrice: "",
-    productSku: "",
     productStock: 0,
     categoryId: "",
   });
+
+  // Size management state
+  const [sizes, setSizes] = useState<Array<{ size: string; stock: number }>>([]);
+  const [customSizeInput, setCustomSizeInput] = useState("");
+
+  // Size options
+  const sizeOptions = [
+    { value: "XS", label: "XS" },
+    { value: "SM", label: "SM" },
+    { value: "M", label: "M" },
+    { value: "L", label: "L" },
+    { value: "XL", label: "XL" },
+    { value: "XXL", label: "XXL" },
+  ];
+
+  // Calculate total stock from sizes
+  const calculateTotalStock = () => {
+    return sizes.reduce((total, sizeItem) => total + sizeItem.stock, 0);
+  };
+
+  // Update stock quantity when sizes change
+  React.useEffect(() => {
+    const totalStock = calculateTotalStock();
+    if (sizes.length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        productStock: totalStock,
+      }));
+    }
+  }, [sizes]);
+
+  // Size management functions
+  const addSize = () => {
+    if (customSizeInput.trim()) {
+      // Add custom size
+      setSizes([
+        ...sizes,
+        { size: customSizeInput.trim().toUpperCase(), stock: 0 },
+      ]);
+      setCustomSizeInput("");
+    } else {
+      // Add empty size for dropdown selection
+      setSizes([...sizes, { size: "", stock: 0 }]);
+    }
+  };
+
+  const removeSize = (index: number) => {
+    setSizes(sizes.filter((_, i) => i !== index));
+  };
+
+  const updateSize = (
+    index: number,
+    field: "size" | "stock",
+    value: string | number
+  ) => {
+    const newSizes = [...sizes];
+    newSizes[index] = { ...newSizes[index], [field]: value };
+    setSizes(newSizes);
+  };
+
+  const addCustomSize = () => {
+    if (customSizeInput.trim()) {
+      setSizes([
+        ...sizes,
+        { size: customSizeInput.trim().toUpperCase(), stock: 0 },
+      ]);
+      setCustomSizeInput("");
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -758,7 +826,7 @@ function CreateDealForm({
         productName: formData.productName.trim(),
         productDescription: formData.productDescription.trim() || undefined,
         productPrice: Number(formData.productPrice),
-        productSku: formData.productSku.trim() || undefined,
+        sizes: sizes.length > 0 ? sizes : undefined,
         productStock: formData.productStock,
         categoryId: formData.categoryId || undefined,
       };
@@ -971,20 +1039,113 @@ function CreateDealForm({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <Label htmlFor="productSku">Product SKU</Label>
-            <Input
-              id="productSku"
-              value={formData.productSku}
-              onChange={(e) =>
-                setFormData({ ...formData, productSku: e.target.value })
-              }
-              placeholder="Enter product SKU..."
-            />
+        {/* Sizes & Stock Section */}
+        <div className="space-y-4 mt-4">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label>Sizes & Stock</Label>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addSize}
+                >
+                  + Add Size
+                </Button>
+              </div>
+            </div>
+
+            {/* Custom Size Input */}
+            <div className="flex gap-2 items-center">
+              <Input
+                placeholder="Enter custom size (e.g., 28, 30, S, M, L)"
+                value={customSizeInput}
+                onChange={(e) => setCustomSizeInput(e.target.value)}
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addCustomSize}
+                disabled={!customSizeInput.trim()}
+              >
+                Add Custom
+              </Button>
+            </div>
+
+            {sizes.length === 0 ? (
+              <p className="text-sm text-gray-500">No sizes added yet</p>
+            ) : (
+              <div className="space-y-2">
+                {sizes.map((sizeItem, index) => (
+                  <div key={index} className="flex gap-2 items-center">
+                    <div className="flex gap-1">
+                      <Select
+                        value={sizeItem.size}
+                        onValueChange={(value) =>
+                          updateSize(index, "size", value)
+                        }
+                      >
+                        <SelectTrigger className="w-24">
+                          <SelectValue placeholder="Size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sizeOptions.map((option) => (
+                            <SelectItem
+                              key={option.value}
+                              value={option.value}
+                            >
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        placeholder="Custom"
+                        value={sizeItem.size}
+                        onChange={(e) =>
+                          updateSize(
+                            index,
+                            "size",
+                            e.target.value.toUpperCase()
+                          )
+                        }
+                        className="w-20"
+                      />
+                    </div>
+                    <Input
+                      type="number"
+                      placeholder="Stock"
+                      value={sizeItem.stock}
+                      onChange={(e) =>
+                        updateSize(
+                          index,
+                          "stock",
+                          parseInt(e.target.value) || 0
+                        )
+                      }
+                      className="w-20"
+                      min="0"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeSize(index)}
+                    >
+                      ×
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-          <div>
-            <Label htmlFor="productStock">Product Stock</Label>
+
+          {/* Total Stock Display */}
+          <div className="space-y-2">
+            <Label htmlFor="productStock">Total Stock</Label>
             <Input
               id="productStock"
               type="number"
@@ -997,7 +1158,14 @@ function CreateDealForm({
                 })
               }
               placeholder="Enter product stock..."
+              disabled={sizes.length > 0}
+              className={sizes.length > 0 ? "bg-gray-100" : ""}
             />
+            {sizes.length > 0 && (
+              <p className="text-xs text-gray-500">
+                Stock quantity automatically calculated from sizes
+              </p>
+            )}
           </div>
         </div>
 
