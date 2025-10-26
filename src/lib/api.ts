@@ -1515,6 +1515,18 @@ class ApiClient {
     });
   }
 
+  async deleteOrder(orderId: string) {
+    return this.request<{
+      message: string;
+      data: {
+        orderId: string;
+        deletedAt: string;
+      };
+    }>(`/orders/${orderId}`, {
+      method: "DELETE",
+    });
+  }
+
   async cancelOrder(orderId: string) {
     return this.request<{
       message: string;
