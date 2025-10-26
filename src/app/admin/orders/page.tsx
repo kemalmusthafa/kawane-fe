@@ -264,7 +264,10 @@ export default function AdminOrders() {
         return;
       }
 
+      console.log("🗑️ Attempting to DELETE order:", orderId);
       const response = await apiClient.deleteOrder(orderId);
+      console.log("📦 DELETE response:", response);
+      
       if (response.success) {
         toast.success("Order berhasil dihapus");
         refetch(); // Refresh data setelah delete
