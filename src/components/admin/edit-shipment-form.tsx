@@ -116,20 +116,25 @@ export default function EditShipmentForm({
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Order Information (Read-only) */}
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-xs font-semibold mb-2 text-gray-700">
-              Order Information
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-              <div>
-                <span className="text-gray-600">Order ID:</span>
-                <span className="ml-2 font-mono font-medium">{shipment?.orderId}</span>
-              </div>
-              <div>
-                <span className="text-gray-600">Customer:</span>
-                <span className="ml-2 font-medium">
-                  {shipment?.order?.user?.name || "N/A"}
-                </span>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Package className="h-4 w-4 text-gray-600" />
+              <span className="font-medium text-sm">Order Information</span>
+            </div>
+            <div className="bg-gray-50 p-3 rounded-lg text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div>
+                  <span className="text-gray-600">Order ID:</span>
+                  <div className="font-mono font-medium">
+                    {shipment?.orderId}
+                  </div>
+                </div>
+                <div>
+                  <span className="text-gray-600">Customer:</span>
+                  <div className="font-medium">
+                    {shipment?.order?.user?.name || "N/A"}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -193,7 +198,9 @@ export default function EditShipmentForm({
           {/* Cost and Estimated Days */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="cost" className="text-xs font-medium">Shipping Cost (Rp)</Label>
+              <Label htmlFor="cost" className="text-xs font-medium">
+                Shipping Cost (Rp)
+              </Label>
               <Input
                 id="cost"
                 type="number"
@@ -206,7 +213,9 @@ export default function EditShipmentForm({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="estimatedDays" className="text-xs font-medium">Estimated Days *</Label>
+              <Label htmlFor="estimatedDays" className="text-xs font-medium">
+                Estimated Days *
+              </Label>
               <Input
                 id="estimatedDays"
                 type="number"
@@ -225,7 +234,9 @@ export default function EditShipmentForm({
 
           {/* Notes */}
           <div className="space-y-2">
-            <Label htmlFor="notes" className="text-xs font-medium">Notes</Label>
+            <Label htmlFor="notes" className="text-xs font-medium">
+              Notes
+            </Label>
             <Textarea
               id="notes"
               value={formData.notes}

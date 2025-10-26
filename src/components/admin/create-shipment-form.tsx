@@ -95,14 +95,13 @@ export default function CreateShipmentForm({
     orders?.filter((order: any) => {
       // ✅ FIXED: Use payment.status instead of paymentStatus
       const paymentStatus = order.payment?.status || order.paymentStatus;
-      
+
       const isReadyForShipment =
         order.status === "PAID" ||
         order.status === "COMPLETED" ||
         order.status === "SHIPPED" ||
         (order.status === "PENDING" &&
-          (paymentStatus === "SUCCEEDED" ||
-            paymentStatus === "PAID"));
+          (paymentStatus === "SUCCEEDED" || paymentStatus === "PAID"));
 
       const hasNoShipment = !order.shipment;
 
@@ -135,7 +134,9 @@ export default function CreateShipmentForm({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="orderId" className="text-xs font-medium">Order ID *</Label>
+              <Label htmlFor="orderId" className="text-xs font-medium">
+                Order ID *
+              </Label>
               <Select
                 value={formData.orderId}
                 onValueChange={(value) => handleInputChange("orderId", value)}
@@ -146,7 +147,11 @@ export default function CreateShipmentForm({
                 </SelectTrigger>
                 <SelectContent>
                   {availableOrders.map((order: any) => (
-                    <SelectItem key={order.id} value={order.id} className="text-xs">
+                    <SelectItem
+                      key={order.id}
+                      value={order.id}
+                      className="text-xs"
+                    >
                       {order.id} - {order.user?.name} - Rp{" "}
                       {order.totalAmount.toLocaleString("id-ID")}
                     </SelectItem>
@@ -206,7 +211,9 @@ export default function CreateShipmentForm({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="trackingNo" className="text-xs font-medium">Tracking Number</Label>
+              <Label htmlFor="trackingNo" className="text-xs font-medium">
+                Tracking Number
+              </Label>
               <Input
                 id="trackingNo"
                 placeholder="Enter tracking number"
@@ -219,7 +226,9 @@ export default function CreateShipmentForm({
             </div>
 
             <div>
-              <Label htmlFor="cost" className="text-xs font-medium">Shipping Cost (Rp)</Label>
+              <Label htmlFor="cost" className="text-xs font-medium">
+                Shipping Cost (Rp)
+              </Label>
               <Input
                 id="cost"
                 type="number"
@@ -233,7 +242,9 @@ export default function CreateShipmentForm({
           </div>
 
           <div>
-            <Label htmlFor="estimatedDays" className="text-xs font-medium">Estimated Delivery Days</Label>
+            <Label htmlFor="estimatedDays" className="text-xs font-medium">
+              Estimated Delivery Days
+            </Label>
             <Input
               id="estimatedDays"
               type="number"
@@ -248,7 +259,9 @@ export default function CreateShipmentForm({
           </div>
 
           <div>
-            <Label htmlFor="notes" className="text-xs font-medium">Notes</Label>
+            <Label htmlFor="notes" className="text-xs font-medium">
+              Notes
+            </Label>
             <Textarea
               id="notes"
               placeholder="Additional notes..."
