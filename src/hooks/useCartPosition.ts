@@ -33,15 +33,6 @@ export const useCartPosition = () => {
       // Cart button with ShoppingCart icon and relative positioning
       'a:has(svg[class*="shopping-cart"]):has(.relative)',
       'button:has(svg[class*="shopping-cart"]):has(.relative)',
-      // Generic cart selectors (less reliable)
-      'a[href*="cart"]',
-      'button[class*="cart"]',
-      // SVG patterns
-      'svg[class*="shopping-cart"]',
-      'svg[class*="cart"]',
-      // Class patterns
-      ".cart-icon",
-      "#cart-icon",
     ];
 
     console.log("🎯 Available selectors:", cartSelectors);
@@ -66,13 +57,16 @@ export const useCartPosition = () => {
             cartElement.textContent?.toLowerCase().includes("cart") ||
             cartElement.textContent?.toLowerCase().includes("keranjang");
 
-          // Exclude theme toggle and other non-cart elements
+          // Exclude theme toggle and other non-cart elements - more comprehensive check
           const isThemeToggle =
             cartElement.querySelector('svg[class*="sun"]') ||
             cartElement.querySelector('svg[class*="moon"]') ||
             cartElement.querySelector('svg[class*="theme"]') ||
             cartElement.closest("[data-theme-toggle]") ||
-            cartElement.closest(".theme-toggle");
+            cartElement.closest(".theme-toggle") ||
+            cartElement.querySelector('button[class*="h-10 w-10"]') || // ThemeToggle specific class
+            (cartElement.tagName === "BUTTON" && 
+             cartElement.querySelector('div[class*="relative w-[1.2rem] h-[1.2rem]"]')); // ThemeToggle structure
 
           if (
             (hasShoppingCartIcon || hasCartHref || hasCartText) &&
@@ -137,13 +131,16 @@ export const useCartPosition = () => {
             element.textContent?.toLowerCase().includes("keranjang");
           const hasCartHref = element.getAttribute("href")?.includes("cart");
 
-          // Exclude theme toggle buttons and other non-cart elements
+          // Exclude theme toggle buttons and other non-cart elements - more comprehensive check
           const isThemeToggle =
             element.querySelector('svg[class*="sun"]') ||
             element.querySelector('svg[class*="moon"]') ||
             element.querySelector('svg[class*="theme"]') ||
             element.closest("[data-theme-toggle]") ||
-            element.closest(".theme-toggle");
+            element.closest(".theme-toggle") ||
+            element.querySelector('button[class*="h-10 w-10"]') || // ThemeToggle specific class
+            (element.tagName === "BUTTON" && 
+             element.querySelector('div[class*="relative w-[1.2rem] h-[1.2rem]"]')); // ThemeToggle structure
           const isUserButton =
             element.querySelector('svg[class*="user"]') ||
             element.querySelector('svg[class*="profile"]');
@@ -153,6 +150,7 @@ export const useCartPosition = () => {
             element,
             tagName: element.tagName,
             href: element.getAttribute("href"),
+            className: element.className,
             hasShoppingCartIcon: !!shoppingCartIcon,
             hasBadge: !!hasBadge,
             hasCartText: !!hasCartText,
@@ -160,6 +158,7 @@ export const useCartPosition = () => {
             isThemeToggle: !!isThemeToggle,
             isUserButton: !!isUserButton,
             isHeartButton: !!isHeartButton,
+            innerHTML: element.innerHTML.substring(0, 100) + "...", // First 100 chars
           });
 
           if (

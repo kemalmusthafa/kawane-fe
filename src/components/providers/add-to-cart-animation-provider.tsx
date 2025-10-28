@@ -39,24 +39,34 @@ export const AddToCartAnimationProvider: React.FC<
   // Ensure we recalc cart position right before triggering animation
   const triggerWithFreshPosition = useCallback(
     (productId: string, imageUrl: string, productName: string) => {
-      console.log("🎬 AddToCartAnimationProvider: triggerWithFreshPosition called");
-      console.log("🎬 AddToCartAnimationProvider: current cartPosition:", cartPosition);
-      
+      console.log(
+        "🎬 AddToCartAnimationProvider: triggerWithFreshPosition called"
+      );
+      console.log(
+        "🎬 AddToCartAnimationProvider: current cartPosition:",
+        cartPosition
+      );
+
       try {
         // Recalculate cart position synchronously
         updateCartPosition();
-        
+
         // Use requestAnimationFrame to ensure DOM is updated
         if (typeof window !== "undefined") {
           requestAnimationFrame(() => {
-            console.log("🎬 AddToCartAnimationProvider: triggering animation after position update");
+            console.log(
+              "🎬 AddToCartAnimationProvider: triggering animation after position update"
+            );
             triggerAnimation(productId, imageUrl, productName);
           });
         } else {
           triggerAnimation(productId, imageUrl, productName);
         }
       } catch (error) {
-        console.error("🎬 AddToCartAnimationProvider: error in triggerWithFreshPosition:", error);
+        console.error(
+          "🎬 AddToCartAnimationProvider: error in triggerWithFreshPosition:",
+          error
+        );
         // Fallback to direct trigger
         triggerAnimation(productId, imageUrl, productName);
       }
@@ -78,19 +88,21 @@ export const AddToCartAnimationProvider: React.FC<
         productName={animationState.productName}
         cartPosition={cartPosition}
       />
-      
+
       {/* Debug logging for cart position */}
       {animationState.isAnimating && (
-        <div style={{ 
-          position: 'fixed', 
-          top: 10, 
-          left: 10, 
-          background: 'red', 
-          color: 'white', 
-          padding: '5px', 
-          zIndex: 9999,
-          fontSize: '12px'
-        }}>
+        <div
+          style={{
+            position: "fixed",
+            top: 10,
+            left: 10,
+            background: "red",
+            color: "white",
+            padding: "5px",
+            zIndex: 9999,
+            fontSize: "12px",
+          }}
+        >
           Cart Position: {JSON.stringify(cartPosition)}
         </div>
       )}
