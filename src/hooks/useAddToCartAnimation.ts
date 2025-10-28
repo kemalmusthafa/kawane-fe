@@ -19,6 +19,8 @@ export const useAddToCartAnimation = () => {
 
   const triggerAnimation = useCallback(
     (productId: string, imageUrl: string, productName: string) => {
+      console.log("🎬 useAddToCartAnimation: triggerAnimation called with:", { productId, imageUrl, productName });
+      
       setAnimationState({
         isAnimating: true,
         productId,
@@ -28,6 +30,7 @@ export const useAddToCartAnimation = () => {
 
       // Reset animation after duration
       setTimeout(() => {
+        console.log("🎬 useAddToCartAnimation: resetting animation state");
         setAnimationState({
           isAnimating: false,
           productId: null,

@@ -39,25 +39,29 @@ export const AddToCartAnimationProvider: React.FC<
   // Ensure we recalc cart position right before triggering animation
   const triggerWithFreshPosition = useCallback(
     (productId: string, imageUrl: string, productName: string) => {
+      console.log("🎬 AddToCartAnimationProvider: triggerWithFreshPosition called");
+      console.log("🎬 AddToCartAnimationProvider: current cartPosition:", cartPosition);
+      
       try {
         // Recalculate cart position synchronously
         updateCartPosition();
-        // Next frame to ensure layout updated
+        
+        // Use requestAnimationFrame to ensure DOM is updated
         if (typeof window !== "undefined") {
           requestAnimationFrame(() => {
-            setTimeout(() => {
-              triggerAnimation(productId, imageUrl, productName);
-            }, 16);
+            console.log("🎬 AddToCartAnimationProvider: triggering animation after position update");
+            triggerAnimation(productId, imageUrl, productName);
           });
         } else {
           triggerAnimation(productId, imageUrl, productName);
         }
-      } catch {
+      } catch (error) {
+        console.error("🎬 AddToCartAnimationProvider: error in triggerWithFreshPosition:", error);
         // Fallback to direct trigger
         triggerAnimation(productId, imageUrl, productName);
       }
     },
-    [triggerAnimation, updateCartPosition]
+    [triggerAnimation, updateCartPosition, cartPosition]
   );
 
   return (
@@ -74,6 +78,22 @@ export const AddToCartAnimationProvider: React.FC<
         productName={animationState.productName}
         cartPosition={cartPosition}
       />
+      
+      {/* Debug logging for cart position */}
+      {animationState.isAnimating && (
+        <div style={{ 
+          position: 'fixed', 
+          top: 10, 
+          left: 10, 
+          background: 'red', 
+          color: 'white', 
+          padding: '5px', 
+          zIndex: 9999,
+          fontSize: '12px'
+        }}>
+          Cart Position: {JSON.stringify(cartPosition)}
+        </div>
+      )}
     </AddToCartAnimationContext.Provider>
   );
 };
