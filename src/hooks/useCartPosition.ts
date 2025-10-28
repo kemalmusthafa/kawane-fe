@@ -65,8 +65,10 @@ export const useCartPosition = () => {
             cartElement.closest("[data-theme-toggle]") ||
             cartElement.closest(".theme-toggle") ||
             cartElement.querySelector('button[class*="h-10 w-10"]') || // ThemeToggle specific class
-            (cartElement.tagName === "BUTTON" && 
-             cartElement.querySelector('div[class*="relative w-[1.2rem] h-[1.2rem]"]')); // ThemeToggle structure
+            (cartElement.tagName === "BUTTON" &&
+              cartElement.querySelector(
+                'div[class*="relative w-[1.2rem] h-[1.2rem]"]'
+              )); // ThemeToggle structure
 
           if (
             (hasShoppingCartIcon || hasCartHref || hasCartText) &&
@@ -139,8 +141,10 @@ export const useCartPosition = () => {
             element.closest("[data-theme-toggle]") ||
             element.closest(".theme-toggle") ||
             element.querySelector('button[class*="h-10 w-10"]') || // ThemeToggle specific class
-            (element.tagName === "BUTTON" && 
-             element.querySelector('div[class*="relative w-[1.2rem] h-[1.2rem]"]')); // ThemeToggle structure
+            (element.tagName === "BUTTON" &&
+              element.querySelector(
+                'div[class*="relative w-[1.2rem] h-[1.2rem]"]'
+              )); // ThemeToggle structure
           const isUserButton =
             element.querySelector('svg[class*="user"]') ||
             element.querySelector('svg[class*="profile"]');

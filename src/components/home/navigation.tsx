@@ -164,8 +164,6 @@ export function HomeNavigation() {
           </div>
 
           <div className="hidden lg:flex items-center space-x-3 flex-shrink-0 pt-2">
-            <ThemeToggle />
-
             <Button variant="ghost" size="icon" asChild>
               <Link href="/wishlist">
                 <div className="relative">
@@ -191,6 +189,8 @@ export function HomeNavigation() {
                 </div>
               </Link>
             </Button>
+
+            <ThemeToggle />
 
             {isLoading ? (
               <Button
