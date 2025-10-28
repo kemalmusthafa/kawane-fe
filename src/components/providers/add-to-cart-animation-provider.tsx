@@ -91,7 +91,6 @@ export const AddToCartAnimationProvider: React.FC<
         productName={animationState.productName}
         cartPosition={cartPosition}
       />
-
     </AddToCartAnimationContext.Provider>
   );
 };
