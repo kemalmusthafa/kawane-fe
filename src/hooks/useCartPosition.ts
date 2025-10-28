@@ -61,7 +61,7 @@ export const useCartPosition = () => {
           const hasCartText =
             cartElement.textContent?.toLowerCase().includes("cart") ||
             cartElement.textContent?.toLowerCase().includes("keranjang");
-          
+
           // Check if cart has badge (indicates it's the main cart with item count)
           const hasBadge = cartElement.querySelector(".absolute");
           const hasRelativeContainer = cartElement.querySelector(".relative");
@@ -81,7 +81,7 @@ export const useCartPosition = () => {
 
           // Prioritize cart with badge (main cart with item count)
           const isMainCart = hasBadge || hasRelativeContainer;
-          
+
           if (
             (hasShoppingCartIcon || hasCartHref || hasCartText) &&
             !isThemeToggle &&

@@ -19,12 +19,6 @@ export const useAddToCartAnimation = () => {
 
   const triggerAnimation = useCallback(
     (productId: string, imageUrl: string, productName: string) => {
-      console.log("🎬 useAddToCartAnimation: triggerAnimation called with:", {
-        productId,
-        imageUrl,
-        productName,
-      });
-
       // Use requestAnimationFrame to ensure state update happens at the right time
       requestAnimationFrame(() => {
         setAnimationState({
@@ -36,7 +30,6 @@ export const useAddToCartAnimation = () => {
 
         // Reset animation after duration - match cart update timing
         setTimeout(() => {
-          console.log("🎬 useAddToCartAnimation: resetting animation state");
           setAnimationState({
             isAnimating: false,
             productId: null,

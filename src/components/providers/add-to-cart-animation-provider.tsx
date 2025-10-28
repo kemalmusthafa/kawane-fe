@@ -39,14 +39,6 @@ export const AddToCartAnimationProvider: React.FC<
   // Ensure we recalc cart position right before triggering animation
   const triggerWithFreshPosition = useCallback(
     (productId: string, imageUrl: string, productName: string) => {
-      console.log(
-        "🎬 AddToCartAnimationProvider: triggerWithFreshPosition called"
-      );
-      console.log(
-        "🎬 AddToCartAnimationProvider: current cartPosition:",
-        cartPosition
-      );
-
       try {
         // Recalculate cart position synchronously
         updateCartPosition();
@@ -56,9 +48,6 @@ export const AddToCartAnimationProvider: React.FC<
         if (typeof window !== "undefined") {
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-              console.log(
-                "🎬 AddToCartAnimationProvider: triggering animation after DOM update"
-              );
               triggerAnimation(productId, imageUrl, productName);
             });
           });
@@ -67,7 +56,7 @@ export const AddToCartAnimationProvider: React.FC<
         }
       } catch (error) {
         console.error(
-          "🎬 AddToCartAnimationProvider: error in triggerWithFreshPosition:",
+          "AddToCartAnimationProvider: error in triggerWithFreshPosition:",
           error
         );
         // Fallback to direct trigger
