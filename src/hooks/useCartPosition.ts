@@ -244,9 +244,10 @@ export const useCartPosition = () => {
         "Position:",
         position
       );
-      
+
       // Use requestAnimationFrame to ensure position is set after DOM updates
       requestAnimationFrame(() => {
+        console.trace("🎯 Setting cart position:", position);
         setCartPosition(position);
       });
     } else {
@@ -259,9 +260,10 @@ export const useCartPosition = () => {
         "⚠️ Cart element not found, using fallback:",
         fallbackPosition
       );
-      
+
       // Use requestAnimationFrame for fallback too
       requestAnimationFrame(() => {
+        console.trace("🎯 Setting fallback cart position:", fallbackPosition);
         setCartPosition(fallbackPosition);
       });
     }

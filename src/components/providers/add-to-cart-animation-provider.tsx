@@ -92,23 +92,6 @@ export const AddToCartAnimationProvider: React.FC<
         cartPosition={cartPosition}
       />
 
-      {/* Debug logging for cart position */}
-      {animationState.isAnimating && (
-        <div
-          style={{
-            position: "fixed",
-            top: 10,
-            left: 10,
-            background: "red",
-            color: "white",
-            padding: "5px",
-            zIndex: 9999,
-            fontSize: "12px",
-          }}
-        >
-          Cart Position: {JSON.stringify(cartPosition)}
-        </div>
-      )}
     </AddToCartAnimationContext.Provider>
   );
 };
