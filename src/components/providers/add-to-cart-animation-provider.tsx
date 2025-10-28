@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, ReactNode, useCallback } from "react";
 import { useAddToCartAnimation } from "@/hooks/useAddToCartAnimation";
 import { useCartPosition } from "@/hooks/useCartPosition";
 import { AddToCartAnimation } from "@/components/ui/add-to-cart-animation";
@@ -34,10 +34,34 @@ export const AddToCartAnimationProvider: React.FC<
   AddToCartAnimationProviderProps
 > = ({ children }) => {
   const { animationState, triggerAnimation } = useAddToCartAnimation();
-  const { cartPosition } = useCartPosition();
+  const { cartPosition, updateCartPosition } = useCartPosition();
+
+  // Ensure we recalc cart position right before triggering animation
+  const triggerWithFreshPosition = useCallback(
+    (productId: string, imageUrl: string, productName: string) => {
+      try {
+        // Recalculate cart position synchronously
+        updateCartPosition();
+        // Next frame to ensure layout updated
+        if (typeof window !== "undefined") {
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              triggerAnimation(productId, imageUrl, productName);
+            }, 16);
+          });
+        } else {
+          triggerAnimation(productId, imageUrl, productName);
+        }
+      } catch {
+        // Fallback to direct trigger
+        triggerAnimation(productId, imageUrl, productName);
+      }
+    },
+    [triggerAnimation, updateCartPosition]
+  );
 
   return (
-    <AddToCartAnimationContext.Provider value={{ triggerAnimation }}>
+    <AddToCartAnimationContext.Provider value={{ triggerAnimation: triggerWithFreshPosition }}>
       {children}
 
       {/* Global Add to Cart Animation */}
@@ -51,3 +75,6 @@ export const AddToCartAnimationProvider: React.FC<
     </AddToCartAnimationContext.Provider>
   );
 };
+
+
+

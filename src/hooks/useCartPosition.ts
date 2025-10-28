@@ -109,22 +109,31 @@ export const useCartPosition = () => {
 
     if (cartElement) {
       // Try to get the ShoppingCart SVG icon position for more accurate targeting
-      const shoppingCartIcon = cartElement.querySelector('svg[class*="shopping-cart"]');
+      const shoppingCartIcon = cartElement.querySelector(
+        'svg[class*="shopping-cart"]'
+      );
       let targetElement = cartElement;
-      
+
       if (shoppingCartIcon) {
         targetElement = shoppingCartIcon as Element;
         console.log("🎯 Using ShoppingCart SVG icon for position calculation");
       } else {
         console.log("🎯 Using cart element wrapper for position calculation");
       }
-      
+
       const rect = targetElement.getBoundingClientRect();
       const position = {
         x: rect.left + rect.width / 2,
         y: rect.top + rect.height / 2,
       };
-      console.log("🎯 Cart element found:", cartElement, "Target element:", targetElement, "Position:", position);
+      console.log(
+        "🎯 Cart element found:",
+        cartElement,
+        "Target element:",
+        targetElement,
+        "Position:",
+        position
+      );
       setCartPosition(position);
     } else {
       // Fallback position (top-right corner)
