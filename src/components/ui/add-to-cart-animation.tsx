@@ -50,7 +50,7 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
               pointerEvents: "none",
             }}
           />
-          
+
           {/* Debug Info Box */}
           <div
             style={{
@@ -65,13 +65,20 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
               borderRadius: "4px",
             }}
           >
-            <div>Target: {targetPosition.x.toFixed(1)}, {targetPosition.y.toFixed(1)}</div>
-            <div>Cart: {cartPosition.x.toFixed(1)}, {cartPosition.y.toFixed(1)}</div>
-            <div>Start: {startPosition.x.toFixed(1)}, {startPosition.y.toFixed(1)}</div>
+            <div>
+              Target: {targetPosition.x.toFixed(1)},{" "}
+              {targetPosition.y.toFixed(1)}
+            </div>
+            <div>
+              Cart: {cartPosition.x.toFixed(1)}, {cartPosition.y.toFixed(1)}
+            </div>
+            <div>
+              Start: {startPosition.x.toFixed(1)}, {startPosition.y.toFixed(1)}
+            </div>
           </div>
         </>
       )}
-      
+
       {isAnimating && imageUrl && (
         <>
           {/* Flying Product Image */}
