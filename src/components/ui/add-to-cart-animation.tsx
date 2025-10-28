@@ -73,7 +73,7 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
               <img
                 src={imageUrl}
                 alt={productName || "Product"}
-                className="w-16 h-16 rounded-lg object-cover shadow-lg border-2 border-white"
+                className="w-12 h-12 rounded-lg object-cover shadow-lg border-2 border-white"
               />
               {/* Glow effect */}
               <div className="absolute inset-0 rounded-lg bg-blue-500/20 blur-sm -z-10" />
@@ -96,8 +96,8 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
               transform: "translate(-50%, -50%)",
             }}
           >
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-              <ShoppingCart className="w-4 h-4 text-white" />
+            <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+              <ShoppingCart className="w-3 h-3 text-white" />
             </div>
           </motion.div>
 
@@ -121,15 +121,15 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
                 animate={{
                   scale: [0, 1, 0],
                   opacity: [1, 1, 0],
-                  x: Math.cos((i * 60 * Math.PI) / 180) * 30,
-                  y: Math.sin((i * 60 * Math.PI) / 180) * 30,
+                  x: Math.cos((i * 60 * Math.PI) / 180) * 20,
+                  y: Math.sin((i * 60 * Math.PI) / 180) * 20,
                 }}
                 transition={{
                   duration: 0.6,
                   delay: 0.4 + i * 0.05,
                   ease: "easeOut",
                 }}
-                className="absolute w-2 h-2 bg-green-500 rounded-full"
+                className="absolute w-1.5 h-1.5 bg-green-500 rounded-full"
               />
             ))}
           </motion.div>
