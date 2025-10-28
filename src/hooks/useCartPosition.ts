@@ -16,7 +16,10 @@ export const useCartPosition = () => {
   const updateCartPosition = useCallback(() => {
     // More specific selectors for cart icon detection - prioritize data attribute and href
     const cartSelectors = [
-      // Most reliable: data attribute with href="/cart"
+      // Most reliable: data attribute with href="/cart" and ShoppingCart icon
+      'a[data-testid="cart-icon"][href="/cart"]:has(svg[class*="shopping-cart"])',
+      'a[data-testid="cart-icon"][href*="/cart"]:has(svg[class*="shopping-cart"])',
+      // Data attribute with href="/cart"
       'a[data-testid="cart-icon"][href="/cart"]',
       'a[data-testid="cart-icon"][href*="/cart"]',
       // Cart button with ShoppingCart icon and href="/cart"
@@ -58,16 +61,35 @@ export const useCartPosition = () => {
             cartElement.textContent?.toLowerCase().includes("keranjang");
 
           // Exclude theme toggle and other non-cart elements
-          const isThemeToggle = cartElement.querySelector('svg[class*="sun"]') || 
-                               cartElement.querySelector('svg[class*="moon"]') ||
-                               cartElement.querySelector('svg[class*="theme"]') ||
-                               cartElement.closest('[data-theme-toggle]') ||
-                               cartElement.closest('.theme-toggle');
-          
-          if ((hasShoppingCartIcon || hasCartHref || hasCartText) && !isThemeToggle) {
+          const isThemeToggle =
+            cartElement.querySelector('svg[class*="sun"]') ||
+            cartElement.querySelector('svg[class*="moon"]') ||
+            cartElement.querySelector('svg[class*="theme"]') ||
+            cartElement.closest("[data-theme-toggle]") ||
+            cartElement.closest(".theme-toggle");
+
+          if (
+            (hasShoppingCartIcon || hasCartHref || hasCartText) &&
+            !isThemeToggle
+          ) {
             console.log("🎯 Found valid cart element with selector:", selector);
+            console.log("🎯 Cart element details:", {
+              tagName: cartElement.tagName,
+              href: cartElement.getAttribute("href"),
+              hasShoppingCartIcon: !!hasShoppingCartIcon,
+              hasCartHref: !!hasCartHref,
+              hasCartText: !!hasCartText,
+              isThemeToggle: !!isThemeToggle
+            });
             break;
           } else {
+            console.log("❌ Cart element validation failed:", {
+              selector,
+              hasShoppingCartIcon: !!hasShoppingCartIcon,
+              hasCartHref: !!hasCartHref,
+              hasCartText: !!hasCartText,
+              isThemeToggle: !!isThemeToggle
+            });
             cartElement = null; // Reset if validation fails
           }
         }
@@ -98,8 +120,8 @@ export const useCartPosition = () => {
             element.querySelector('svg[class*="sun"]') ||
             element.querySelector('svg[class*="moon"]') ||
             element.querySelector('svg[class*="theme"]') ||
-            element.closest('[data-theme-toggle]') ||
-            element.closest('.theme-toggle');
+            element.closest("[data-theme-toggle]") ||
+            element.closest(".theme-toggle");
           const isUserButton =
             element.querySelector('svg[class*="user"]') ||
             element.querySelector('svg[class*="profile"]');
@@ -113,6 +135,16 @@ export const useCartPosition = () => {
           ) {
             cartElement = element;
             console.log("🎯 Found cart element by content analysis");
+            console.log("🎯 Content analysis details:", {
+              tagName: element.tagName,
+              href: element.getAttribute("href"),
+              hasBadge: !!hasBadge,
+              hasCartText: !!hasCartText,
+              hasCartHref: !!hasCartHref,
+              isThemeToggle: !!isThemeToggle,
+              isUserButton: !!isUserButton,
+              isHeartButton: !!isHeartButton
+            });
             break;
           }
         }
