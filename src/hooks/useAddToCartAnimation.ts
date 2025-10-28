@@ -25,23 +25,26 @@ export const useAddToCartAnimation = () => {
         productName,
       });
 
-      setAnimationState({
-        isAnimating: true,
-        productId,
-        imageUrl,
-        productName,
-      });
-
-      // Reset animation after duration
-      setTimeout(() => {
-        console.log("🎬 useAddToCartAnimation: resetting animation state");
+      // Use requestAnimationFrame to ensure state update happens at the right time
+      requestAnimationFrame(() => {
         setAnimationState({
-          isAnimating: false,
-          productId: null,
-          imageUrl: null,
-          productName: null,
+          isAnimating: true,
+          productId,
+          imageUrl,
+          productName,
         });
-      }, 1000); // Animation duration
+
+        // Reset animation after duration - match cart update timing
+        setTimeout(() => {
+          console.log("🎬 useAddToCartAnimation: resetting animation state");
+          setAnimationState({
+            isAnimating: false,
+            productId: null,
+            imageUrl: null,
+            productName: null,
+          });
+        }, 1200); // Slightly longer duration to match cart badge update
+      });
     },
     []
   );

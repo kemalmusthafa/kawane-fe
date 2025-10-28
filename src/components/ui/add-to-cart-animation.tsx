@@ -68,8 +68,8 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
               opacity: 0,
             }}
             transition={{
-              duration: 0.8,
-              ease: "easeInOut",
+              duration: 1.0,
+              ease: [0.25, 0.46, 0.45, 0.94], // Custom easing for smoother animation
             }}
             className="fixed z-50 pointer-events-none"
             style={{
@@ -92,9 +92,9 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
             initial={{ scale: 1 }}
             animate={{ scale: [1, 1.2, 1] }}
             transition={{
-              duration: 0.6,
+              duration: 0.8,
               repeat: 1,
-              ease: "easeInOut",
+              ease: [0.25, 0.46, 0.45, 0.94], // Match product image easing
             }}
             className="fixed z-50 pointer-events-none"
             style={{

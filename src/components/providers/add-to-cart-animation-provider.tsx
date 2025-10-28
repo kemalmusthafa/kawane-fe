@@ -51,13 +51,16 @@ export const AddToCartAnimationProvider: React.FC<
         // Recalculate cart position synchronously
         updateCartPosition();
 
-        // Use requestAnimationFrame to ensure DOM is updated
+        // Use multiple requestAnimationFrame calls to ensure DOM is fully updated
+        // This matches the timing of cart state updates
         if (typeof window !== "undefined") {
           requestAnimationFrame(() => {
-            console.log(
-              "🎬 AddToCartAnimationProvider: triggering animation after position update"
-            );
-            triggerAnimation(productId, imageUrl, productName);
+            requestAnimationFrame(() => {
+              console.log(
+                "🎬 AddToCartAnimationProvider: triggering animation after DOM update"
+              );
+              triggerAnimation(productId, imageUrl, productName);
+            });
           });
         } else {
           triggerAnimation(productId, imageUrl, productName);

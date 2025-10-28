@@ -35,6 +35,11 @@ export const useCartPosition = () => {
       'button:has(svg[class*="shopping-cart"]):has(.relative)',
     ];
 
+    // Add a small delay to ensure DOM is fully rendered
+    setTimeout(() => {
+      console.log("🔍 DOM should be ready, proceeding with detection...");
+    }, 0);
+
     console.log("🎯 Available selectors:", cartSelectors);
 
     let cartElement: Element | null = null;
@@ -239,7 +244,11 @@ export const useCartPosition = () => {
         "Position:",
         position
       );
-      setCartPosition(position);
+      
+      // Use requestAnimationFrame to ensure position is set after DOM updates
+      requestAnimationFrame(() => {
+        setCartPosition(position);
+      });
     } else {
       // Fallback position (top-right corner)
       const fallbackPosition = {
@@ -250,7 +259,11 @@ export const useCartPosition = () => {
         "⚠️ Cart element not found, using fallback:",
         fallbackPosition
       );
-      setCartPosition(fallbackPosition);
+      
+      // Use requestAnimationFrame for fallback too
+      requestAnimationFrame(() => {
+        setCartPosition(fallbackPosition);
+      });
     }
   }, []);
 
