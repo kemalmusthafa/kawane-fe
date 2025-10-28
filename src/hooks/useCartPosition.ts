@@ -14,13 +14,14 @@ export const useCartPosition = () => {
   });
 
   const updateCartPosition = useCallback(() => {
-    // More specific selectors for cart icon detection - prioritize data attribute
+    // More specific selectors for cart icon detection - prioritize data attribute and href
     const cartSelectors = [
-      // Most reliable: data attribute
-      '[data-testid="cart-icon"]',
+      // Most reliable: data attribute with href="/cart"
+      'a[data-testid="cart-icon"][href="/cart"]',
+      'a[data-testid="cart-icon"][href*="/cart"]',
       // Cart button with ShoppingCart icon and href="/cart"
       'a[href="/cart"]:has(svg[class*="shopping-cart"])',
-      'button:has(svg[class*="shopping-cart"]):has(a[href="/cart"])',
+      'a[href*="/cart"]:has(svg[class*="shopping-cart"])',
       // Cart button with ShoppingCart icon and badge
       'a:has(svg[class*="shopping-cart"]):has(.absolute)',
       'button:has(svg[class*="shopping-cart"]):has(.absolute)',
@@ -56,7 +57,15 @@ export const useCartPosition = () => {
             cartElement.textContent?.toLowerCase().includes("cart") ||
             cartElement.textContent?.toLowerCase().includes("keranjang");
 
-          if (hasShoppingCartIcon || hasCartHref || hasCartText) {
+          // Exclude theme toggle and other non-cart elements
+          const isThemeToggle = cartElement.querySelector('svg[class*="sun"]') || 
+                               cartElement.querySelector('svg[class*="moon"]') ||
+                               cartElement.querySelector('svg[class*="theme"]') ||
+                               cartElement.closest('[data-theme-toggle]') ||
+                               cartElement.closest('.theme-toggle');
+          
+          if ((hasShoppingCartIcon || hasCartHref || hasCartText) && !isThemeToggle) {
+            console.log("🎯 Found valid cart element with selector:", selector);
             break;
           } else {
             cartElement = null; // Reset if validation fails
@@ -88,7 +97,9 @@ export const useCartPosition = () => {
           const isThemeToggle =
             element.querySelector('svg[class*="sun"]') ||
             element.querySelector('svg[class*="moon"]') ||
-            element.querySelector('svg[class*="theme"]');
+            element.querySelector('svg[class*="theme"]') ||
+            element.closest('[data-theme-toggle]') ||
+            element.closest('.theme-toggle');
           const isUserButton =
             element.querySelector('svg[class*="user"]') ||
             element.querySelector('svg[class*="profile"]');
@@ -101,6 +112,7 @@ export const useCartPosition = () => {
             !isHeartButton
           ) {
             cartElement = element;
+            console.log("🎯 Found cart element by content analysis");
             break;
           }
         }
