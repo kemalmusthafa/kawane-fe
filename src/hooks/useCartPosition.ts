@@ -122,15 +122,35 @@ export const useCartPosition = () => {
       }
 
       const rect = targetElement.getBoundingClientRect();
+      
+      // Add visual offset for SVG elements to account for stroke and visual center
+      let visualOffsetX = 0;
+      let visualOffsetY = 0;
+      
+      if (targetElement.tagName === 'svg') {
+        // SVG visual center adjustment - account for stroke width and visual appearance
+        visualOffsetY = -2; // Move slightly up for better visual alignment
+        visualOffsetX = 0; // Keep horizontal center
+      } else if (targetElement.tagName === 'a' || targetElement.tagName === 'button') {
+        // For wrapper elements, try to find the SVG inside and adjust accordingly
+        const svgInside = targetElement.querySelector('svg');
+        if (svgInside) {
+          visualOffsetY = -2; // Same adjustment for visual alignment
+        }
+      }
+      
       const position = {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
+        x: rect.left + rect.width / 2 + visualOffsetX,
+        y: rect.top + rect.height / 2 + visualOffsetY,
       };
+      
       console.log(
         "🎯 Cart element found:",
         cartElement,
         "Target element:",
         targetElement,
+        "Visual offset:",
+        {visualOffsetX, visualOffsetY},
         "Position:",
         position
       );

@@ -80,7 +80,7 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
             </div>
           </motion.div>
 
-          {/* Cart Icon Pulse Effect */}
+          {/* Cart Icon Pulse Effect - More precise positioning */}
           <motion.div
             initial={{ scale: 1 }}
             animate={{ scale: [1, 1.2, 1] }}
@@ -101,7 +101,7 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
             </div>
           </motion.div>
 
-          {/* Success Particles */}
+          {/* Success Particles - More precise positioning */}
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}

@@ -61,7 +61,9 @@ export const AddToCartAnimationProvider: React.FC<
   );
 
   return (
-    <AddToCartAnimationContext.Provider value={{ triggerAnimation: triggerWithFreshPosition }}>
+    <AddToCartAnimationContext.Provider
+      value={{ triggerAnimation: triggerWithFreshPosition }}
+    >
       {children}
 
       {/* Global Add to Cart Animation */}
@@ -75,6 +77,3 @@ export const AddToCartAnimationProvider: React.FC<
     </AddToCartAnimationContext.Provider>
   );
 };
-
-
-
