@@ -15,7 +15,7 @@ export const useCartPosition = () => {
 
   const updateCartPosition = useCallback(() => {
     console.log("🔍 Starting cart position detection...");
-    
+
     // More specific selectors for cart icon detection - prioritize data attribute and href
     const cartSelectors = [
       // Most reliable: data attribute with href="/cart" and ShoppingCart icon
@@ -43,7 +43,7 @@ export const useCartPosition = () => {
       ".cart-icon",
       "#cart-icon",
     ];
-    
+
     console.log("🎯 Available selectors:", cartSelectors);
 
     let cartElement: Element | null = null;
@@ -107,14 +107,23 @@ export const useCartPosition = () => {
 
     // If not found, try to find by icon content and structure
     if (!cartElement) {
-      console.log("🔍 No cart element found with selectors, trying content analysis...");
+      console.log(
+        "🔍 No cart element found with selectors, trying content analysis..."
+      );
       const allElements = document.querySelectorAll("button, a");
-      console.log(`🔍 Found ${allElements.length} button/a elements to analyze`);
-      
+      console.log(
+        `🔍 Found ${allElements.length} button/a elements to analyze`
+      );
+
       // Log all elements with shopping cart icons
-      const allShoppingCartElements = document.querySelectorAll('svg[class*="shopping-cart"]');
-      console.log(`🔍 Found ${allShoppingCartElements.length} ShoppingCart SVG elements:`, allShoppingCartElements);
-      
+      const allShoppingCartElements = document.querySelectorAll(
+        'svg[class*="shopping-cart"]'
+      );
+      console.log(
+        `🔍 Found ${allShoppingCartElements.length} ShoppingCart SVG elements:`,
+        allShoppingCartElements
+      );
+
       for (const element of allElements) {
         // Check if element contains ShoppingCart icon
         const shoppingCartIcon = element.querySelector(
@@ -139,7 +148,7 @@ export const useCartPosition = () => {
             element.querySelector('svg[class*="user"]') ||
             element.querySelector('svg[class*="profile"]');
           const isHeartButton = element.querySelector('svg[class*="heart"]');
-          
+
           console.log(`🔍 Analyzing element:`, {
             element,
             tagName: element.tagName,
@@ -150,7 +159,7 @@ export const useCartPosition = () => {
             hasCartHref: !!hasCartHref,
             isThemeToggle: !!isThemeToggle,
             isUserButton: !!isUserButton,
-            isHeartButton: !!isHeartButton
+            isHeartButton: !!isHeartButton,
           });
 
           if (

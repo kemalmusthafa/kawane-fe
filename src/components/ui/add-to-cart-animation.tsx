@@ -30,6 +30,10 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
     y: cartPosition.y,
   };
 
+  // Debug logging for animation positioning
+  console.log("🎬 AddToCartAnimation received cartPosition:", cartPosition);
+  console.log("🎬 AddToCartAnimation calculated targetPosition:", targetPosition);
+
   console.log("🎬 Animation positions:", {
     startPosition,
     targetPosition,
@@ -94,6 +98,13 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
               left: targetPosition.x,
               top: targetPosition.y,
               transform: "translate(-50%, -50%)",
+            }}
+            onAnimationStart={() => {
+              console.log("🎬 Cart pulse animation starting at:", {
+                left: targetPosition.x,
+                top: targetPosition.y,
+                transform: "translate(-50%, -50%)"
+              });
             }}
           >
             <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
