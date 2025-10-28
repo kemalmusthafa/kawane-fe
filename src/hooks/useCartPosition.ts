@@ -18,21 +18,18 @@ export const useCartPosition = () => {
 
     // More specific selectors for cart icon detection - prioritize cart with badge
     const cartSelectors = [
-      // Most reliable: cart with badge (shows item count)
-      'a[data-testid="cart-icon"]:has(svg[class*="shopping-cart"]):has(.absolute)',
-      'a[href*="/cart"]:has(svg[class*="shopping-cart"]):has(.absolute)',
-      // Cart with relative positioning (badge container)
-      'a[data-testid="cart-icon"]:has(svg[class*="shopping-cart"]):has(.relative)',
-      'a[href*="/cart"]:has(svg[class*="shopping-cart"]):has(.relative)',
-      // Fallback: any cart with data-testid
+      // Most reliable: cart with badge (shows item count) - EXACT match
+      'a[data-testid="cart-icon"][href="/cart"]:has(svg[class*="shopping-cart"]):has(.absolute)',
+      'a[data-testid="cart-icon"][href*="/cart"]:has(svg[class*="shopping-cart"]):has(.absolute)',
+      // Cart with relative positioning (badge container) - EXACT match
+      'a[data-testid="cart-icon"][href="/cart"]:has(svg[class*="shopping-cart"]):has(.relative)',
+      'a[data-testid="cart-icon"][href*="/cart"]:has(svg[class*="shopping-cart"]):has(.relative)',
+      // Fallback: any cart with data-testid - EXACT match
       'a[data-testid="cart-icon"][href="/cart"]:has(svg[class*="shopping-cart"])',
       'a[data-testid="cart-icon"][href*="/cart"]:has(svg[class*="shopping-cart"])',
-      // Fallback: any cart with href
+      // Last resort: any cart with href
       'a[href="/cart"]:has(svg[class*="shopping-cart"])',
       'a[href*="/cart"]:has(svg[class*="shopping-cart"])',
-      // Generic cart selectors
-      'a:has(svg[class*="shopping-cart"]):has(.absolute)',
-      'button:has(svg[class*="shopping-cart"]):has(.absolute)',
     ];
 
     // Add a small delay to ensure DOM is fully rendered
@@ -51,6 +48,21 @@ export const useCartPosition = () => {
         cartElement = document.querySelector(selector);
         console.log(`🔍 Found element:`, cartElement);
         if (cartElement) {
+          // CRITICAL: Double-check this is NOT a theme toggle
+          const isDefinitelyThemeToggle = 
+            cartElement.querySelector('svg[class*="sun"]') ||
+            cartElement.querySelector('svg[class*="moon"]') ||
+            cartElement.querySelector('svg[class*="theme"]') ||
+            cartElement.closest("[data-theme-toggle]") ||
+            cartElement.closest(".theme-toggle") ||
+            (cartElement.tagName === "BUTTON" && 
+             cartElement.querySelector('div[class*="relative w-[1.2rem] h-[1.2rem]"]'));
+          
+          if (isDefinitelyThemeToggle) {
+            console.log("❌ REJECTED: Element is definitely a theme toggle");
+            cartElement = null;
+            continue;
+          }
           // Additional validation: make sure it's actually a cart element
           const hasShoppingCartIcon = cartElement.querySelector(
             'svg[class*="shopping-cart"]'

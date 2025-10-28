@@ -32,6 +32,46 @@ export const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
 
   return (
     <AnimatePresence>
+      {/* Temporary Debug Visual Indicators */}
+      {isAnimating && (
+        <>
+          {/* Target Position Indicator */}
+          <div
+            style={{
+              position: "fixed",
+              left: targetPosition.x,
+              top: targetPosition.y,
+              width: "20px",
+              height: "20px",
+              background: "red",
+              borderRadius: "50%",
+              zIndex: 10000,
+              transform: "translate(-50%, -50%)",
+              pointerEvents: "none",
+            }}
+          />
+          
+          {/* Debug Info Box */}
+          <div
+            style={{
+              position: "fixed",
+              top: 10,
+              left: 10,
+              background: "red",
+              color: "white",
+              padding: "10px",
+              zIndex: 10000,
+              fontSize: "12px",
+              borderRadius: "4px",
+            }}
+          >
+            <div>Target: {targetPosition.x.toFixed(1)}, {targetPosition.y.toFixed(1)}</div>
+            <div>Cart: {cartPosition.x.toFixed(1)}, {cartPosition.y.toFixed(1)}</div>
+            <div>Start: {startPosition.x.toFixed(1)}, {startPosition.y.toFixed(1)}</div>
+          </div>
+        </>
+      )}
+      
       {isAnimating && imageUrl && (
         <>
           {/* Flying Product Image */}
