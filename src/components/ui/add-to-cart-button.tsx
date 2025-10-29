@@ -7,7 +7,6 @@ import { Plus, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { toastNotifications } from "@/utils/toast";
-import { useAddToCartAnimationContext } from "@/components/providers/add-to-cart-animation-provider";
 
 interface AddToCartButtonProps {
   product: Product;
@@ -23,24 +22,6 @@ interface AddToCartButtonProps {
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
   disabled?: boolean;
-  enableAnimation?: boolean;
-}
-
-interface AddToCartButtonProps {
-  product: Product;
-  quantity?: number;
-  selectedSize?: string;
-  variant?:
-    | "default"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | "link"
-    | "destructive";
-  size?: "default" | "sm" | "lg" | "icon";
-  className?: string;
-  disabled?: boolean;
-  enableAnimation?: boolean;
 }
 
 export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
@@ -51,23 +32,10 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   size = "default",
   className,
   disabled = false,
-  enableAnimation = true,
 }) => {
   const { addItem, isLoading, isInCart, getItemQuantity } = useCart();
   const { requireAuth } = useAuthRedirect();
   const [isAdding, setIsAdding] = useState(false);
-
-  // Try to get animation context, fallback to no animation if not available
-  let triggerAnimation:
-    | ((productId: string, imageUrl: string, productName: string) => void)
-    | null = null;
-  try {
-    const animationContext = useAddToCartAnimationContext();
-    triggerAnimation = animationContext.triggerAnimation;
-  } catch (error) {
-    // Context not available, animation will be disabled
-    console.log("AddToCartAnimationProvider not found, animations disabled");
-  }
 
   const handleAddToCart = async () => {
     if (disabled || isLoading || isAdding) return;
@@ -83,16 +51,6 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
         setIsAdding(true);
 
         await addItem(product.id, quantity, selectedSize);
-
-        // Trigger animation if enabled and product has image
-        if (
-          enableAnimation &&
-          triggerAnimation &&
-          product.images &&
-          product.images.length > 0
-        ) {
-          triggerAnimation(product.id, product.images[0].url, product.name);
-        }
 
         toastNotifications.success.addToCart(product.name);
       } catch (error) {
