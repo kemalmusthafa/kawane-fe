@@ -142,7 +142,7 @@ export function ProductCard({
                 </p>
               )}
               {selectedSize && (
-                <p className="text-[9px] sm:text-xs text-green-600 mt-1 sm:mt-2 text-center">
+                <p className="text-[9px] sm:text-xs text-green-600 mt-1 sm:mt-2 text-left">
                   ✓ Size {selectedSize} selected
                 </p>
               )}

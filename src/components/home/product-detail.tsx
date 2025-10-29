@@ -218,7 +218,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                 ))}
               </div>
               {selectedSize && (
-                <p className="text-sm sm:text-base text-green-600 mb-2">
+                <p className="text-sm sm:text-base text-green-600 mb-2 text-left">
                   ✓ Size {selectedSize} selected
                 </p>
               )}
