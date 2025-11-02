@@ -137,7 +137,7 @@ export function HomeFooter() {
                   href="mailto:info@kawanestudio.com"
                   className="text-xs sm:text-sm lg:text-base text-muted-foreground hover:text-primary break-all transition-colors"
                 >
-                  info@kawanestudio.com
+                  www.kawanestudio.com
                 </a>
               </div>
               <div className="flex items-center space-x-2">
@@ -161,7 +161,7 @@ export function HomeFooter() {
 
         <div className="border-t mt-3 sm:mt-4 lg:mt-6 pt-3 sm:pt-4 lg:pt-6 text-center">
           <p className="font-pragmatica tracking-[0.01em] text-xs sm:text-sm lg:text-base text-muted-foreground">
-            © 2021 Kawane Studio. All rights reserved.
+            © 1921 Kawane Studio. All rights reserved.
           </p>
         </div>
       </div>

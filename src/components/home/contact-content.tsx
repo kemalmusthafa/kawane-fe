@@ -8,8 +8,8 @@ const contactInfo = [
     icon: Mail,
     title: "Email Us",
     description: "Send us an email anytime",
-    details: "info@kawanestudio.com",
-    action: "mailto:info@kawanestudio.com",
+    details: "kawane.studio1921@gmail.com",
+    action: "mailto:kawane.studio1921@gmail.com",
   },
   {
     icon: Phone,
@@ -24,7 +24,7 @@ const contactInfo = [
     description: "Come say hello at our office",
     details: "Bandung, Indonesia",
     action:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.3345021545043!2d106.82201567497814!3d-6.208763693739153!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTInMzEuNyJTIDEwNsKwNTAnNDQuMiJF!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid",
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3168.835434509374!2d107.5405235!3d-6.8657241!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e9f5f5f5f5f5%3A0x5f5f5f5f5f5f5f5f!2zNsKwNTEnNTYuNiJTIDEwN8KwMzInMzUuMiJF!5e0!3m2!1sen!2sid!4v1738560000000!5m2!1sen!2sid",
   },
   {
     icon: Clock,
@@ -112,7 +112,7 @@ export function ContactContent() {
       <div className="w-full">
         <div className="w-full h-[400px] sm:h-[500px] lg:h-[600px] rounded-lg overflow-hidden shadow-lg border">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.3345021545043!2d106.82201567497814!3d-6.208763693739153!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTInMzEuNyJTIDEwNsKwNTAnNDQuMiJF!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3168.835434509374!2d107.5405235!3d-6.8657241!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e9f5f5f5f5f5%3A0x5f5f5f5f5f5f5f5f!2zNsKwNTEnNTYuNiJTIDEwN8KwMzInMzUuMiJF!5e0!3m2!1sen!2sid!4v1738560000000!5m2!1sen!2sid"
             width="100%"
             height="100%"
             style={{ border: 0 }}
@@ -120,17 +120,17 @@ export function ContactContent() {
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             className="w-full h-full"
-            title="Kawane Studio Location"
+            title="Kawane Studio Location - Cipageran, Cimahi"
           />
         </div>
         <p className="text-center mt-4 text-xs sm:text-sm text-muted-foreground">
           <a
-            href="https://maps.app.goo.gl/8AQEotFPyQVFB7Df8"
+            href="https://maps.app.goo.gl/wiK6FRSjKPdVxyuX8"
             target="_blank"
             rel="noopener noreferrer"
             className="text-primary hover:text-primary/80 underline"
           >
-            Buka di Google Maps
+            Open in Google Maps
           </a>
         </p>
       </div>
