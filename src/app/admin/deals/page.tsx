@@ -365,7 +365,9 @@ export default function AdminDealsPage() {
         {dealsLoading ? (
           <Card>
             <CardContent className="p-6">
-              <p className="text-muted-foreground">Loading banner management...</p>
+              <p className="text-muted-foreground">
+                Loading banner management...
+              </p>
             </CardContent>
           </Card>
         ) : (

@@ -245,7 +245,10 @@ export function MultipleBannerManagement({
         // Save to localStorage immediately
         if (typeof window !== "undefined") {
           try {
-            localStorage.setItem("multiple-banners", JSON.stringify(updatedBanners));
+            localStorage.setItem(
+              "multiple-banners",
+              JSON.stringify(updatedBanners)
+            );
             // Dispatch custom event to notify other components
             window.dispatchEvent(new CustomEvent("bannerUpdated"));
             toast.success("Banner deleted successfully");
@@ -275,7 +278,10 @@ export function MultipleBannerManagement({
       // Save to localStorage immediately
       if (typeof window !== "undefined") {
         try {
-          localStorage.setItem("multiple-banners", JSON.stringify(updatedBanners));
+          localStorage.setItem(
+            "multiple-banners",
+            JSON.stringify(updatedBanners)
+          );
           // Dispatch custom event to notify other components
           window.dispatchEvent(new CustomEvent("bannerUpdated"));
           toast.success("Banner duplicated successfully");
@@ -315,7 +321,10 @@ export function MultipleBannerManagement({
         // Save to localStorage immediately
         if (typeof window !== "undefined") {
           try {
-            localStorage.setItem("multiple-banners", JSON.stringify(newBanners));
+            localStorage.setItem(
+              "multiple-banners",
+              JSON.stringify(newBanners)
+            );
             // Dispatch custom event to notify other components
             window.dispatchEvent(new CustomEvent("bannerUpdated"));
             toast.success("Banner order updated successfully");
@@ -531,7 +540,10 @@ export function MultipleBannerManagement({
             onClick={() => {
               try {
                 if (typeof window !== "undefined") {
-                  localStorage.setItem("multiple-banners", JSON.stringify(banners));
+                  localStorage.setItem(
+                    "multiple-banners",
+                    JSON.stringify(banners)
+                  );
                   localStorage.setItem(
                     "banner-auto-scroll-interval",
                     autoScrollInterval.toString()

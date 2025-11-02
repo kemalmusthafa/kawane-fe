@@ -111,12 +111,12 @@ export const createOrderMessage = (orderData: {
       if (first.product.deal && first.product.deal.id) {
         // Use deal link instead of product link
         firstProductLink = `${
-          process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
+          process.env.NEXT_PUBLIC_APP_URL || "https://www.kawanestudio.com"
         }/deals/${first.product.deal.id}`;
       } else {
         // Use regular product link
         firstProductLink = `${
-          process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
+          process.env.NEXT_PUBLIC_APP_URL || "https://www.kawanestudio.com"
         }/products/${(first.product as any).id}`;
       }
     }
@@ -169,11 +169,11 @@ export const createOrderMessage = (orderData: {
         // Check if this item has deal information
         if (item.product.deal && item.product.deal.id) {
           message += `\n   🔗 Lihat deal: ${
-            process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
+            process.env.NEXT_PUBLIC_APP_URL || "https://www.kawanestudio.com"
           }/deals/${item.product.deal.id}`;
         } else {
           message += `\n   🔗 Lihat produk: ${
-            process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app"
+            process.env.NEXT_PUBLIC_APP_URL || "https://www.kawanestudio.com"
           }/products/${(item.product as any).id}`;
         }
       }
@@ -225,7 +225,7 @@ export const createCheckoutMessage = (cartData: {
   // Promote first product link to the top to trigger rich preview
   let firstProductLink: string | null = null;
   const appUrl =
-    process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app";
+    process.env.NEXT_PUBLIC_APP_URL || "https://www.kawanestudio.com";
   const firstWithId = cartData.items.find((it: any) => (it.product as any)?.id);
   if ((firstWithId as any)?.product?.id) {
     // Check if this item has deal information
