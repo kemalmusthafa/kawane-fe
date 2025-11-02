@@ -99,10 +99,10 @@ export function AboutContent() {
     <div className="space-y-12 sm:space-y-16">
       {/* Hero Section */}
       <div className="text-center px-4">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-3 sm:mb-4 lg:mb-6 leading-tight">
           About <span className="text-primary">Kawane Studio</span>
         </h1>
-        <p className="text-sm sm:text-base md:text-base text-muted-foreground max-w-4xl mx-auto leading-relaxed px-4 sm:px-0">
+        <p className="text-xs sm:text-sm lg:text-base text-muted-foreground max-w-4xl mx-auto leading-relaxed px-4 sm:px-0">
           We're passionate about bringing you the finest products with
           exceptional service. Since our founding, we've been committed to
           quality, innovation, and customer satisfaction.
@@ -146,7 +146,7 @@ export function AboutContent() {
                     </div>
                   )}
                 </div>
-                <div className="text-xs sm:text-sm text-muted-foreground">
+                <div className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
                   {stat.label}
                 </div>
               </CardContent>
@@ -158,10 +158,10 @@ export function AboutContent() {
       {/* Our Story */}
       <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
         <div className="order-2 lg:order-1">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-4 sm:mb-6 leading-tight">
             Our Story
           </h2>
-          <div className="space-y-3 sm:space-y-4 text-sm sm:text-base text-muted-foreground leading-relaxed">
+          <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm lg:text-base text-muted-foreground leading-relaxed">
             <p>
               Kawane is a local brand born from personal concerns and makes it
               the core of the creative process. Based on a blend of streetwear
@@ -202,7 +202,7 @@ export function AboutContent() {
 
       {/* Our Values */}
       <div className="px-4">
-        <h2 className="text-xl sm:text-2xl font-semibold text-center mb-8 sm:mb-12">
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-center mb-6 sm:mb-8 lg:mb-12 leading-tight">
           Our Values
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -213,10 +213,10 @@ export function AboutContent() {
             >
               <CardContent className="p-4 sm:p-6">
                 <value.icon className="h-10 w-10 sm:h-12 sm:w-12 text-primary mx-auto mb-3 sm:mb-4" />
-                <h3 className="text-sm sm:text-base font-medium mb-2 sm:mb-3">
+                <h3 className="text-xs sm:text-sm lg:text-base font-medium mb-2 sm:mb-3 leading-tight">
                   {value.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground leading-relaxed">
                   {value.description}
                 </p>
               </CardContent>
@@ -227,17 +227,17 @@ export function AboutContent() {
 
       {/* Features */}
       <div className="bg-muted/30 rounded-xl p-6 sm:p-8">
-        <h2 className="text-xl sm:text-2xl font-semibold text-center mb-6 sm:mb-8">
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-center mb-6 sm:mb-8 leading-tight">
           Why Choose Us
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <div key={index} className="text-center">
               <feature.icon className="h-10 w-10 sm:h-12 sm:w-12 text-primary mx-auto mb-3 sm:mb-4" />
-              <h3 className="text-sm sm:text-base font-medium mb-2">
+              <h3 className="text-xs sm:text-sm lg:text-base font-medium mb-2 leading-tight">
                 {feature.title}
               </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">
+              <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground leading-relaxed">
                 {feature.description}
               </p>
             </div>
@@ -247,10 +247,10 @@ export function AboutContent() {
 
       {/* CTA Section */}
       <div className="bg-primary text-primary-foreground rounded-xl p-6 sm:p-8 text-center">
-        <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4 leading-tight">
           Ready to Experience the Difference?
         </h2>
-        <p className="text-sm sm:text-base mb-4 sm:mb-6 opacity-90">
+        <p className="text-xs sm:text-sm lg:text-base mb-4 sm:mb-6 opacity-90 leading-relaxed">
           Join thousands of satisfied customers and discover premium products at
           unbeatable prices.
         </p>

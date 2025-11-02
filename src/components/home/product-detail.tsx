@@ -128,12 +128,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
       <div className="mb-4 sm:mb-6">
         <Link
           href="/products"
-          className="text-xs sm:text-sm text-blue-600 hover:text-blue-800"
+          className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400"
         >
           Products
         </Link>
         <span className="mx-2 text-xs sm:text-sm text-gray-400">/</span>
-        <span className="text-xs sm:text-sm text-gray-600">{product.name}</span>
+        <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{product.name}</span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
@@ -185,7 +185,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
             <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3">
               Description
             </h3>
-            <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300 whitespace-pre-line leading-relaxed">
+            <div className="text-xs sm:text-sm lg:text-base text-gray-600 dark:text-gray-300 whitespace-pre-line leading-relaxed">
               {product.description}
             </div>
           </div>

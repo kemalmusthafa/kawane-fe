@@ -154,19 +154,19 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Breadcrumb */}
-      <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-6">
-        <Link href="/" className="text-sm text-blue-600 hover:text-blue-800">
+      <nav className="flex items-center space-x-2 mb-4 sm:mb-6">
+        <Link href="/" className="text-xs sm:text-sm text-blue-600 hover:text-blue-800">
           Home
         </Link>
-        <span className="mx-2 text-sm text-gray-400">/</span>
+        <span className="mx-2 text-xs sm:text-sm text-gray-400">/</span>
         <Link
           href="/deals"
-          className="text-sm text-blue-600 hover:text-blue-800"
+          className="text-xs sm:text-sm text-blue-600 hover:text-blue-800"
         >
           Deals
         </Link>
-        <span className="mx-2 text-sm text-gray-400">/</span>
-        <span className="text-sm text-gray-600">{deal.title}</span>
+        <span className="mx-2 text-xs sm:text-sm text-gray-400">/</span>
+        <span className="text-xs sm:text-sm text-gray-600">{deal.title}</span>
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -183,7 +183,7 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
         <div className="space-y-6">
           {/* Deal Title and Badges */}
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3 leading-tight">
               {deal.title}
             </h1>
             <div className="flex items-center gap-2 mb-4">
@@ -202,8 +202,8 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
 
           {/* Deal Description */}
           <div>
-            <h3 className="text-sm font-semibold mb-2">Deal Description</h3>
-            <p className="text-xs text-gray-600">
+            <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3 leading-tight">Deal Description</h3>
+            <p className="text-xs sm:text-sm lg:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
               {deal.description ||
                 "Attractive deal with limited offers. Don't miss the opportunity to get quality products at special prices!"}
             </p>
@@ -212,23 +212,23 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
           {/* Deal Details */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-sm">
+              <CardTitle className="flex items-center gap-2 text-xs sm:text-sm lg:text-base font-semibold leading-tight">
                 <Clock className="h-4 w-4" />
                 Deal Details
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-600">Discount Type</span>
-                <Badge variant="outline" className="text-xs">
+                <span className="text-[10px] sm:text-xs lg:text-sm text-gray-600 dark:text-gray-400">Discount Type</span>
+                <Badge variant="outline" className="text-[10px] sm:text-xs">
                   {deal.type === "PERCENTAGE" && "Percentage"}
                   {deal.type === "FIXED_AMOUNT" && "Fixed Amount"}
                   {deal.type === "FLASH_SALE" && "Flash Sale"}
                 </Badge>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-600">Discount Value</span>
-                <span className="text-sm font-medium">
+                <span className="text-[10px] sm:text-xs lg:text-sm text-gray-600 dark:text-gray-400">Discount Value</span>
+                <span className="text-xs sm:text-sm lg:text-base font-medium">
                   {deal.type === "PERCENTAGE" && `${deal.value}%`}
                   {deal.type === "FIXED_AMOUNT" &&
                     `Rp ${deal.value.toLocaleString()}`}
@@ -237,20 +237,20 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-600">Time Remaining</span>
-                <span className="text-sm font-medium text-red-600">
+                <span className="text-[10px] sm:text-xs lg:text-sm text-gray-600 dark:text-gray-400">Time Remaining</span>
+                <span className="text-xs sm:text-sm lg:text-base font-medium text-red-600 dark:text-red-400">
                   {getTimeRemaining(deal.endDate)}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-600">Used</span>
-                <span className="text-sm font-medium">
+                <span className="text-[10px] sm:text-xs lg:text-sm text-gray-600 dark:text-gray-400">Used</span>
+                <span className="text-xs sm:text-sm lg:text-base font-medium">
                   {deal.usedCount} / {deal.maxUses ? deal.maxUses : "∞"}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-600">Valid Until</span>
-                <span className="text-sm font-medium">
+                <span className="text-[10px] sm:text-xs lg:text-sm text-gray-600 dark:text-gray-400">Valid Until</span>
+                <span className="text-xs sm:text-sm lg:text-base font-medium">
                   {formatDate(deal.endDate)}
                 </span>
               </div>
@@ -259,8 +259,8 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
 
           {/* Quantity and Actions */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-4">
-              <Label htmlFor="quantity" className="text-xs">
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <Label htmlFor="quantity" className="text-sm sm:text-base font-medium">
                 Quantity:
               </Label>
               <div className="flex items-center space-x-2">
@@ -314,18 +314,18 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
           </div>
 
           {/* Features */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t">
-            <div className="flex items-center gap-2 text-xs text-gray-600">
-              <Truck className="h-4 w-4 text-green-600" />
-              <span>Free Shipping</span>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+              <span className="text-sm sm:text-base font-medium">Free Shipping</span>
             </div>
-            <div className="flex items-center gap-2 text-xs text-gray-600">
-              <Shield className="h-4 w-4 text-blue-600" />
-              <span>Secure Payment</span>
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+              <span className="text-sm sm:text-base font-medium">Secure Payment</span>
             </div>
-            <div className="flex items-center gap-2 text-xs text-gray-600">
-              <Package className="h-4 w-4 text-purple-600" />
-              <span>Quality Guarantee</span>
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <Package className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
+              <span className="text-sm sm:text-base font-medium">Quality Guarantee</span>
             </div>
           </div>
         </div>
