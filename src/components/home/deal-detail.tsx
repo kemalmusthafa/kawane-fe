@@ -42,6 +42,7 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
   const actualDealId = dealId || (params.id as string);
 
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState<string>("");
 
   const { isAuthenticated, user } = useAuth();
   const { addDealItem } = useCart();
@@ -51,12 +52,22 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
   const handleBuyNow = async () => {
     if (!deal || !deal.dealProducts || deal.dealProducts.length === 0) return;
 
+    // Get first product from deal
+    const firstProduct = deal.dealProducts?.[0]?.product;
+    if (!firstProduct) return;
+
+    // Check if product has sizes and size is selected
+    if (firstProduct.sizes && firstProduct.sizes.length > 0 && !selectedSize) {
+      toast.error("Please select a size first");
+      return;
+    }
+
     const buyNowAction = async () => {
       try {
         // Use the first product in the deal
-        const firstProduct = deal.dealProducts?.[0];
-        if (!firstProduct) return;
-        await addDealItem(deal.id, firstProduct.productId, quantity);
+        const dealProduct = deal.dealProducts?.[0];
+        if (!dealProduct) return;
+        await addDealItem(deal.id, dealProduct.productId, quantity, selectedSize);
         toast.success("Deal added to cart");
 
         // Then redirect to checkout
@@ -257,6 +268,48 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
             </CardContent>
           </Card>
 
+          {/* Size Selection */}
+          {deal.dealProducts?.[0]?.product?.sizes &&
+            deal.dealProducts[0].product.sizes.length > 0 && (
+              <div>
+                <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3">
+                  Select Size
+                </h3>
+                <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-2.5 mb-4 sm:mb-6">
+                  {deal.dealProducts[0].product.sizes.map((sizeItem) => (
+                    <button
+                      key={sizeItem.id}
+                      onClick={() => setSelectedSize(sizeItem.size)}
+                      className={`p-2 sm:p-2.5 border rounded-md text-center transition-colors ${
+                        selectedSize === sizeItem.size
+                          ? "border-blue-500 bg-blue-500 text-white dark:border-blue-500 dark:bg-blue-500 dark:text-white"
+                          : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
+                      } ${
+                        sizeItem.stock === 0
+                          ? "opacity-50 cursor-not-allowed"
+                          : "cursor-pointer"
+                      }`}
+                      disabled={sizeItem.stock === 0}
+                    >
+                      <div className="text-xs sm:text-sm font-medium">
+                        {sizeItem.size}
+                      </div>
+                      {sizeItem.stock > 0 && (
+                        <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1">
+                          ({sizeItem.stock})
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+                {selectedSize && (
+                  <p className="text-sm sm:text-base text-green-600 dark:text-green-400 mb-2 text-left">
+                    ✓ Size {selectedSize} selected
+                  </p>
+                )}
+              </div>
+            )}
+
           {/* Quantity and Actions */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2 sm:space-x-4">
@@ -297,13 +350,26 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
                 deal={deal}
                 productId={deal.dealProducts?.[0]?.productId || ""}
                 quantity={quantity}
+                selectedSize={selectedSize}
                 variant="outline"
                 className="flex-1"
-                disabled={!deal.dealProducts || deal.dealProducts.length === 0}
+                disabled={
+                  !deal.dealProducts ||
+                  deal.dealProducts.length === 0 ||
+                  (deal.dealProducts[0]?.product?.sizes &&
+                    deal.dealProducts[0].product.sizes.length > 0 &&
+                    !selectedSize)
+                }
               />
               <Button
                 onClick={handleBuyNow}
-                disabled={!deal.dealProducts || deal.dealProducts.length === 0}
+                disabled={
+                  !deal.dealProducts ||
+                  deal.dealProducts.length === 0 ||
+                  (deal.dealProducts[0]?.product?.sizes &&
+                    deal.dealProducts[0].product.sizes.length > 0 &&
+                    !selectedSize)
+                }
                 className="flex-1"
                 size="lg"
               >

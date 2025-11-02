@@ -11,6 +11,7 @@ interface AddToDealCartButtonProps {
   deal: Deal;
   productId: string;
   quantity?: number;
+  selectedSize?: string;
   variant?:
     | "default"
     | "outline"
@@ -27,6 +28,7 @@ export const AddToDealCartButton: React.FC<AddToDealCartButtonProps> = ({
   deal,
   productId,
   quantity = 1,
+  selectedSize = "",
   variant = "default",
   size = "default",
   className,
@@ -42,7 +44,7 @@ export const AddToDealCartButton: React.FC<AddToDealCartButtonProps> = ({
     const addToCartAction = async () => {
       try {
         setIsAdding(true);
-        await addDealItem(deal.id, productId, quantity);
+        await addDealItem(deal.id, productId, quantity, selectedSize);
         toast.success("Deal added to cart");
       } catch (error) {
         console.error("Error adding deal to cart:", error);

@@ -148,14 +148,29 @@ export function ImageUpload({
     onImagesChange(newImages);
   };
 
+  const [urlInput, setUrlInput] = useState("");
+  const [showUrlInput, setShowUrlInput] = useState(false);
+
   const addImageUrl = () => {
-    const url = prompt("Enter image URL:");
-    if (url && url.trim()) {
+    if (urlInput && urlInput.trim()) {
       if (images.length >= maxImages) {
         toast.error(`Maximum ${maxImages} images allowed`);
         return;
       }
-      onImagesChange([...images, url.trim()]);
+      
+      // Validate URL
+      try {
+        new URL(urlInput.trim());
+        onImagesChange([...images, urlInput.trim()]);
+        setUrlInput("");
+        setShowUrlInput(false);
+        toast.success("Image URL added successfully");
+      } catch (error) {
+        toast.error("Please enter a valid URL");
+      }
+    } else {
+      // Toggle input field
+      setShowUrlInput(!showUrlInput);
     }
   };
 
@@ -165,27 +180,62 @@ export function ImageUpload({
 
       {/* Upload Area */}
       <div className="space-y-2">
-        <div className="flex gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={disabled || isUploading || images.length >= maxImages}
-            className="flex-1"
-          >
-            <Upload className="h-4 w-4 mr-2" />
-            {isUploading ? "Uploading..." : "Upload Images"}
-          </Button>
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={disabled || isUploading || images.length >= maxImages}
+              className="flex-1"
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              {isUploading ? "Uploading..." : "Upload Images"}
+            </Button>
 
-          <Button
-            type="button"
-            variant="outline"
-            onClick={addImageUrl}
-            disabled={disabled || images.length >= maxImages}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Add URL
-          </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={addImageUrl}
+              disabled={disabled || images.length >= maxImages}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add URL
+            </Button>
+          </div>
+
+          {showUrlInput && (
+            <div className="flex gap-2">
+              <Input
+                type="url"
+                placeholder="Enter image URL (e.g., https://example.com/image.jpg)"
+                value={urlInput}
+                onChange={(e) => setUrlInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addImageUrl();
+                  } else if (e.key === "Escape") {
+                    setShowUrlInput(false);
+                    setUrlInput("");
+                  }
+                }}
+                className="flex-1"
+                autoFocus
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setShowUrlInput(false);
+                  setUrlInput("");
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          )}
         </div>
 
         <Input
