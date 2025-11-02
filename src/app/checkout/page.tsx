@@ -111,8 +111,10 @@ export default function CheckoutPage() {
       })),
       totalAmount: total, // Total amount from cart (this is what Midtrans will use)
 
-      // Shipping address as string (concatenated) - using street field as detail
-      shippingAddress: `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.postalCode}, ${shippingAddress.country}`,
+      // Shipping address as string (concatenated) - include all fields
+      // Format: "street, city, postalCode, country"
+      // Note: Phone will be included in notes if provided (backend limitation)
+      shippingAddress: `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.postalCode}, ${shippingAddress.country || 'Indonesia'}`,
 
       // Mapped payment method
       paymentMethod: mapPaymentMethod(selectedPaymentMethod),
@@ -121,7 +123,12 @@ export default function CheckoutPage() {
       addressId: null, // We're using new address, not existing one
 
       // Optional fields
-      notes: notes.trim() || "",
+      // Include phone and country info in notes as fallback since backend doesn't store them in address
+      notes: [
+        notes.trim(),
+        shippingAddress.phone ? `Phone: ${shippingAddress.phone}` : '',
+        shippingAddress.country && shippingAddress.country !== 'Indonesia' ? `Country: ${shippingAddress.country}` : '',
+      ].filter(Boolean).join(' | ') || "",
     };
 
     // Validate order data

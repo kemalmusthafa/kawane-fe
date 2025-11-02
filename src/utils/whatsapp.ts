@@ -184,8 +184,37 @@ export const createOrderMessage = (orderData: {
   if (orderData.address) {
     message += `\n\n📍 *Alamat Pengiriman:*`;
     message += `\n${orderData.address.detail}`;
-    message += `\n${orderData.address.city}, ${orderData.address.province}`;
-    message += `\n${orderData.address.postalCode}`;
+    
+    // Try to get phone from address, user, or notes
+    let addressPhone = orderData.address.phone;
+    if (!addressPhone && (orderData as any).user?.phone) {
+      addressPhone = (orderData as any).user.phone;
+    }
+    if (!addressPhone && orderData.notes) {
+      const phoneMatch = orderData.notes.match(/Phone:\s*([^|]+)/);
+      if (phoneMatch) {
+        addressPhone = phoneMatch[1].trim();
+      }
+    }
+    if (addressPhone) {
+      message += `\n📞 ${addressPhone}`;
+    }
+    
+    message += `\n${orderData.address.city}, ${orderData.address.postalCode}`;
+    message += `\n${orderData.address.province}`;
+    
+    // Try to get country from address or notes
+    let addressCountry = orderData.address.country;
+    if (!addressCountry && orderData.notes) {
+      const countryMatch = orderData.notes.match(/Country:\s*([^|]+)/);
+      if (countryMatch) {
+        addressCountry = countryMatch[1].trim();
+      }
+    }
+    if (addressCountry && addressCountry !== orderData.address.province) {
+      message += `\n${addressCountry}`;
+    }
+    
     if (orderData.address.label) {
       message += `\n(${orderData.address.label})`;
     }

@@ -50,6 +50,8 @@ interface OrderDetail {
     city: string;
     postalCode: string;
     province: string;
+    country?: string;
+    phone?: string;
     label?: string;
   };
   shipment?: {
@@ -68,6 +70,12 @@ interface OrderDetail {
   };
   paymentMethod: string;
   notes?: string;
+  user?: {
+    id: string;
+    name?: string;
+    email?: string;
+    phone?: string;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -109,13 +117,39 @@ export default function OrderDetailPage() {
         );
 
         // Map the API response to match our OrderDetail interface
+        // Try to extract phone and country from order data or user data
+        const addressData = orderData.address || {
+          detail: "No address information",
+          city: "Unknown",
+          postalCode: "00000",
+          province: "Unknown",
+        };
+
+        // Extract phone and country from notes if available
+        let extractedPhone = addressData.phone || (orderData as any).user?.phone;
+        let extractedCountry = addressData.country || addressData.province || "Indonesia";
+        
+        if (orderData.notes) {
+          // Try to extract phone from notes (format: "Phone: +62...")
+          const phoneMatch = orderData.notes.match(/Phone:\s*([^|]+)/);
+          if (phoneMatch) {
+            extractedPhone = phoneMatch[1].trim();
+          }
+          
+          // Try to extract country from notes (format: "Country: ...")
+          const countryMatch = orderData.notes.match(/Country:\s*([^|]+)/);
+          if (countryMatch) {
+            extractedCountry = countryMatch[1].trim();
+          }
+        }
+
+        // If phone or country is in address object, include them
         const mappedOrder: OrderDetail = {
           ...orderData,
-          address: orderData.address || {
-            detail: "No address information",
-            city: "Unknown",
-            postalCode: "00000",
-            province: "Unknown",
+          address: {
+            ...addressData,
+            phone: extractedPhone,
+            country: extractedCountry,
           },
         };
         setOrder(mappedOrder);
@@ -489,11 +523,19 @@ export default function OrderDetailPage() {
                         <p className="text-xs md:text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                           {order.address.detail}
                         </p>
+                        {order.address.phone && (
+                          <p className="text-xs md:text-sm text-gray-700 dark:text-gray-300 mb-1">
+                            📞 {order.address.phone}
+                          </p>
+                        )}
                         <p className="text-xs md:text-sm text-gray-700 dark:text-gray-300">
                           {order.address.city}, {order.address.postalCode}
                         </p>
                         <p className="text-xs md:text-sm text-gray-700 dark:text-gray-300">
                           {order.address.province}
+                          {order.address.country && order.address.country !== order.address.province && (
+                            <>, {order.address.country}</>
+                          )}
                         </p>
                         {order.address.label && (
                           <p className="text-[11px] md:text-xs text-gray-600 dark:text-gray-400 mt-2 bg-gray-100 dark:bg-gray-600 px-2 py-1 rounded-lg inline-block">
