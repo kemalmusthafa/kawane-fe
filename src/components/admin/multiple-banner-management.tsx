@@ -344,7 +344,29 @@ export function MultipleBannerManagement({
 
   const handleDealSelect = (dealId: string) => {
     try {
-      if (!editingBannerForm || !dealId) return;
+      if (!editingBannerForm) return;
+
+      // Handle "none" value to clear deal link
+      if (dealId === "none") {
+        setEditingBannerForm((prev) =>
+          prev
+            ? {
+                ...prev,
+                dealId: undefined,
+                linkUrl: prev.linkUrl && !prev.linkUrl.startsWith("/deals/") 
+                  ? prev.linkUrl 
+                  : undefined,
+                linkText: prev.linkText && prev.linkText !== "Shop Now"
+                  ? prev.linkText
+                  : undefined,
+              }
+            : null
+        );
+        return;
+      }
+
+      // Handle actual deal selection
+      if (!dealId) return;
 
       const selectedDeal = deals?.find((deal) => deal?.id === dealId);
       if (selectedDeal) {
@@ -600,11 +622,17 @@ export function MultipleBannerManagement({
             }
           }}
         >
-          <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
+          <DialogContent 
+            className="max-w-2xl max-h-[90vh] flex flex-col"
+            aria-describedby="banner-dialog-description"
+          >
             <DialogHeader className="flex-shrink-0">
               <DialogTitle>
                 {editingBanner ? "Edit Banner" : "Add New Banner"}
               </DialogTitle>
+              <p id="banner-dialog-description" className="text-sm text-muted-foreground sr-only">
+                {editingBanner ? "Edit banner configuration and settings" : "Create a new banner with custom text, colors, and settings"}
+              </p>
             </DialogHeader>
 
             {editingBannerForm ? (
@@ -641,7 +669,7 @@ export function MultipleBannerManagement({
                         <SelectValue placeholder="Select a deal to promote" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">No deal link</SelectItem>
+                        <SelectItem value="none">No deal link</SelectItem>
                         {activeDeals.map((deal) => (
                           <SelectItem key={deal.id} value={deal.id!}>
                             {deal.title} -{" "}
