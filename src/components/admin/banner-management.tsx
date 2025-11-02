@@ -32,19 +32,20 @@ import {
   Edit,
   Trash2,
 } from "lucide-react";
-import { apiClient, Deal } from "@/lib/api";
+import { apiClient, Deal, Banner } from "@/lib/api";
 import { toast } from "sonner";
 
 interface BannerConfig {
   id?: string;
   text: string;
   isActive: boolean;
-  backgroundColor: string;
-  textColor: string;
-  linkUrl?: string;
-  linkText?: string;
-  dealId?: string;
+  backgroundColor?: string | null;
+  textColor?: string | null;
+  linkUrl?: string | null;
+  linkText?: string | null;
+  dealId?: string | null;
   priority: number;
+  duration?: number | null;
 }
 
 interface BannerManagementProps {
@@ -61,28 +62,76 @@ export function BannerManagement({ deals, onRefresh }: BannerManagementProps) {
     priority: 1,
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingBanner, setIsLoadingBanner] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Load banner config from localStorage or API
+  // Load banner config from API
   useEffect(() => {
-    const savedConfig = localStorage.getItem("banner-config");
-    if (savedConfig) {
-      setBannerConfig(JSON.parse(savedConfig));
-    }
+    const fetchBanner = async () => {
+      try {
+        setIsLoadingBanner(true);
+        const response = await apiClient.getBanners({ includeInactive: true });
+
+        if (response.data && response.data.length > 0) {
+          // Get the first active banner or the first banner if no active ones
+          const activeBanner =
+            response.data.find((b) => b.isActive) || response.data[0];
+
+          setBannerConfig({
+            id: activeBanner.id,
+            text: activeBanner.text,
+            isActive: activeBanner.isActive,
+            backgroundColor: activeBanner.backgroundColor || "bg-primary",
+            textColor: activeBanner.textColor || "text-primary-foreground",
+            linkUrl: activeBanner.linkUrl,
+            linkText: activeBanner.linkText,
+            dealId: activeBanner.dealId,
+            priority: activeBanner.priority,
+            duration: activeBanner.duration,
+          });
+        }
+      } catch (error: any) {
+        console.error("Failed to load banner:", error);
+        // Keep default config if API fails
+      } finally {
+        setIsLoadingBanner(false);
+      }
+    };
+
+    fetchBanner();
   }, []);
 
   const handleSave = async () => {
     try {
       setIsLoading(true);
 
-      // Save to localStorage for now (can be moved to API later)
-      localStorage.setItem("banner-config", JSON.stringify(bannerConfig));
+      const bannerData = {
+        text: bannerConfig.text,
+        isActive: bannerConfig.isActive,
+        backgroundColor: bannerConfig.backgroundColor || null,
+        textColor: bannerConfig.textColor || null,
+        linkUrl: bannerConfig.linkUrl || null,
+        linkText: bannerConfig.linkText || null,
+        dealId: bannerConfig.dealId || null,
+        priority: bannerConfig.priority,
+        duration: bannerConfig.duration || null,
+      };
 
-      toast.success("Banner configuration saved successfully");
+      if (bannerConfig.id) {
+        // Update existing banner
+        await apiClient.updateBanner(bannerConfig.id, bannerData);
+        toast.success("Banner updated successfully");
+      } else {
+        // Create new banner
+        const response = await apiClient.createBanner(bannerData);
+        if (response.data?.id) {
+          setBannerConfig((prev) => ({ ...prev, id: response.data!.id }));
+        }
+        toast.success("Banner created successfully");
+      }
+
       setIsDialogOpen(false);
-
-      // Trigger a page refresh to show changes
-      window.location.reload();
+      onRefresh(); // Refresh parent component
     } catch (error: any) {
       toast.error(error.message || "Failed to save banner configuration");
     } finally {
@@ -91,6 +140,16 @@ export function BannerManagement({ deals, onRefresh }: BannerManagementProps) {
   };
 
   const handleDealSelect = (dealId: string) => {
+    if (dealId === "none") {
+      setBannerConfig((prev) => ({
+        ...prev,
+        dealId: null,
+        linkUrl: null,
+        linkText: null,
+      }));
+      return;
+    }
+
     const selectedDeal = deals.find((deal) => deal.id === dealId);
     if (selectedDeal) {
       setBannerConfig((prev) => ({
@@ -128,17 +187,28 @@ export function BannerManagement({ deals, onRefresh }: BannerManagementProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Current Banner Preview */}
-        <div className="space-y-2">
-          <Label>Current Banner Preview</Label>
-          <div
-            className={`${bannerConfig.backgroundColor} ${bannerConfig.textColor} py-2 px-4 rounded-md text-center text-sm`}
-          >
-            {bannerConfig.text}
-            {bannerConfig.linkUrl && bannerConfig.linkText && (
-              <span className="ml-2 underline">{bannerConfig.linkText}</span>
-            )}
+        {isLoadingBanner ? (
+          <div className="space-y-2">
+            <Label>Loading banner...</Label>
+            <div className="py-2 px-4 rounded-md text-center text-sm bg-gray-100 animate-pulse">
+              Loading...
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="space-y-2">
+            <Label>Current Banner Preview</Label>
+            <div
+              className={`${bannerConfig.backgroundColor || "bg-primary"} ${
+                bannerConfig.textColor || "text-primary-foreground"
+              } py-2 px-4 rounded-md text-center text-sm`}
+            >
+              {bannerConfig.text}
+              {bannerConfig.linkUrl && bannerConfig.linkText && (
+                <span className="ml-2 underline">{bannerConfig.linkText}</span>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Quick Actions */}
         <div className="flex items-center gap-2">
@@ -176,12 +246,15 @@ export function BannerManagement({ deals, onRefresh }: BannerManagementProps) {
                 {activeDeals.length > 0 && (
                   <div className="space-y-2">
                     <Label>Link to Active Deal (Optional)</Label>
-                    <Select onValueChange={handleDealSelect}>
+                    <Select
+                      value={bannerConfig.dealId ?? "none"}
+                      onValueChange={handleDealSelect}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a deal to promote" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">No deal link</SelectItem>
+                        <SelectItem value="none">No deal link</SelectItem>
                         {activeDeals.map((deal) => (
                           <SelectItem key={deal.id} value={deal.id!}>
                             {deal.title} -{" "}
@@ -231,7 +304,7 @@ export function BannerManagement({ deals, onRefresh }: BannerManagementProps) {
                 <div className="space-y-2">
                   <Label>Background Color</Label>
                   <Select
-                    value={bannerConfig.backgroundColor}
+                    value={bannerConfig.backgroundColor || undefined}
                     onValueChange={(value) =>
                       setBannerConfig((prev) => ({
                         ...prev,
@@ -264,7 +337,7 @@ export function BannerManagement({ deals, onRefresh }: BannerManagementProps) {
                 <div className="space-y-2">
                   <Label>Text Color</Label>
                   <Select
-                    value={bannerConfig.textColor}
+                    value={bannerConfig.textColor || undefined}
                     onValueChange={(value) =>
                       setBannerConfig((prev) => ({ ...prev, textColor: value }))
                     }
@@ -321,7 +394,11 @@ export function BannerManagement({ deals, onRefresh }: BannerManagementProps) {
                 <div className="space-y-2">
                   <Label>Preview</Label>
                   <div
-                    className={`${bannerConfig.backgroundColor} ${bannerConfig.textColor} py-2 px-4 rounded-md text-center text-sm`}
+                    className={`${
+                      bannerConfig.backgroundColor || "bg-primary"
+                    } ${
+                      bannerConfig.textColor || "text-primary-foreground"
+                    } py-2 px-4 rounded-md text-center text-sm`}
                   >
                     {bannerConfig.text}
                     {bannerConfig.linkUrl && bannerConfig.linkText && (
@@ -355,20 +432,33 @@ export function BannerManagement({ deals, onRefresh }: BannerManagementProps) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => {
-              setBannerConfig((prev) => ({
-                ...prev,
-                isActive: !prev.isActive,
-              }));
-              localStorage.setItem(
-                "banner-config",
-                JSON.stringify({
-                  ...bannerConfig,
-                  isActive: !bannerConfig.isActive,
-                })
-              );
-              window.location.reload();
+            onClick={async () => {
+              if (!bannerConfig.id) {
+                toast.error("Please create a banner first");
+                return;
+              }
+
+              try {
+                setIsLoading(true);
+                const newIsActive = !bannerConfig.isActive;
+                await apiClient.updateBanner(bannerConfig.id, {
+                  isActive: newIsActive,
+                });
+                setBannerConfig((prev) => ({
+                  ...prev,
+                  isActive: newIsActive,
+                }));
+                toast.success(
+                  `Banner ${newIsActive ? "shown" : "hidden"} successfully`
+                );
+                onRefresh();
+              } catch (error: any) {
+                toast.error(error.message || "Failed to update banner status");
+              } finally {
+                setIsLoading(false);
+              }
             }}
+            disabled={isLoading || !bannerConfig.id}
           >
             {bannerConfig.isActive ? (
               <EyeOff className="h-4 w-4 mr-2" />

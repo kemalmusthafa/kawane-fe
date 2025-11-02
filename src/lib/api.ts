@@ -155,6 +155,21 @@ export interface Address {
   updatedAt: string;
 }
 
+export interface Banner {
+  id: string;
+  text: string;
+  isActive: boolean;
+  backgroundColor?: string | null;
+  textColor?: string | null;
+  linkUrl?: string | null;
+  linkText?: string | null;
+  dealId?: string | null;
+  priority: number;
+  duration?: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Admin Services Interfaces
 export interface Shipment {
   id: string;
@@ -624,6 +639,51 @@ class ApiClient {
 
   async deleteProduct(id: string) {
     return this.request(`/products/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  // Banner methods
+  async getBanners(params?: { isActive?: boolean; includeInactive?: boolean }) {
+    const queryParams = new URLSearchParams();
+    if (params?.isActive !== undefined) {
+      queryParams.append("isActive", params.isActive.toString());
+    }
+    if (params?.includeInactive) {
+      queryParams.append("includeInactive", "true");
+    }
+
+    return this.request<Banner[]>(
+      `/banners${queryParams.toString() ? `?${queryParams.toString()}` : ""}`
+    );
+  }
+
+  async createBanner(bannerData: {
+    text: string;
+    isActive?: boolean;
+    backgroundColor?: string | null;
+    textColor?: string | null;
+    linkUrl?: string | null;
+    linkText?: string | null;
+    dealId?: string | null;
+    priority?: number;
+    duration?: number | null;
+  }) {
+    return this.request<Banner>("/banners", {
+      method: "POST",
+      body: JSON.stringify(bannerData),
+    });
+  }
+
+  async updateBanner(id: string, bannerData: Partial<Banner>) {
+    return this.request<Banner>(`/banners/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(bannerData),
+    });
+  }
+
+  async deleteBanner(id: string) {
+    return this.request(`/banners/${id}`, {
       method: "DELETE",
     });
   }
