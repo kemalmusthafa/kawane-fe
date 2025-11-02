@@ -272,19 +272,21 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
               quantity={quantity}
               selectedSize={selectedSize}
               variant="outline"
-              className="flex-1 text-xs sm:text-sm lg:text-sm h-8 sm:h-10 lg:h-10"
+              className="w-full sm:flex-1 text-xs sm:text-sm lg:text-sm h-8 sm:h-10 lg:h-10"
               disabled={product.stock === 0}
             />
-            <AddToWishlistButton
-              product={product}
-              variant="outline"
-              size="icon"
-              className="h-8 w-8 sm:h-10 sm:w-10 lg:h-10 lg:w-10 flex-shrink-0"
-            />
+            <div className="flex justify-center sm:justify-start">
+              <AddToWishlistButton
+                product={product}
+                variant="outline"
+                size="icon"
+                className="h-8 w-8 sm:h-10 sm:w-10 lg:h-10 lg:w-10 flex-shrink-0"
+              />
+            </div>
             <Button
               onClick={handleBuyNow}
               disabled={product.stock === 0}
-              className="flex-1 text-xs sm:text-sm lg:text-sm h-8 sm:h-10 lg:h-10"
+              className="w-full sm:flex-1 text-xs sm:text-sm lg:text-sm h-8 sm:h-10 lg:h-10"
               size="lg"
             >
               <CreditCard className="w-3 h-3 sm:w-4 sm:h-4 lg:w-4 lg:h-4 mr-2" />
