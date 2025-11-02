@@ -185,20 +185,26 @@ export default function AdminDealsPage() {
             : undefined,
         maxUses: dealData.maxUses || undefined,
         // Ensure sizes are properly formatted
-        sizes: dealData.sizes && Array.isArray(dealData.sizes) && dealData.sizes.length > 0
-          ? dealData.sizes.map((s: any) => ({
-              size: s.size?.trim().toUpperCase() || s.size,
-              stock: Number(s.stock) || 0,
-            }))
-          : undefined,
+        sizes:
+          dealData.sizes &&
+          Array.isArray(dealData.sizes) &&
+          dealData.sizes.length > 0
+            ? dealData.sizes.map((s: any) => ({
+                size: s.size?.trim().toUpperCase() || s.size,
+                stock: Number(s.stock) || 0,
+              }))
+            : undefined,
       };
 
       // Debug log to verify sizes data is being sent
       console.log("Creating deal with sizes:", finalDealData.sizes);
-      console.log("Full deal data being sent:", JSON.stringify(finalDealData, null, 2));
+      console.log(
+        "Full deal data being sent:",
+        JSON.stringify(finalDealData, null, 2)
+      );
 
       const response = await apiClient.createDeal(finalDealData);
-      
+
       // Log response to verify sizes were saved
       console.log("Deal created successfully:", response);
       if (response?.dealProducts?.[0]) {
@@ -233,12 +239,29 @@ export default function AdminDealsPage() {
   const handleUpdateDeal = async (id: string, dealData: any) => {
     try {
       setIsLoading(true);
-      await apiClient.updateDeal(id, dealData);
+
+      // Ensure sizes are properly formatted
+      const finalDealData = {
+        ...dealData,
+        sizes: dealData.sizes && Array.isArray(dealData.sizes) && dealData.sizes.length > 0
+          ? dealData.sizes.map((s: any) => ({
+              size: s.size?.trim().toUpperCase() || s.size,
+              stock: Number(s.stock) || 0,
+            }))
+          : undefined,
+      };
+
+      // Debug log to verify sizes data is being sent
+      console.log("Updating deal with sizes:", finalDealData.sizes);
+      console.log("Full deal update data:", JSON.stringify(finalDealData, null, 2));
+
+      await apiClient.updateDeal(id, finalDealData);
       toast.success("Deal updated successfully");
       setIsEditDialogOpen(false);
       setSelectedDeal(null);
       refetch();
     } catch (error: any) {
+      console.error("Update deal error:", error);
       toast.error(error.message || "Failed to update deal");
     } finally {
       setIsLoading(false);
@@ -455,6 +478,7 @@ export default function AdminDealsPage() {
                     <TableHead>Status</TableHead>
                     <TableHead>Duration</TableHead>
                     <TableHead>Products</TableHead>
+                    <TableHead>Sizes</TableHead>
                     <TableHead>Created</TableHead>
                     <TableHead className="w-[50px]">Actions</TableHead>
                   </TableRow>
@@ -537,6 +561,20 @@ export default function AdminDealsPage() {
                           <Users className="h-4 w-4" />
                           {deal.dealProducts?.length || 0} products
                         </div>
+                      </TableCell>
+                      <TableCell>
+                        {deal.dealProducts?.[0]?.product?.sizes &&
+                        deal.dealProducts[0].product.sizes.length > 0 ? (
+                          <div className="flex flex-wrap gap-1">
+                            {deal.dealProducts[0].product.sizes.map((sizeItem, idx) => (
+                              <Badge key={idx} variant="outline" className="text-xs">
+                                {sizeItem.size} ({sizeItem.stock})
+                              </Badge>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-sm text-muted-foreground">No sizes</span>
+                        )}
                       </TableCell>
                       <TableCell>
                         <div className="text-sm">
@@ -875,9 +913,10 @@ function CreateDealForm({
         productDescription: formData.productDescription.trim() || undefined,
         productPrice: Number(formData.productPrice),
         sizes: validSizes.length > 0 ? validSizes : undefined,
-        productStock: validSizes.length > 0 
-          ? validSizes.reduce((sum, s) => sum + s.stock, 0)
-          : formData.productStock,
+        productStock:
+          validSizes.length > 0
+            ? validSizes.reduce((sum, s) => sum + s.stock, 0)
+            : formData.productStock,
         categoryId: formData.categoryId || undefined,
       };
 
@@ -1295,6 +1334,12 @@ function EditDealForm({
   onSubmit: (data: any) => void;
   isLoading: boolean;
 }) {
+  // Load sizes from deal product
+  const initialSizes = deal.dealProducts?.[0]?.product?.sizes?.map((s) => ({
+    size: s.size,
+    stock: s.stock,
+  })) || [];
+
   const [formData, setFormData] = useState({
     title: deal.title,
     description: deal.description || "",
@@ -1308,6 +1353,51 @@ function EditDealForm({
     maxUses: deal.maxUses?.toString() || "",
     status: deal.status,
   });
+
+  // Size management state
+  const [sizes, setSizes] = useState<Array<{ size: string; stock: number }>>(
+    initialSizes
+  );
+  const [customSizeInput, setCustomSizeInput] = useState("");
+
+  // Size options
+  const sizeOptions = [
+    { value: "XS", label: "XS" },
+    { value: "SM", label: "SM" },
+    { value: "M", label: "M" },
+    { value: "L", label: "L" },
+    { value: "XL", label: "XL" },
+    { value: "XXL", label: "XXL" },
+  ];
+
+  // Size management functions
+  const addSize = () => {
+    setSizes([...sizes, { size: "", stock: 0 }]);
+  };
+
+  const removeSize = (index: number) => {
+    setSizes(sizes.filter((_, i) => i !== index));
+  };
+
+  const updateSize = (
+    index: number,
+    field: "size" | "stock",
+    value: string | number
+  ) => {
+    const newSizes = [...sizes];
+    newSizes[index] = { ...newSizes[index], [field]: value };
+    setSizes(newSizes);
+  };
+
+  const addCustomSize = () => {
+    if (customSizeInput.trim()) {
+      setSizes([
+        ...sizes,
+        { size: customSizeInput.trim().toUpperCase(), stock: 0 },
+      ]);
+      setCustomSizeInput("");
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1348,12 +1438,40 @@ function EditDealForm({
       return;
     }
 
+    // Validate sizes if provided
+    if (sizes.length > 0) {
+      const invalidSizes = sizes.filter(
+        (sizeItem) => !sizeItem.size || sizeItem.size.trim() === ""
+      );
+      if (invalidSizes.length > 0) {
+        toast.error("All sizes must have a value");
+        return;
+      }
+
+      const invalidStocks = sizes.filter(
+        (sizeItem) => isNaN(sizeItem.stock) || sizeItem.stock < 0
+      );
+      if (invalidStocks.length > 0) {
+        toast.error("All stock values must be valid numbers (≥ 0)");
+        return;
+      }
+    }
+
+    // Filter and format sizes - only include valid ones
+    const validSizes = sizes
+      .filter((sizeItem) => sizeItem.size && sizeItem.size.trim() !== "")
+      .map((sizeItem) => ({
+        size: sizeItem.size.trim().toUpperCase(),
+        stock: Math.max(0, Number(sizeItem.stock) || 0),
+      }));
+
     onSubmit({
       ...formData,
       maxUses: formData.maxUses ? parseInt(formData.maxUses) : undefined,
       images: formData.images.length > 0 ? formData.images : undefined,
       startDate: new Date(formData.startDate).toISOString(),
       endDate: new Date(formData.endDate).toISOString(),
+      sizes: validSizes.length > 0 ? validSizes : undefined,
     });
   };
 
@@ -1490,6 +1608,129 @@ function EditDealForm({
           }
         />
         <Label htmlFor="isFlashSale">Flash Sale</Label>
+      </div>
+
+      {/* Sizes & Stock Section */}
+      <div className="border-t pt-4 mt-4">
+        <h3 className="text-lg font-semibold mb-4">Product Sizes & Stock</h3>
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label>Sizes & Stock</Label>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addSize}
+                >
+                  + Add Size
+                </Button>
+              </div>
+            </div>
+
+            {/* Custom Size Input */}
+            <div className="flex gap-2 items-center">
+              <Input
+                placeholder="Enter custom size (e.g., 28, 30, S, M, L)"
+                value={customSizeInput}
+                onChange={(e) => setCustomSizeInput(e.target.value)}
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addCustomSize}
+                disabled={!customSizeInput.trim()}
+              >
+                Add Custom
+              </Button>
+            </div>
+
+            {sizes.length === 0 ? (
+              <p className="text-sm text-gray-500">No sizes added yet</p>
+            ) : (
+              <div className="space-y-2">
+                {sizes.map((sizeItem, index) => (
+                  <div key={index} className="flex gap-2 items-center">
+                    <div className="flex gap-1">
+                      <Select
+                        value={sizeItem.size || undefined}
+                        onValueChange={(value) =>
+                          updateSize(index, "size", value)
+                        }
+                      >
+                        <SelectTrigger className="w-24">
+                          <SelectValue placeholder="Select size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sizeOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        placeholder="Custom"
+                        value={sizeItem.size}
+                        onChange={(e) =>
+                          updateSize(
+                            index,
+                            "size",
+                            e.target.value.toUpperCase()
+                          )
+                        }
+                        className="w-20"
+                      />
+                    </div>
+                    <Input
+                      type="number"
+                      placeholder="Stock"
+                      value={sizeItem.stock}
+                      onChange={(e) =>
+                        updateSize(
+                          index,
+                          "stock",
+                          parseInt(e.target.value) || 0
+                        )
+                      }
+                      className="w-20"
+                      min="0"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeSize(index)}
+                    >
+                      ×
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Total Stock Display */}
+          <div className="space-y-2">
+            <Label>Total Stock</Label>
+            <Input
+              type="number"
+              min="0"
+              value={sizes.reduce((sum, s) => sum + s.stock, 0)}
+              disabled
+              className="bg-gray-100"
+            />
+            {sizes.length > 0 && (
+              <p className="text-xs text-gray-500">
+                Stock quantity automatically calculated from sizes
+              </p>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="flex justify-end gap-3">
