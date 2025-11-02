@@ -362,7 +362,15 @@ export default function AdminDealsPage() {
         variants={contentVariants}
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
       >
-        <MultipleBannerManagement deals={deals} onRefresh={refetch} />
+        {dealsLoading ? (
+          <Card>
+            <CardContent className="p-6">
+              <p className="text-muted-foreground">Loading banner management...</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <MultipleBannerManagement deals={deals || []} onRefresh={refetch} />
+        )}
       </motion.div>
 
       {/* Search & Filter */}

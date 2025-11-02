@@ -57,7 +57,7 @@ interface MultipleBannerManagementProps {
 }
 
 export function MultipleBannerManagement({
-  deals,
+  deals = [],
   onRefresh,
 }: MultipleBannerManagementProps) {
   const [banners, setBanners] = useState<BannerConfig[]>([
@@ -79,26 +79,43 @@ export function MultipleBannerManagement({
   const [autoScrollInterval, setAutoScrollInterval] = useState(5);
   const [scrollThreshold, setScrollThreshold] = useState(100);
 
-  // Load banners from localStorage
+  // Load banners from localStorage (client-side only)
   useEffect(() => {
-    const savedBanners = localStorage.getItem("multiple-banners");
-    const savedInterval = localStorage.getItem("banner-auto-scroll-interval");
-    const savedThreshold = localStorage.getItem("banner-scroll-threshold");
+    try {
+      // Check if we're on client side
+      if (typeof window === "undefined") return;
 
-    if (savedBanners) {
-      try {
-        setBanners(JSON.parse(savedBanners));
-      } catch (error) {
-        console.error("Error parsing banners:", error);
+      const savedBanners = localStorage.getItem("multiple-banners");
+      const savedInterval = localStorage.getItem("banner-auto-scroll-interval");
+      const savedThreshold = localStorage.getItem("banner-scroll-threshold");
+
+      if (savedBanners) {
+        try {
+          const parsed = JSON.parse(savedBanners);
+          if (Array.isArray(parsed)) {
+            setBanners(parsed);
+          }
+        } catch (error) {
+          console.error("Error parsing banners:", error);
+        }
       }
-    }
 
-    if (savedInterval) {
-      setAutoScrollInterval(parseInt(savedInterval));
-    }
+      if (savedInterval) {
+        const interval = parseInt(savedInterval);
+        if (!isNaN(interval) && interval >= 2 && interval <= 30) {
+          setAutoScrollInterval(interval);
+        }
+      }
 
-    if (savedThreshold) {
-      setScrollThreshold(parseInt(savedThreshold));
+      if (savedThreshold) {
+        const threshold = parseInt(savedThreshold);
+        if (!isNaN(threshold) && threshold >= 50 && threshold <= 500) {
+          setScrollThreshold(threshold);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading banners from localStorage:", error);
+      // Don't throw, just log the error
     }
   }, []);
 
@@ -147,6 +164,9 @@ export function MultipleBannerManagement({
 
       // Save to localStorage with error handling
       try {
+        if (typeof window === "undefined") {
+          throw new Error("localStorage is not available");
+        }
         localStorage.setItem(
           "multiple-banners",
           JSON.stringify(updatedBanners)
@@ -159,9 +179,14 @@ export function MultipleBannerManagement({
           "banner-scroll-threshold",
           scrollThreshold.toString()
         );
-      } catch (storageError) {
+      } catch (storageError: any) {
         console.error("localStorage error:", storageError);
-        toast.error("Failed to save to browser storage. Please try again.");
+        toast.error(
+          storageError.message ||
+            "Failed to save to browser storage. Please try again."
+        );
+        // Revert state change on storage failure
+        setBanners(banners);
         return;
       }
 
@@ -207,101 +232,151 @@ export function MultipleBannerManagement({
   };
 
   const handleDeleteBanner = (id: string) => {
-    if (banners.length <= 1) {
-      toast.error("You must have at least one banner");
-      return;
-    }
+    try {
+      if (banners.length <= 1) {
+        toast.error("You must have at least one banner");
+        return;
+      }
 
-    if (confirm("Are you sure you want to delete this banner?")) {
-      const updatedBanners = banners.filter((banner) => banner.id !== id);
-      setBanners(updatedBanners);
+      if (confirm("Are you sure you want to delete this banner?")) {
+        const updatedBanners = banners.filter((banner) => banner.id !== id);
+        setBanners(updatedBanners);
 
-      // Save to localStorage immediately
-      localStorage.setItem("multiple-banners", JSON.stringify(updatedBanners));
-      // Dispatch custom event to notify other components
-      window.dispatchEvent(new CustomEvent("bannerUpdated"));
-      toast.success("Banner deleted successfully");
+        // Save to localStorage immediately
+        if (typeof window !== "undefined") {
+          try {
+            localStorage.setItem("multiple-banners", JSON.stringify(updatedBanners));
+            // Dispatch custom event to notify other components
+            window.dispatchEvent(new CustomEvent("bannerUpdated"));
+            toast.success("Banner deleted successfully");
+          } catch (storageError) {
+            console.error("localStorage error:", storageError);
+            toast.error("Failed to save to browser storage");
+          }
+        }
+      }
+    } catch (error: any) {
+      console.error("Error deleting banner:", error);
+      toast.error("Failed to delete banner. Please try again.");
     }
   };
 
   const handleDuplicateBanner = (banner: BannerConfig) => {
-    const duplicatedBanner: BannerConfig = {
-      ...banner,
-      id: `banner-${Date.now()}`,
-      text: `${banner.text} (Copy)`,
-      priority: banners.length + 1,
-    };
-    setBanners((prev) => [...prev, duplicatedBanner]);
+    try {
+      const duplicatedBanner: BannerConfig = {
+        ...banner,
+        id: `banner-${Date.now()}`,
+        text: `${banner.text} (Copy)`,
+        priority: banners.length + 1,
+      };
+      const updatedBanners = [...banners, duplicatedBanner];
+      setBanners(updatedBanners);
 
-    // Save to localStorage immediately
-    const updatedBanners = [...banners, duplicatedBanner];
-    localStorage.setItem("multiple-banners", JSON.stringify(updatedBanners));
-    // Dispatch custom event to notify other components
-    window.dispatchEvent(new CustomEvent("bannerUpdated"));
-    toast.success("Banner duplicated successfully");
+      // Save to localStorage immediately
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("multiple-banners", JSON.stringify(updatedBanners));
+          // Dispatch custom event to notify other components
+          window.dispatchEvent(new CustomEvent("bannerUpdated"));
+          toast.success("Banner duplicated successfully");
+        } catch (storageError) {
+          console.error("localStorage error:", storageError);
+          toast.error("Failed to save to browser storage");
+        }
+      }
+    } catch (error: any) {
+      console.error("Error duplicating banner:", error);
+      toast.error("Failed to duplicate banner. Please try again.");
+    }
   };
 
   const handleMoveBanner = (id: string, direction: "up" | "down") => {
-    setBanners((prev) => {
-      const index = prev.findIndex((banner) => banner.id === id);
-      if (index === -1) return prev;
+    try {
+      setBanners((prev) => {
+        const index = prev.findIndex((banner) => banner.id === id);
+        if (index === -1) return prev;
 
-      const newBanners = [...prev];
-      const targetIndex = direction === "up" ? index - 1 : index + 1;
+        const newBanners = [...prev];
+        const targetIndex = direction === "up" ? index - 1 : index + 1;
 
-      if (targetIndex < 0 || targetIndex >= newBanners.length) return prev;
+        if (targetIndex < 0 || targetIndex >= newBanners.length) return prev;
 
-      // Swap banners
-      [newBanners[index], newBanners[targetIndex]] = [
-        newBanners[targetIndex],
-        newBanners[index],
-      ];
+        // Swap banners
+        [newBanners[index], newBanners[targetIndex]] = [
+          newBanners[targetIndex],
+          newBanners[index],
+        ];
 
-      // Update priorities
-      newBanners.forEach((banner, idx) => {
-        banner.priority = idx + 1;
+        // Update priorities
+        newBanners.forEach((banner, idx) => {
+          banner.priority = idx + 1;
+        });
+
+        // Save to localStorage immediately
+        if (typeof window !== "undefined") {
+          try {
+            localStorage.setItem("multiple-banners", JSON.stringify(newBanners));
+            // Dispatch custom event to notify other components
+            window.dispatchEvent(new CustomEvent("bannerUpdated"));
+            toast.success("Banner order updated successfully");
+          } catch (storageError) {
+            console.error("localStorage error:", storageError);
+            toast.error("Failed to save to browser storage");
+          }
+        }
+
+        return newBanners;
       });
-
-      // Save to localStorage immediately
-      localStorage.setItem("multiple-banners", JSON.stringify(newBanners));
-      // Dispatch custom event to notify other components
-      window.dispatchEvent(new CustomEvent("bannerUpdated"));
-      toast.success("Banner order updated successfully");
-
-      return newBanners;
-    });
+    } catch (error: any) {
+      console.error("Error moving banner:", error);
+      toast.error("Failed to move banner. Please try again.");
+    }
   };
 
   const handleDealSelect = (dealId: string) => {
-    if (!editingBannerForm) return;
+    try {
+      if (!editingBannerForm || !dealId) return;
 
-    const selectedDeal = deals.find((deal) => deal.id === dealId);
-    if (selectedDeal) {
-      setEditingBannerForm((prev) =>
-        prev
-          ? {
-              ...prev,
-              dealId,
-              text: `🔥 ${selectedDeal.title} - ${
-                selectedDeal.type === "PERCENTAGE"
-                  ? `${selectedDeal.value}% OFF`
-                  : `$${selectedDeal.value} OFF`
-              }`,
-              linkUrl: `/deals/${dealId}`,
-              linkText: "Shop Now",
-            }
-          : null
-      );
+      const selectedDeal = deals?.find((deal) => deal?.id === dealId);
+      if (selectedDeal) {
+        setEditingBannerForm((prev) =>
+          prev
+            ? {
+                ...prev,
+                dealId,
+                text: `🔥 ${selectedDeal.title || "Deal"} - ${
+                  selectedDeal.type === "PERCENTAGE"
+                    ? `${selectedDeal.value}% OFF`
+                    : `$${selectedDeal.value || 0} OFF`
+                }`,
+                linkUrl: `/deals/${dealId}`,
+                linkText: "Shop Now",
+              }
+            : null
+        );
+      }
+    } catch (error: any) {
+      console.error("Error selecting deal:", error);
+      toast.error("Failed to select deal. Please try again.");
     }
   };
 
   const getActiveDeals = () => {
-    return deals.filter(
-      (deal) =>
-        deal.status === "ACTIVE" &&
-        new Date(deal.startDate) <= new Date() &&
-        new Date(deal.endDate) >= new Date()
-    );
+    try {
+      if (!deals || !Array.isArray(deals)) return [];
+      return deals.filter(
+        (deal) =>
+          deal &&
+          deal.status === "ACTIVE" &&
+          deal.startDate &&
+          deal.endDate &&
+          new Date(deal.startDate) <= new Date() &&
+          new Date(deal.endDate) >= new Date()
+      );
+    } catch (error) {
+      console.error("Error getting active deals:", error);
+      return [];
+    }
   };
 
   const activeDeals = getActiveDeals();
@@ -329,12 +404,18 @@ export function MultipleBannerManagement({
               max="30"
               value={autoScrollInterval}
               onChange={(e) => {
-                const value = parseInt(e.target.value) || 5;
-                setAutoScrollInterval(value);
-                localStorage.setItem(
-                  "banner-auto-scroll-interval",
-                  value.toString()
-                );
+                try {
+                  const value = parseInt(e.target.value) || 5;
+                  setAutoScrollInterval(value);
+                  if (typeof window !== "undefined") {
+                    localStorage.setItem(
+                      "banner-auto-scroll-interval",
+                      value.toString()
+                    );
+                  }
+                } catch (error) {
+                  console.error("Error saving auto scroll interval:", error);
+                }
               }}
             />
           </div>
@@ -347,12 +428,18 @@ export function MultipleBannerManagement({
               max="500"
               value={scrollThreshold}
               onChange={(e) => {
-                const value = parseInt(e.target.value) || 100;
-                setScrollThreshold(value);
-                localStorage.setItem(
-                  "banner-scroll-threshold",
-                  value.toString()
-                );
+                try {
+                  const value = parseInt(e.target.value) || 100;
+                  setScrollThreshold(value);
+                  if (typeof window !== "undefined") {
+                    localStorage.setItem(
+                      "banner-scroll-threshold",
+                      value.toString()
+                    );
+                  }
+                } catch (error) {
+                  console.error("Error saving scroll threshold:", error);
+                }
               }}
             />
             <p className="text-xs text-muted-foreground">
@@ -442,18 +529,27 @@ export function MultipleBannerManagement({
         <div className="flex items-center gap-2">
           <Button
             onClick={() => {
-              localStorage.setItem("multiple-banners", JSON.stringify(banners));
-              localStorage.setItem(
-                "banner-auto-scroll-interval",
-                autoScrollInterval.toString()
-              );
-              localStorage.setItem(
-                "banner-scroll-threshold",
-                scrollThreshold.toString()
-              );
-              // Dispatch custom event to notify other components
-              window.dispatchEvent(new CustomEvent("bannerUpdated"));
-              toast.success("All banners saved successfully");
+              try {
+                if (typeof window !== "undefined") {
+                  localStorage.setItem("multiple-banners", JSON.stringify(banners));
+                  localStorage.setItem(
+                    "banner-auto-scroll-interval",
+                    autoScrollInterval.toString()
+                  );
+                  localStorage.setItem(
+                    "banner-scroll-threshold",
+                    scrollThreshold.toString()
+                  );
+                  // Dispatch custom event to notify other components
+                  window.dispatchEvent(new CustomEvent("bannerUpdated"));
+                  toast.success("All banners saved successfully");
+                } else {
+                  toast.error("Browser storage is not available");
+                }
+              } catch (error: any) {
+                console.error("Error saving all banners:", error);
+                toast.error("Failed to save banners. Please try again.");
+              }
             }}
             disabled={isLoading}
           >
