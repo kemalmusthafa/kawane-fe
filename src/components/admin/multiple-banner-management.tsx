@@ -181,18 +181,23 @@ export function MultipleBannerManagement({
   };
 
   const handleAddBanner = () => {
-    const newBanner: BannerConfig = {
-      id: `banner-${Date.now()}`,
-      text: "New banner text",
-      isActive: true,
-      backgroundColor: "bg-primary",
-      textColor: "text-primary-foreground",
-      priority: banners.length + 1,
-      duration: 5,
-    };
-    setEditingBanner(null); // Set to null for new banner
-    setEditingBannerForm({ ...newBanner });
-    setIsDialogOpen(true);
+    try {
+      const newBanner: BannerConfig = {
+        id: `banner-${Date.now()}`,
+        text: "New banner text",
+        isActive: true,
+        backgroundColor: "bg-primary",
+        textColor: "text-primary-foreground",
+        priority: banners.length + 1,
+        duration: 5,
+      };
+      setEditingBanner(null); // Set to null for new banner
+      setEditingBannerForm({ ...newBanner });
+      setIsDialogOpen(true);
+    } catch (error: any) {
+      console.error("Error adding banner:", error);
+      toast.error("Failed to open add banner dialog. Please try again.");
+    }
   };
 
   const handleEditBanner = (banner: BannerConfig) => {
@@ -476,7 +481,17 @@ export function MultipleBannerManagement({
         )}
 
         {/* Edit Banner Dialog */}
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog
+          open={isDialogOpen}
+          onOpenChange={(open) => {
+            setIsDialogOpen(open);
+            if (!open) {
+              // Reset form when dialog closes
+              setEditingBanner(null);
+              setEditingBannerForm(null);
+            }
+          }}
+        >
           <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
             <DialogHeader className="flex-shrink-0">
               <DialogTitle>
@@ -484,7 +499,7 @@ export function MultipleBannerManagement({
               </DialogTitle>
             </DialogHeader>
 
-            {editingBannerForm && (
+            {editingBannerForm ? (
               <div className="flex-1 overflow-y-auto space-y-4 pr-2">
                 {/* Banner Text */}
                 <div className="space-y-2">
@@ -682,6 +697,10 @@ export function MultipleBannerManagement({
                       )}
                   </div>
                 </div>
+              </div>
+            ) : (
+              <div className="flex-1 flex items-center justify-center py-8">
+                <p className="text-muted-foreground">Loading banner form...</p>
               </div>
             )}
 
