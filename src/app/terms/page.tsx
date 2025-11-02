@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { CartDrawer } from "@/components/home/cart-drawer";
 import { HomeFooter } from "@/components/home/footer";
 import { HomeNavigation } from "@/components/home/navigation";
 
@@ -166,7 +165,6 @@ export default function TermsPage() {
         </div>
       </main>
       <HomeFooter />
-      <CartDrawer />
     </div>
   );
 }
