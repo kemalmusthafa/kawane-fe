@@ -1,25 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Loader2, Mail, Phone, MapPin, Clock, Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "sonner";
-
-const contactSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  subject: z.string().min(5, "Subject must be at least 5 characters"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
-});
-
-type ContactFormData = z.infer<typeof contactSchema>;
+import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 const contactInfo = [
   {
@@ -32,22 +14,22 @@ const contactInfo = [
   {
     icon: Phone,
     title: "Call Us",
-    description: "Mon-Fri from 8am to 5pm",
-    details: "+62 21 1234 5678",
-    action: "tel:+622112345678",
+    description: "24/7 Customer Support",
+    details: "+62 857 1309 3129",
+    action: "tel:+685713093129",
   },
   {
     icon: MapPin,
     title: "Visit Us",
     description: "Come say hello at our office",
-    details: "Jakarta, Indonesia",
+    details: "Bandung, Indonesia",
     action: "https://maps.google.com",
   },
   {
     icon: Clock,
     title: "Business Hours",
     description: "We're here to help",
-    details: "Mon-Fri: 8am-5pm\nSat: 9am-3pm",
+    details: "Day and Night",
     action: null,
   },
 ];
@@ -64,9 +46,9 @@ const faqs = [
       "We offer a 30-day return policy for most items. Items must be in original condition with tags attached.",
   },
   {
-    question: "Do you ship internationally?",
+    question: "How do I update my shipping address?",
     answer:
-      "Yes, we ship to over 25 countries worldwide. Shipping costs and delivery times vary by location.",
+      "You can update your shipping address in your account settings under 'Addresses'.",
   },
   {
     question: "How can I contact customer support?",
@@ -76,32 +58,6 @@ const faqs = [
 ];
 
 export function ContactContent() {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<ContactFormData>({
-    resolver: zodResolver(contactSchema),
-  });
-
-  const onSubmit = async (data: ContactFormData) => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      toast.success("Message sent successfully! We'll get back to you soon.");
-      reset();
-    } catch (error) {
-      toast.error("Failed to send message. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="space-y-16 text-stable">
       {/* Header */}
@@ -151,190 +107,31 @@ export function ContactContent() {
         ))}
       </div>
 
-      {/* Contact Form & Map */}
-      <div className="grid lg:grid-cols-2 gap-12">
-        {/* Contact Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base sm:text-lg lg:text-xl font-semibold">
-              Send us a Message
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="space-y-3 sm:space-y-4"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                <div className="space-y-1 sm:space-y-2">
-                  <Label
-                    htmlFor="name"
-                    className="text-xs sm:text-sm lg:text-base font-medium"
-                  >
-                    Name
-                  </Label>
-                  <Input
-                    id="name"
-                    placeholder="Your name"
-                    {...register("name")}
-                    className={`text-xs sm:text-sm lg:text-base ${
-                      errors.name ? "border-destructive" : ""
-                    }`}
-                  />
-                  {errors.name && (
-                    <p className="text-[10px] sm:text-xs lg:text-sm text-destructive leading-tight">
-                      {errors.name.message}
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-1 sm:space-y-2">
-                  <Label
-                    htmlFor="email"
-                    className="text-xs sm:text-sm lg:text-base font-medium"
-                  >
-                    Email
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="your@email.com"
-                    {...register("email")}
-                    className={`text-xs sm:text-sm lg:text-base ${
-                      errors.email ? "border-destructive" : ""
-                    }`}
-                  />
-                  {errors.email && (
-                    <p className="text-[10px] sm:text-xs lg:text-sm text-destructive leading-tight">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-1 sm:space-y-2">
-                <Label
-                  htmlFor="subject"
-                  className="text-xs sm:text-sm lg:text-base font-medium"
-                >
-                  Subject
-                </Label>
-                <Input
-                  id="subject"
-                  placeholder="What's this about?"
-                  {...register("subject")}
-                  className={`text-xs sm:text-sm lg:text-base ${
-                    errors.subject ? "border-destructive" : ""
-                  }`}
-                />
-                {errors.subject && (
-                  <p className="text-[10px] sm:text-xs lg:text-sm text-destructive leading-tight">
-                    {errors.subject.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-1 sm:space-y-2">
-                <Label
-                  htmlFor="message"
-                  className="text-xs sm:text-sm lg:text-base font-medium"
-                >
-                  Message
-                </Label>
-                <Textarea
-                  id="message"
-                  placeholder="Tell us how we can help..."
-                  rows={4}
-                  {...register("message")}
-                  className={`text-xs sm:text-sm lg:text-base resize-none ${
-                    errors.message ? "border-destructive" : ""
-                  }`}
-                />
-                {errors.message && (
-                  <p className="text-[10px] sm:text-xs lg:text-sm text-destructive leading-tight">
-                    {errors.message.message}
-                  </p>
-                )}
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full text-xs sm:text-sm lg:text-base font-medium"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                    Send Message
-                  </>
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Map Placeholder */}
-        <div className="space-y-4 sm:space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base sm:text-lg lg:text-xl font-semibold">
-                Find Us
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="w-full h-48 sm:h-56 lg:h-64 bg-muted rounded-lg flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-xs sm:text-sm lg:text-base text-muted-foreground font-medium">
-                    Interactive Map
-                  </p>
-                  <p className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground leading-relaxed">
-                    Jakarta, Indonesia
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick Links */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base sm:text-lg lg:text-xl font-semibold">
-                Quick Links
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 sm:space-y-3">
-              <a
-                href="/home/shipping"
-                className="block text-xs sm:text-sm lg:text-base text-primary hover:text-primary/80 font-medium leading-tight transition-colors"
-              >
-                Shipping Information
-              </a>
-              <a
-                href="/home/returns"
-                className="block text-xs sm:text-sm lg:text-base text-primary hover:text-primary/80 font-medium leading-tight transition-colors"
-              >
-                Returns & Exchanges
-              </a>
-              <a
-                href="/home/faq"
-                className="block text-xs sm:text-sm lg:text-base text-primary hover:text-primary/80 font-medium leading-tight transition-colors"
-              >
-                Frequently Asked Questions
-              </a>
-              <a
-                href="/home/size-guide"
-                className="block text-xs sm:text-sm lg:text-base text-primary hover:text-primary/80 font-medium leading-tight transition-colors"
-              >
-                Size Guide
-              </a>
-            </CardContent>
-          </Card>
+      {/* Google Maps */}
+      <div className="w-full">
+        <div className="w-full h-[400px] sm:h-[500px] lg:h-[600px] rounded-lg overflow-hidden shadow-lg border">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.3345021545043!2d106.82201567497814!3d-6.208763693739153!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTInMzEuNyJTIDEwNsKwNTAnNDQuMiJF!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="w-full h-full"
+            title="Kawane Studio Location"
+          />
         </div>
+        <p className="text-center mt-4 text-xs sm:text-sm text-muted-foreground">
+          <a
+            href="https://maps.app.goo.gl/8AQEotFPyQVFB7Df8"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:text-primary/80 underline"
+          >
+            Buka di Google Maps
+          </a>
+        </p>
       </div>
 
       {/* FAQ Section */}
