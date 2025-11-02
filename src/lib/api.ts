@@ -1341,7 +1341,12 @@ class ApiClient {
     });
   }
 
-  async addDealToCart(dealId: string, productId: string, quantity: number) {
+  async addDealToCart(
+    dealId: string,
+    productId: string,
+    quantity: number,
+    size?: string
+  ) {
     return this.request<{
       cartItem: {
         id: string;
@@ -1362,7 +1367,7 @@ class ApiClient {
       };
     }>("/cart/add-deal", {
       method: "POST",
-      body: JSON.stringify({ dealId, productId, quantity }),
+      body: JSON.stringify({ dealId, productId, quantity, size }),
     });
   }
 

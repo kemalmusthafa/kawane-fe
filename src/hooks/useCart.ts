@@ -29,9 +29,10 @@ export const useCart = () => {
   const addDealItem = async (
     dealId: string,
     productId: string,
-    quantity: number = 1
+    quantity: number = 1,
+    selectedSize?: string
   ) => {
-    return addDealToCart(dealId, productId, quantity);
+    return addDealToCart(dealId, productId, quantity, selectedSize);
   };
 
   const removeItem = async (cartItemId: string) => {

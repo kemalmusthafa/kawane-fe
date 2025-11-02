@@ -952,7 +952,8 @@ export const useCartApi = () => {
   const addDealToCart = async (
     dealId: string,
     productId: string,
-    quantity: number
+    quantity: number,
+    size?: string
   ) => {
     if (!isAuthenticated) {
       throw new Error("Login required to add deals to cart");
@@ -961,7 +962,8 @@ export const useCartApi = () => {
       const response = await apiClient.addDealToCart(
         dealId,
         productId,
-        quantity
+        quantity,
+        size
       );
       if (response.success) {
         mutate();
