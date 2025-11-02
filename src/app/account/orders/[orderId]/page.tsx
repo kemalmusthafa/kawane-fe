@@ -126,8 +126,10 @@ export default function OrderDetailPage() {
         };
 
         // Extract phone and country from notes if available
-        let extractedPhone = addressData.phone || (orderData as any).user?.phone;
-        let extractedCountry = addressData.country || addressData.province || "Indonesia";
+        // Address data from API might not have phone/country directly
+        const addressDataWithExtras = addressData as any;
+        let extractedPhone = addressDataWithExtras.phone || (orderData as any).user?.phone;
+        let extractedCountry = addressDataWithExtras.country || addressData.province || "Indonesia";
         
         if (orderData.notes) {
           // Try to extract phone from notes (format: "Phone: +62...")

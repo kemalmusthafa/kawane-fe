@@ -186,12 +186,13 @@ export const createOrderMessage = (orderData: {
     message += `\n${orderData.address.detail}`;
     
     // Try to get phone from address, user, or notes
-    let addressPhone = orderData.address.phone;
+    const addressDataWithExtras = orderData.address as any;
+    let addressPhone = addressDataWithExtras?.phone;
     if (!addressPhone && (orderData as any).user?.phone) {
       addressPhone = (orderData as any).user.phone;
     }
-    if (!addressPhone && orderData.notes) {
-      const phoneMatch = orderData.notes.match(/Phone:\s*([^|]+)/);
+    if (!addressPhone && (orderData as any).notes) {
+      const phoneMatch = (orderData as any).notes.match(/Phone:\s*([^|]+)/);
       if (phoneMatch) {
         addressPhone = phoneMatch[1].trim();
       }
@@ -204,9 +205,9 @@ export const createOrderMessage = (orderData: {
     message += `\n${orderData.address.province}`;
     
     // Try to get country from address or notes
-    let addressCountry = orderData.address.country;
-    if (!addressCountry && orderData.notes) {
-      const countryMatch = orderData.notes.match(/Country:\s*([^|]+)/);
+    let addressCountry = addressDataWithExtras?.country;
+    if (!addressCountry && (orderData as any).notes) {
+      const countryMatch = (orderData as any).notes.match(/Country:\s*([^|]+)/);
       if (countryMatch) {
         addressCountry = countryMatch[1].trim();
       }
