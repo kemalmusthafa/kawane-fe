@@ -195,12 +195,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
               <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3">
                 Select Size
               </h3>
-              <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-1.5 sm:gap-2 mb-4 sm:mb-6">
+              <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-1 sm:gap-1.5 lg:gap-2 mb-4 sm:mb-6">
                 {product.sizes.map((sizeItem) => (
                   <button
                     key={sizeItem.id}
                     onClick={() => setSelectedSize(sizeItem.size)}
-                    className={`p-1.5 sm:p-2 border rounded-md text-center transition-colors ${
+                    className={`p-1 sm:p-1.5 lg:p-2 border rounded-md text-center transition-colors ${
                       selectedSize === sizeItem.size
                         ? "border-blue-500 bg-blue-500 text-white dark:border-blue-500 dark:bg-blue-500 dark:text-white"
                         : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
@@ -266,27 +266,25 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
           </div>
 
           {/* Action Buttons */}
-          <div className="space-y-3 sm:space-y-4">
-            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 lg:space-x-3">
-              <AddToCartButton
-                product={product}
-                quantity={quantity}
-                selectedSize={selectedSize}
-                variant="outline"
-                className="flex-1 text-xs sm:text-sm lg:text-sm h-8 sm:h-10 lg:h-10"
-                disabled={product.stock === 0}
-              />
-              <AddToWishlistButton
-                product={product}
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 sm:h-10 sm:w-10 lg:h-10 lg:w-10 flex-shrink-0"
-              />
-            </div>
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 lg:gap-3">
+            <AddToCartButton
+              product={product}
+              quantity={quantity}
+              selectedSize={selectedSize}
+              variant="outline"
+              className="flex-1 text-xs sm:text-sm lg:text-sm h-8 sm:h-10 lg:h-10"
+              disabled={product.stock === 0}
+            />
+            <AddToWishlistButton
+              product={product}
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 sm:h-10 sm:w-10 lg:h-10 lg:w-10 flex-shrink-0"
+            />
             <Button
               onClick={handleBuyNow}
               disabled={product.stock === 0}
-              className="w-full text-xs sm:text-sm lg:text-sm h-8 sm:h-10 lg:h-10"
+              className="flex-1 text-xs sm:text-sm lg:text-sm h-8 sm:h-10 lg:h-10"
               size="lg"
             >
               <CreditCard className="w-3 h-3 sm:w-4 sm:h-4 lg:w-4 lg:h-4 mr-2" />
@@ -298,19 +296,19 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
-              <span className="text-sm sm:text-base font-medium leading-tight">
+              <span className="text-xs sm:text-sm lg:text-base font-medium leading-tight">
                 Free Shipping
               </span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 flex-shrink-0" />
-              <span className="text-sm sm:text-base font-medium leading-tight">
+              <span className="text-xs sm:text-sm lg:text-base font-medium leading-tight">
                 Secure Payment
               </span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Package className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500 flex-shrink-0" />
-              <span className="text-sm sm:text-base font-medium leading-tight">
+              <span className="text-xs sm:text-sm lg:text-base font-medium leading-tight whitespace-nowrap">
                 Quality Guarantee
               </span>
             </div>
