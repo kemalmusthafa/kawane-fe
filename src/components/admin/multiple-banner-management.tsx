@@ -353,12 +353,14 @@ export function MultipleBannerManagement({
             ? {
                 ...prev,
                 dealId: undefined,
-                linkUrl: prev.linkUrl && !prev.linkUrl.startsWith("/deals/") 
-                  ? prev.linkUrl 
-                  : undefined,
-                linkText: prev.linkText && prev.linkText !== "Shop Now"
-                  ? prev.linkText
-                  : undefined,
+                linkUrl:
+                  prev.linkUrl && !prev.linkUrl.startsWith("/deals/")
+                    ? prev.linkUrl
+                    : undefined,
+                linkText:
+                  prev.linkText && prev.linkText !== "Shop Now"
+                    ? prev.linkText
+                    : undefined,
               }
             : null
         );
@@ -622,7 +624,7 @@ export function MultipleBannerManagement({
             }
           }}
         >
-          <DialogContent 
+          <DialogContent
             className="max-w-2xl max-h-[90vh] flex flex-col"
             aria-describedby="banner-dialog-description"
           >
@@ -630,8 +632,13 @@ export function MultipleBannerManagement({
               <DialogTitle>
                 {editingBanner ? "Edit Banner" : "Add New Banner"}
               </DialogTitle>
-              <p id="banner-dialog-description" className="text-sm text-muted-foreground sr-only">
-                {editingBanner ? "Edit banner configuration and settings" : "Create a new banner with custom text, colors, and settings"}
+              <p
+                id="banner-dialog-description"
+                className="text-sm text-muted-foreground sr-only"
+              >
+                {editingBanner
+                  ? "Edit banner configuration and settings"
+                  : "Create a new banner with custom text, colors, and settings"}
               </p>
             </DialogHeader>
 

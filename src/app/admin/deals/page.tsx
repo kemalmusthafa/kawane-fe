@@ -184,9 +184,26 @@ export default function AdminDealsPage() {
             ? dealData.image.trim()
             : undefined,
         maxUses: dealData.maxUses || undefined,
+        // Ensure sizes are properly formatted
+        sizes: dealData.sizes && Array.isArray(dealData.sizes) && dealData.sizes.length > 0
+          ? dealData.sizes.map((s: any) => ({
+              size: s.size?.trim().toUpperCase() || s.size,
+              stock: Number(s.stock) || 0,
+            }))
+          : undefined,
       };
 
+      // Debug log to verify sizes data is being sent
+      console.log("Creating deal with sizes:", finalDealData.sizes);
+      console.log("Full deal data being sent:", JSON.stringify(finalDealData, null, 2));
+
       const response = await apiClient.createDeal(finalDealData);
+      
+      // Log response to verify sizes were saved
+      console.log("Deal created successfully:", response);
+      if (response?.dealProducts?.[0]) {
+        console.log("Saved product data:", response.dealProducts[0]);
+      }
       toast.success("Deal created successfully");
       setIsCreateDialogOpen(false);
       refetch();
@@ -638,17 +655,9 @@ function CreateDealForm({
 
   // Size management functions
   const addSize = () => {
-    if (customSizeInput.trim()) {
-      // Add custom size
-      setSizes([
-        ...sizes,
-        { size: customSizeInput.trim().toUpperCase(), stock: 0 },
-      ]);
-      setCustomSizeInput("");
-    } else {
-      // Add empty size for dropdown selection
-      setSizes([...sizes, { size: "", stock: 0 }]);
-    }
+    // Add empty size row for dropdown/input selection
+    // User will select size from dropdown or enter custom size
+    setSizes([...sizes, { size: "", stock: 0 }]);
   };
 
   const removeSize = (index: number) => {
@@ -820,6 +829,33 @@ function CreateDealForm({
         return;
       }
 
+      // Validate sizes if provided
+      if (sizes.length > 0) {
+        const invalidSizes = sizes.filter(
+          (sizeItem) => !sizeItem.size || sizeItem.size.trim() === ""
+        );
+        if (invalidSizes.length > 0) {
+          toast.error("All sizes must have a value");
+          return;
+        }
+
+        const invalidStocks = sizes.filter(
+          (sizeItem) => isNaN(sizeItem.stock) || sizeItem.stock < 0
+        );
+        if (invalidStocks.length > 0) {
+          toast.error("All stock values must be valid numbers (≥ 0)");
+          return;
+        }
+      }
+
+      // Filter and format sizes - only include valid ones
+      const validSizes = sizes
+        .filter((sizeItem) => sizeItem.size && sizeItem.size.trim() !== "")
+        .map((sizeItem) => ({
+          size: sizeItem.size.trim().toUpperCase(),
+          stock: Math.max(0, Number(sizeItem.stock) || 0),
+        }));
+
       const submitData = {
         title: formData.title.trim(),
         description: formData.description.trim() || undefined,
@@ -838,10 +874,16 @@ function CreateDealForm({
         productName: formData.productName.trim(),
         productDescription: formData.productDescription.trim() || undefined,
         productPrice: Number(formData.productPrice),
-        sizes: sizes.length > 0 ? sizes : undefined,
-        productStock: formData.productStock,
+        sizes: validSizes.length > 0 ? validSizes : undefined,
+        productStock: validSizes.length > 0 
+          ? validSizes.reduce((sum, s) => sum + s.stock, 0)
+          : formData.productStock,
         categoryId: formData.categoryId || undefined,
       };
+
+      // Debug log to verify sizes data
+      console.log("Submitting deal with sizes:", validSizes);
+      console.log("Full submit data:", JSON.stringify(submitData, null, 2));
 
       onSubmit(submitData);
     } catch (error: any) {
@@ -1095,13 +1137,13 @@ function CreateDealForm({
                   <div key={index} className="flex gap-2 items-center">
                     <div className="flex gap-1">
                       <Select
-                        value={sizeItem.size}
+                        value={sizeItem.size || undefined}
                         onValueChange={(value) =>
                           updateSize(index, "size", value)
                         }
                       >
                         <SelectTrigger className="w-24">
-                          <SelectValue placeholder="Size" />
+                          <SelectValue placeholder="Select size" />
                         </SelectTrigger>
                         <SelectContent>
                           {sizeOptions.map((option) => (
