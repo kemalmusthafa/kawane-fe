@@ -148,14 +148,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
         {/* Product Info */}
         <div className="space-y-4 sm:space-y-6">
           <div>
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
               {product.name}
             </h1>
             <div className="flex items-center space-x-2 sm:space-x-4 mb-3 sm:mb-4">
               <div className="flex items-center space-x-1 sm:space-x-2">
                 {renderStars(0)}
-                <span className="text-xs sm:text-sm text-gray-600">0.0</span>
-                <span className="text-xs sm:text-sm text-gray-500">
+                <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400">0.0</span>
+                <span className="text-sm sm:text-base text-gray-500 dark:text-gray-500">
                   (0 reviews)
                 </span>
               </div>
@@ -176,31 +176,31 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                   : "Out of Stock"}
               </Badge>
             </div>
-            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-600 dark:text-blue-400">
               Rp {product.price.toLocaleString("id-ID")}
             </p>
           </div>
 
           <div>
-            <h3 className="text-xs sm:text-sm font-semibold mb-2">
+            <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3">
               Description
             </h3>
-            <div className="text-xs sm:text-sm text-gray-600 whitespace-pre-line">
+            <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300 whitespace-pre-line leading-relaxed">
               {product.description}
             </div>
           </div>
 
           {product.sizes && product.sizes.length > 0 && (
             <div>
-              <h3 className="text-xs sm:text-sm font-semibold mb-2">
+              <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3">
                 Select Size
               </h3>
-              <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-1.5 sm:gap-2 mb-4 sm:mb-6">
+              <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-2.5 mb-4 sm:mb-6">
                 {product.sizes.map((sizeItem) => (
                   <button
                     key={sizeItem.id}
                     onClick={() => setSelectedSize(sizeItem.size)}
-                    className={`p-1.5 sm:p-2 border rounded-md text-center transition-colors ${
+                    className={`p-2 sm:p-2.5 border rounded-md text-center transition-colors ${
                       selectedSize === sizeItem.size
                         ? "border-blue-500 bg-blue-500 text-white dark:border-blue-500 dark:bg-blue-500 dark:text-white"
                         : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
@@ -211,14 +211,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                     }`}
                     disabled={sizeItem.stock === 0}
                   >
-                    <div className="text-[10px] sm:text-xs font-medium">
+                    <div className="text-xs sm:text-sm font-medium">
                       {sizeItem.size}
                     </div>
                   </button>
                 ))}
               </div>
               {selectedSize && (
-                <p className="text-sm sm:text-base text-green-600 mb-2 text-left">
+                <p className="text-sm sm:text-base text-green-600 dark:text-green-400 mb-2 text-left">
                   ✓ Size {selectedSize} selected
                 </p>
               )}
@@ -227,7 +227,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
 
           {/* Quantity Selector */}
           <div className="flex items-center space-x-2 sm:space-x-4">
-            <Label htmlFor="quantity" className="text-xs sm:text-sm">
+            <Label htmlFor="quantity" className="text-sm sm:text-base font-medium">
               Quantity:
             </Label>
             <div className="flex items-center space-x-1 sm:space-x-2">
@@ -297,19 +297,19 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
-              <span className="text-xs sm:text-sm lg:text-sm">
+              <span className="text-sm sm:text-base font-medium">
                 Free Shipping
               </span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-              <span className="text-xs sm:text-sm lg:text-sm">
+              <span className="text-sm sm:text-base font-medium">
                 Secure Payment
               </span>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-3">
               <Package className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
-              <span className="text-xs sm:text-sm lg:text-sm">
+              <span className="text-sm sm:text-base font-medium">
                 Quality Guarantee
               </span>
             </div>

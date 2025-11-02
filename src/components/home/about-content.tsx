@@ -102,7 +102,7 @@ export function AboutContent() {
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 sm:mb-6">
           About <span className="text-primary">Kawane Studio</span>
         </h1>
-        <p className="text-sm sm:text-base text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base md:text-base text-muted-foreground max-w-4xl mx-auto leading-relaxed px-4 sm:px-0">
           We're passionate about bringing you the finest products with
           exceptional service. Since our founding, we've been committed to
           quality, innovation, and customer satisfaction.
@@ -136,8 +136,8 @@ export function AboutContent() {
             >
               <CardContent className="p-4 sm:p-6" ref={elementRef}>
                 <stat.icon className="h-6 w-6 sm:h-8 sm:w-8 text-primary mx-auto mb-2 sm:mb-3" />
-                <div className="flex items-baseline justify-center gap-1 mb-1">
-                  <div className="text-lg sm:text-xl font-semibold text-primary">
+                <div className="flex items-baseline justify-center gap-1 mb-1 sm:mb-2">
+                  <div className="text-base sm:text-lg md:text-xl font-semibold text-primary">
                     {count}
                   </div>
                   {stat.suffix && (
@@ -161,7 +161,7 @@ export function AboutContent() {
           <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
             Our Story
           </h2>
-          <div className="space-y-4 text-sm sm:text-base text-muted-foreground">
+          <div className="space-y-3 sm:space-y-4 text-sm sm:text-base text-muted-foreground leading-relaxed">
             <p>
               Kawane is a local brand born from personal concerns and makes it
               the core of the creative process. Based on a blend of streetwear

@@ -23,11 +23,11 @@ export function HeroSection() {
           transition={{ duration: 0.8 }}
           className="max-w-6xl mx-auto"
         >
-          <h1 className="font-pragmatica font-[700] tracking-[-0.02em] leading-[0.95] uppercase text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mb-2 sm:mb-3 md:mb-4 bg-gradient-to-r from-foreground to-muted-foreground dark:from-foreground dark:to-primary bg-clip-text text-transparent">
+          <h1 className="font-pragmatica font-[700] tracking-[-0.02em] leading-[0.95] uppercase text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-2 sm:mb-3 md:mb-4 bg-gradient-to-r from-foreground to-muted-foreground dark:from-foreground dark:to-primary bg-clip-text text-transparent">
             Discover Premium Quality
           </h1>
 
-          <p className="font-pragmatica tracking-[0.02em] text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground dark:text-muted-foreground mb-3 sm:mb-4 md:mb-5 max-w-2xl mx-auto leading-relaxed px-4 sm:px-0">
+          <p className="font-pragmatica tracking-[0.02em] text-sm sm:text-base md:text-base lg:text-lg text-muted-foreground dark:text-muted-foreground mb-3 sm:mb-4 md:mb-5 max-w-2xl mx-auto leading-relaxed px-4 sm:px-0">
             Experience exceptional craftsmanship and timeless design. Shop our
             curated collection of premium products that elevate your lifestyle.
           </p>

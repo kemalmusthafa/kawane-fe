@@ -146,8 +146,8 @@ export function FeaturedCategories() {
                       />
                       <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
                     </div>
-                    <div className="p-2 sm:p-3 lg:p-4 text-center">
-                      <h3 className="text-sm sm:text-base font-medium mb-1 group-hover:text-primary transition-colors line-clamp-1">
+                    <div className="p-2.5 sm:p-3 lg:p-4 text-center">
+                      <h3 className="text-xs sm:text-sm md:text-base font-medium mb-1 group-hover:text-primary transition-colors line-clamp-1">
                         {category.name}
                       </h3>
                     </div>

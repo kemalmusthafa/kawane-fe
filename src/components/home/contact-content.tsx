@@ -8,7 +8,7 @@ const contactInfo = [
     icon: Mail,
     title: "Email Us",
     description: "Send us an email anytime",
-    details: "kawane.studio1921@gmail.com",
+    details: "kawanestudio.com",
     action: "mailto:kawane.studio1921@gmail.com",
   },
   {
