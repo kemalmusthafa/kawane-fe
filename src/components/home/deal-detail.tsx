@@ -275,12 +275,12 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
                 <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3">
                   Select Size
                 </h3>
-                <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-2.5 mb-4 sm:mb-6">
+                <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-2 mb-4 sm:mb-6">
                   {deal.dealProducts[0].product.sizes.map((sizeItem) => (
                     <button
                       key={sizeItem.id}
                       onClick={() => setSelectedSize(sizeItem.size)}
-                      className={`p-2 sm:p-2.5 border rounded-md text-center transition-colors ${
+                      className={`px-2.5 py-1.5 sm:px-3 sm:py-2 border rounded-md text-center transition-colors ${
                         selectedSize === sizeItem.size
                           ? "border-blue-500 bg-blue-500 text-white dark:border-blue-500 dark:bg-blue-500 dark:text-white"
                           : "border-gray-300 hover:border-gray-400 bg-white text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500"
@@ -316,14 +316,15 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
               <Label htmlFor="quantity" className="text-sm sm:text-base font-medium">
                 Quantity:
               </Label>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1 sm:space-x-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   disabled={quantity <= 1}
+                  className="h-7 w-7 sm:h-8 sm:w-8 p-0"
                 >
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
                 <Input
                   id="quantity"
@@ -332,15 +333,16 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
                   onChange={(e) =>
                     setQuantity(Math.max(1, parseInt(e.target.value) || 1))
                   }
-                  className="w-20 text-center"
+                  className="w-12 sm:w-16 text-center text-xs sm:text-sm h-7 sm:h-8"
                   min="1"
                 />
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setQuantity(quantity + 1)}
+                  className="h-7 w-7 sm:h-8 sm:w-8 p-0"
                 >
-                  <Plus className="h-4 w-4" />
+                  <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </div>
             </div>
@@ -352,7 +354,7 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
                 quantity={quantity}
                 selectedSize={selectedSize}
                 variant="outline"
-                className="flex-1"
+                className="flex-1 text-xs sm:text-sm h-9 sm:h-10"
                 disabled={
                   !deal.dealProducts ||
                   deal.dealProducts.length === 0 ||
@@ -370,10 +372,10 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
                     deal.dealProducts[0].product.sizes.length > 0 &&
                     !selectedSize)
                 }
-                className="flex-1"
-                size="lg"
+                className="flex-1 text-xs sm:text-sm h-9 sm:h-10"
+                size="default"
               >
-                <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                <CreditCard className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
                 Buy Now
               </Button>
             </div>

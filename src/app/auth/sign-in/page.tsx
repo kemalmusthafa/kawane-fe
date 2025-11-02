@@ -22,14 +22,14 @@ const formVariants = {
 export default function SignInPage() {
   return (
     <motion.div
-      className="flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8"
+      className="flex items-center justify-center bg-background py-6 sm:py-8 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-200px)]"
       variants={pageVariants}
       initial="hidden"
       animate="visible"
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <motion.div
-        className="max-w-md w-full space-y-8"
+        className="max-w-md w-full space-y-6"
         variants={formVariants}
         transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
       >
@@ -38,7 +38,7 @@ export default function SignInPage() {
           variants={headerVariants}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
         >
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
+          <h2 className="mt-2 sm:mt-4 text-2xl sm:text-3xl font-bold text-gray-900">
             Sign in to your account
           </h2>
           <p className="mt-2 text-sm text-gray-600">
