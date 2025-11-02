@@ -9,6 +9,10 @@ import { CartProvider } from "@/components/providers/cart-provider-backend";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import {
+  OrganizationStructuredData,
+  WebsiteStructuredData,
+} from "@/components/seo/structured-data";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -17,10 +21,11 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Kawane Studio - Premium E-commerce Platform",
+  title: "Kawane Studio - Premium E-commerce Platform | Fashion & Lifestyle",
   description:
-    "Discover premium products with exceptional quality and service at Kawane Studio. Shop the latest trends with confidence.",
-  keywords: "e-commerce, online shopping, premium products, fashion, lifestyle",
+    "Kawane Studio - Discover premium products with exceptional quality and service. Shop fashion, lifestyle products, and trending items with confidence. Kawane Studio offers the best quality products for your needs.",
+  keywords:
+    "kawane, kawane studio, kawanestudio, kawane fashion, kawane lifestyle, premium products, e-commerce, online shopping, fashion indonesia, lifestyle brand, kawane store, kawane products",
   authors: [{ name: "Kawane Studio" }],
   creator: "Kawane Studio",
   publisher: "Kawane Studio",
@@ -29,21 +34,24 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://kawane-fe.vercel.app"),
+  metadataBase: new URL("https://kawanestudio.com"),
+  alternates: {
+    canonical: "https://kawanestudio.com",
+  },
   openGraph: {
     type: "website",
     locale: "id_ID",
-    url: "https://kawane-fe.vercel.app",
+    url: "https://kawanestudio.com",
     title: "Kawane Studio - Premium E-commerce Platform",
     description:
-      "Discover premium products with exceptional quality and service at Kawane Studio.",
+      "Discover premium products with exceptional quality and service at Kawane Studio. Shop the latest fashion and lifestyle trends with confidence.",
     siteName: "Kawane Studio",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "https://kawanestudio.com/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Kawane Studio",
+        alt: "Kawane Studio - Premium E-commerce Platform",
       },
     ],
   },
@@ -52,7 +60,9 @@ export const metadata: Metadata = {
     title: "Kawane Studio - Premium E-commerce Platform",
     description:
       "Discover premium products with exceptional quality and service at Kawane Studio.",
-    images: ["/og-image.jpg"],
+    images: ["https://kawanestudio.com/og-image.jpg"],
+    creator: "@kawanestudio",
+    site: "@kawanestudio",
   },
   robots: {
     index: true,
@@ -80,6 +90,8 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <body className={`font-pragmatica`}>
+        <OrganizationStructuredData />
+        <WebsiteStructuredData />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

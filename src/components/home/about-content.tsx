@@ -1,6 +1,10 @@
+"use client";
+
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useCountUp } from "@/hooks/useCountUp";
 import {
   Award,
   Users,
@@ -11,13 +15,38 @@ import {
   RotateCcw,
   Headphones,
   CheckCircle,
+  Star,
+  ShoppingBag,
+  MessageSquare,
 } from "lucide-react";
 
 const stats = [
-  { label: "Happy Customers", value: "50K+", icon: Users },
-  { label: "Products Sold", value: "1M+", icon: Award },
-  { label: "Countries Served", value: "25+", icon: Globe },
-  { label: "Years Experience", value: "10+", icon: Heart },
+  {
+    label: "Store Rating",
+    value: "4.8",
+    icon: Star,
+    suffix: "/ 5.0",
+    endValue: 4.8,
+    decimals: 1,
+  },
+  {
+    label: "Products Sold",
+    value: "1.5K+",
+    icon: ShoppingBag,
+    endValue: "1.5K+",
+  },
+  {
+    label: "Happy Customers",
+    value: "1.2K+",
+    icon: Users,
+    endValue: "1.2K+",
+  },
+  {
+    label: "Chat Response Rate",
+    value: "98%",
+    icon: MessageSquare,
+    endValue: "98%",
+  },
 ];
 
 const values = [
@@ -50,7 +79,7 @@ const values = [
 const features = [
   {
     title: "Free Shipping",
-    description: "On orders over $50",
+    description: "On orders over IDR 1000K",
     icon: Truck,
   },
   {
@@ -82,22 +111,48 @@ export function AboutContent() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        {stats.map((stat, index) => (
-          <Card
-            key={index}
-            className="text-center hover:shadow-md transition-shadow duration-200"
-          >
-            <CardContent className="p-4 sm:p-6">
-              <stat.icon className="h-6 w-6 sm:h-8 sm:w-8 text-primary mx-auto mb-2 sm:mb-3" />
-              <div className="text-lg sm:text-xl font-semibold text-primary mb-1">
-                {stat.value}
-              </div>
-              <div className="text-xs sm:text-sm text-muted-foreground">
-                {stat.label}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        {stats.map((stat, index) => {
+          // Determine suffix for the hook
+          let suffix = "";
+          if (stat.value.includes("%")) {
+            suffix = "%";
+          } else if (stat.value.includes("K") || stat.value.includes("k")) {
+            // For K format, we'll handle it in the display
+            suffix = stat.value.includes("+") ? "+" : "";
+          } else if (stat.value.includes("+")) {
+            suffix = "+";
+          }
+
+          const { count, elementRef } = useCountUp(stat.endValue, {
+            duration: 2000,
+            decimals: stat.decimals || 0,
+            suffix: suffix,
+          });
+
+          return (
+            <Card
+              key={index}
+              className="text-center hover:shadow-md transition-shadow duration-200"
+            >
+              <CardContent className="p-4 sm:p-6" ref={elementRef}>
+                <stat.icon className="h-6 w-6 sm:h-8 sm:w-8 text-primary mx-auto mb-2 sm:mb-3" />
+                <div className="flex items-baseline justify-center gap-1 mb-1">
+                  <div className="text-lg sm:text-xl font-semibold text-primary">
+                    {count}
+                  </div>
+                  {stat.suffix && (
+                    <div className="text-xs sm:text-sm text-muted-foreground">
+                      {stat.suffix}
+                    </div>
+                  )}
+                </div>
+                <div className="text-xs sm:text-sm text-muted-foreground">
+                  {stat.label}
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       {/* Our Story */}
@@ -108,21 +163,21 @@ export function AboutContent() {
           </h2>
           <div className="space-y-4 text-sm sm:text-base text-muted-foreground">
             <p>
-              Founded in 2014, Kawane Studio started as a small team with a big
-              dream: to make premium products accessible to everyone. What began
-              as a passion project has grown into a trusted e-commerce platform
-              serving customers worldwide.
+              Kawane is a local brand born from personal concerns and makes it
+              the core of the creative process. Based on a blend of streetwear
+              and casualwear, Kawane presents collections that not only speak
+              through design, but also through the meaning behind every detail.
             </p>
             <p>
-              We believe that everyone deserves access to high-quality products
-              that enhance their daily lives. That's why we carefully curate our
-              selection, working directly with manufacturers to ensure the best
-              quality and value.
+              Every piece in our collection is crafted with intention,
+              reflecting our commitment to authenticity and quality. We believe
+              that fashion should be more than just clothing—it should be a form
+              of self-expression that carries meaning and purpose.
             </p>
             <p>
-              Today, we're proud to serve over 50,000 satisfied customers across
-              25+ countries, but our commitment to quality and customer service
-              remains unchanged.
+              From the initial concept to the final product, we ensure that
+              every detail tells a story, making each item not just a piece of
+              clothing, but a statement of your personal style and values.
             </p>
           </div>
         </div>
@@ -140,7 +195,7 @@ export function AboutContent() {
             />
           </div>
           <Badge className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-primary text-primary-foreground text-xs sm:text-sm">
-            Since 2014
+            Since 1921
           </Badge>
         </div>
       </div>
@@ -200,20 +255,24 @@ export function AboutContent() {
           unbeatable prices.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-          <Button
-            variant="secondary"
-            size="lg"
-            className="w-full sm:w-auto bg-white text-black shop-now-btn"
-          >
-            Shop Now
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            className="w-full sm:w-auto bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-          >
-            Contact Us
-          </Button>
+          <Link href="/products">
+            <Button
+              variant="secondary"
+              size="lg"
+              className="w-full sm:w-auto bg-white text-black shop-now-btn"
+            >
+              Shop Now
+            </Button>
+          </Link>
+          <Link href="/contact">
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full sm:w-auto bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+            >
+              Contact Us
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

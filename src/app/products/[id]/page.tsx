@@ -1,5 +1,6 @@
 import { ProductDetail } from "@/components/home/product-detail";
 import { Metadata } from "next";
+import { ProductStructuredDataWrapper } from "@/components/seo/product-structured-data-wrapper";
 
 interface ProductDetailPageProps {
   params: {
@@ -29,8 +30,7 @@ export async function generateMetadata({
     const productData = await response.json();
     const product = productData.data || productData; // Handle both response formats
 
-    const baseUrl =
-      process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app";
+    const baseUrl = "https://kawanestudio.com";
     const productUrl = `${baseUrl}/products/${params.id}`;
     const productImage = product.images?.[0]?.url || `${baseUrl}/og-image.jpg`;
 
@@ -86,8 +86,7 @@ export async function generateMetadata({
     };
   } catch (error) {
     // Fallback metadata if product fetch fails
-    const baseUrl =
-      process.env.NEXT_PUBLIC_APP_URL || "https://kawane-fe.vercel.app";
+    const baseUrl = "https://kawanestudio.com";
     return {
       title: "Product - Kawane Studio",
       description:
@@ -115,8 +114,11 @@ export async function generateMetadata({
 
 export default function ProductDetailPage({ params }: ProductDetailPageProps) {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ProductDetail productId={params.id} />
-    </div>
+    <>
+      <ProductStructuredDataWrapper productId={params.id} />
+      <div className="min-h-screen bg-gray-50">
+        <ProductDetail productId={params.id} />
+      </div>
+    </>
   );
 }
