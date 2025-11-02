@@ -3,13 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { User, ShoppingBag, MapPin, Heart } from "lucide-react";
+import { User, ShoppingBag } from "lucide-react";
 
 const navigation = [
   { name: "Profile", href: "/account/profile", icon: User },
   { name: "Orders", href: "/account/orders", icon: ShoppingBag },
-  { name: "Addresses", href: "/account/addresses", icon: MapPin },
-  { name: "Wishlist", href: "/account/wishlist", icon: Heart },
 ];
 
 export function AccountSidebar() {

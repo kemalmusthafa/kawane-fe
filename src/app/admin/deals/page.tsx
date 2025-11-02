@@ -243,17 +243,23 @@ export default function AdminDealsPage() {
       // Ensure sizes are properly formatted
       const finalDealData = {
         ...dealData,
-        sizes: dealData.sizes && Array.isArray(dealData.sizes) && dealData.sizes.length > 0
-          ? dealData.sizes.map((s: any) => ({
-              size: s.size?.trim().toUpperCase() || s.size,
-              stock: Number(s.stock) || 0,
-            }))
-          : undefined,
+        sizes:
+          dealData.sizes &&
+          Array.isArray(dealData.sizes) &&
+          dealData.sizes.length > 0
+            ? dealData.sizes.map((s: any) => ({
+                size: s.size?.trim().toUpperCase() || s.size,
+                stock: Number(s.stock) || 0,
+              }))
+            : undefined,
       };
 
       // Debug log to verify sizes data is being sent
       console.log("Updating deal with sizes:", finalDealData.sizes);
-      console.log("Full deal update data:", JSON.stringify(finalDealData, null, 2));
+      console.log(
+        "Full deal update data:",
+        JSON.stringify(finalDealData, null, 2)
+      );
 
       await apiClient.updateDeal(id, finalDealData);
       toast.success("Deal updated successfully");
@@ -566,14 +572,22 @@ export default function AdminDealsPage() {
                         {deal.dealProducts?.[0]?.product?.sizes &&
                         deal.dealProducts[0].product.sizes.length > 0 ? (
                           <div className="flex flex-wrap gap-1">
-                            {deal.dealProducts[0].product.sizes.map((sizeItem, idx) => (
-                              <Badge key={idx} variant="outline" className="text-xs">
-                                {sizeItem.size} ({sizeItem.stock})
-                              </Badge>
-                            ))}
+                            {deal.dealProducts[0].product.sizes.map(
+                              (sizeItem, idx) => (
+                                <Badge
+                                  key={idx}
+                                  variant="outline"
+                                  className="text-xs"
+                                >
+                                  {sizeItem.size} ({sizeItem.stock})
+                                </Badge>
+                              )
+                            )}
                           </div>
                         ) : (
-                          <span className="text-sm text-muted-foreground">No sizes</span>
+                          <span className="text-sm text-muted-foreground">
+                            No sizes
+                          </span>
                         )}
                       </TableCell>
                       <TableCell>
@@ -1335,10 +1349,11 @@ function EditDealForm({
   isLoading: boolean;
 }) {
   // Load sizes from deal product
-  const initialSizes = deal.dealProducts?.[0]?.product?.sizes?.map((s) => ({
-    size: s.size,
-    stock: s.stock,
-  })) || [];
+  const initialSizes =
+    deal.dealProducts?.[0]?.product?.sizes?.map((s) => ({
+      size: s.size,
+      stock: s.stock,
+    })) || [];
 
   const [formData, setFormData] = useState({
     title: deal.title,
@@ -1355,9 +1370,8 @@ function EditDealForm({
   });
 
   // Size management state
-  const [sizes, setSizes] = useState<Array<{ size: string; stock: number }>>(
-    initialSizes
-  );
+  const [sizes, setSizes] =
+    useState<Array<{ size: string; stock: number }>>(initialSizes);
   const [customSizeInput, setCustomSizeInput] = useState("");
 
   // Size options
