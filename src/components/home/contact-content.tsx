@@ -8,8 +8,8 @@ const contactInfo = [
     icon: Mail,
     title: "Email Us",
     description: "Send us an email anytime",
-    details: "info@kawane-studio.com",
-    action: "mailto:info@kawane-studio.com",
+    details: "info@kawanestudio.com",
+    action: "mailto:info@kawanestudio.com",
   },
   {
     icon: Phone,
@@ -23,7 +23,8 @@ const contactInfo = [
     title: "Visit Us",
     description: "Come say hello at our office",
     details: "Bandung, Indonesia",
-    action: "https://maps.google.com",
+    action:
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.3345021545043!2d106.82201567497814!3d-6.208763693739153!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTInMzEuNyJTIDEwNsKwNTAnNDQuMiJF!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid",
   },
   {
     icon: Clock,

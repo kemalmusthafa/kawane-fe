@@ -133,15 +133,21 @@ export function HomeFooter() {
             <div className="space-y-1 sm:space-y-1.5 lg:space-y-2 flex-1">
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-muted-foreground flex-shrink-0" />
-                <span className="text-xs sm:text-sm lg:text-base text-muted-foreground break-all">
-                  info@kawane-studio.com
-                </span>
+                <a
+                  href="mailto:info@kawanestudio.com"
+                  className="text-xs sm:text-sm lg:text-base text-muted-foreground hover:text-primary break-all transition-colors"
+                >
+                  info@kawanestudio.com
+                </a>
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-muted-foreground flex-shrink-0" />
-                <span className="text-xs sm:text-sm lg:text-base text-muted-foreground">
-                  +62 21 1234 5678
-                </span>
+                <a
+                  href="tel:+685713093129"
+                  className="text-xs sm:text-sm lg:text-base text-muted-foreground hover:text-primary transition-colors"
+                >
+                  +62 857 1309 3129
+                </a>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-muted-foreground flex-shrink-0" />
