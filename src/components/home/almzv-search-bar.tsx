@@ -69,10 +69,6 @@ export function AlmzvSearchBar() {
       );
 
       const data = await response.json();
-
-      console.log("🔍 Direct Fetch Response:", data);
-      console.log("🔍 Direct Fetch Products:", data.data?.products);
-
       const products = data.data?.products || [];
       setSearchResults(products);
     } catch (error) {

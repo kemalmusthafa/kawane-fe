@@ -196,41 +196,17 @@ export default function AdminDealsPage() {
             : undefined,
       };
 
-      // Debug log to verify sizes data is being sent
-      console.log("Creating deal with sizes:", finalDealData.sizes);
-      console.log(
-        "Full deal data being sent:",
-        JSON.stringify(finalDealData, null, 2)
-      );
-
       const response = await apiClient.createDeal(finalDealData);
-
-      // Log response to verify sizes were saved
-      console.log("Deal created successfully:", response);
-      if (response?.dealProducts?.[0]) {
-        console.log("Saved product data:", response.dealProducts[0]);
-      }
       toast.success("Deal created successfully");
       setIsCreateDialogOpen(false);
       refetch();
     } catch (error: any) {
-      console.error("Create deal error:", error);
-      console.error("Error details:", error.response?.data || error.message);
-
       // Show detailed error message
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
         "Failed to create deal";
       toast.error(errorMessage);
-
-      // Log the full error for debugging
-      if (error.response?.data) {
-        console.error(
-          "Full error response:",
-          JSON.stringify(error.response.data, null, 2)
-        );
-      }
     } finally {
       setIsLoading(false);
     }
@@ -254,20 +230,12 @@ export default function AdminDealsPage() {
             : undefined,
       };
 
-      // Debug log to verify sizes data is being sent
-      console.log("Updating deal with sizes:", finalDealData.sizes);
-      console.log(
-        "Full deal update data:",
-        JSON.stringify(finalDealData, null, 2)
-      );
-
       await apiClient.updateDeal(id, finalDealData);
       toast.success("Deal updated successfully");
       setIsEditDialogOpen(false);
       setSelectedDeal(null);
       refetch();
     } catch (error: any) {
-      console.error("Update deal error:", error);
       toast.error(error.message || "Failed to update deal");
     } finally {
       setIsLoading(false);
@@ -933,10 +901,6 @@ function CreateDealForm({
             : formData.productStock,
         categoryId: formData.categoryId || undefined,
       };
-
-      // Debug log to verify sizes data
-      console.log("Submitting deal with sizes:", validSizes);
-      console.log("Full submit data:", JSON.stringify(submitData, null, 2));
 
       onSubmit(submitData);
     } catch (error: any) {

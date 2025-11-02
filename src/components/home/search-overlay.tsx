@@ -55,9 +55,6 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
       );
 
       const data = await response.json();
-      console.log("🔍 Mobile Search Response:", data);
-      console.log("🔍 Mobile Search Products:", data.data?.products);
-
       const products = data.data?.products || [];
       setSearchResults(products);
     } catch (error) {

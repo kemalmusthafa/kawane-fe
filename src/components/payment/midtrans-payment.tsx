@@ -113,12 +113,6 @@ export default function MidtransPayment({
 
       const data = await response.json();
 
-      console.log("=== MIDTRANS FRONTEND DEBUG ===");
-      console.log("API Response:", data);
-      console.log("Token:", data.data?.token);
-      console.log("Success:", data.success);
-      console.log("===============================");
-
       if (data.success && data.data.token) {
         // Open Midtrans payment popup
         window.snap.pay(data.data.token, {

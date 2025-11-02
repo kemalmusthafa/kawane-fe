@@ -104,18 +104,6 @@ export default function OrderDetailPage() {
       setIsLoading(true);
       const orderData = await OrderService.getOrder(orderId);
       if (orderData) {
-        // Debug: Log order data to see if size is included
-        console.log("📦 Order data received:", orderData);
-        console.log(
-          "📦 Order items:",
-          orderData.items?.map((item: any) => ({
-            id: item.id,
-            productName: item.product?.name,
-            quantity: item.quantity,
-            size: item.size,
-          }))
-        );
-
         // Map the API response to match our OrderDetail interface
         // Try to extract phone and country from order data or user data
         const addressData = orderData.address || {
