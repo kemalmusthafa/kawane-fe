@@ -383,17 +383,17 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
 
           {/* Features */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-              <span className="text-sm sm:text-base font-medium">Free Shipping</span>
+            <div className="flex items-center space-x-2">
+              <Truck className="w-4 h-4 text-green-600 flex-shrink-0" />
+              <span className="text-xs font-medium whitespace-nowrap">Free Shipping</span>
             </div>
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-              <span className="text-sm sm:text-base font-medium">Secure Payment</span>
+            <div className="flex items-center space-x-2">
+              <Shield className="w-4 h-4 text-blue-600 flex-shrink-0" />
+              <span className="text-xs font-medium whitespace-nowrap">Secure Payment</span>
             </div>
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <Package className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
-              <span className="text-sm sm:text-base font-medium">Quality Guarantee</span>
+            <div className="flex items-center space-x-2">
+              <Package className="w-4 h-4 text-purple-600 flex-shrink-0" />
+              <span className="text-xs font-medium whitespace-nowrap">Quality Guarantee</span>
             </div>
           </div>
         </div>

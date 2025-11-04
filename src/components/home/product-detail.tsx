@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useProduct, useWishlist } from "@/hooks/useApi";
+import { useProduct, useWishlist, useOrders, useReviews } from "@/hooks/useApi";
 import { Product } from "@/lib/api";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useCart } from "../../hooks/useCart";
@@ -16,6 +16,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { ProductImageCarousel } from "@/components/ui/product-image-carousel";
+import { ReviewForm } from "@/components/ui/review-form";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Plus,
   Minus,
@@ -25,6 +32,7 @@ import {
   Shield,
   ArrowLeft,
   CreditCard,
+  MessageSquare,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -39,11 +47,23 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
 
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string>("");
+  const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
 
   const { isAuthenticated, user } = useAuth();
   const { addItem } = useCart();
   const { requireAuth } = useAuthRedirect();
   const { product, error, isLoading } = useProduct(actualProductId);
+  const { orders, isLoading: isLoadingOrders } = useOrders({ status: "COMPLETED" });
+  const { createReview } = useReviews(actualProductId);
+
+  // Check if user has purchased this product
+  const hasPurchasedProduct = useMemo(() => {
+    if (!isAuthenticated || !product || isLoadingOrders) return false;
+    
+    return orders.some((order: any) =>
+      order.items?.some((item: any) => item.productId === product.id)
+    );
+  }, [isAuthenticated, product, orders, isLoadingOrders]);
 
   const handleBuyNow = async () => {
     if (!product) return;
@@ -69,6 +89,27 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
     };
 
     requireAuth(buyNowAction);
+  };
+
+  const handleReviewSubmit = async (reviewData: {
+    rating: number;
+    comment: string;
+  }) => {
+    if (!product) return;
+
+    try {
+      await createReview({
+        productId: product.id,
+        rating: reviewData.rating,
+        comment: reviewData.comment,
+      });
+      toast.success("Review submitted successfully!");
+      setIsReviewDialogOpen(false);
+    } catch (error: any) {
+      console.error("Error submitting review:", error);
+      toast.error(error?.message || "Failed to submit review. Please try again.");
+      throw error;
+    }
   };
 
   const renderStars = (rating: number) => {
@@ -281,6 +322,16 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                 variant="outline"
                 className="flex-1 text-xs sm:text-sm h-9 sm:h-10"
               />
+              {hasPurchasedProduct && (
+                <Button
+                  variant="outline"
+                  onClick={() => setIsReviewDialogOpen(true)}
+                  className="flex-1 text-xs sm:text-sm h-9 sm:h-10"
+                >
+                  <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
+                  Review
+                </Button>
+              )}
             </div>
             <Button
               onClick={handleBuyNow}
@@ -295,27 +346,41 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
 
           {/* Product Features */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
-              <span className="text-sm sm:text-base font-medium">
+            <div className="flex items-center space-x-2">
+              <Truck className="w-4 h-4 text-blue-500 flex-shrink-0" />
+              <span className="text-xs font-medium whitespace-nowrap">
                 Free Shipping
               </span>
             </div>
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-              <span className="text-sm sm:text-base font-medium">
+            <div className="flex items-center space-x-2">
+              <Shield className="w-4 h-4 text-green-500 flex-shrink-0" />
+              <span className="text-xs font-medium whitespace-nowrap">
                 Secure Payment
               </span>
             </div>
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <Package className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
-              <span className="text-sm sm:text-base font-medium">
+            <div className="flex items-center space-x-2">
+              <Package className="w-4 h-4 text-purple-500 flex-shrink-0" />
+              <span className="text-xs font-medium whitespace-nowrap">
                 Quality Guarantee
               </span>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Review Dialog */}
+      <Dialog open={isReviewDialogOpen} onOpenChange={setIsReviewDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Write a Review</DialogTitle>
+          </DialogHeader>
+          <ReviewForm
+            productId={actualProductId}
+            onSubmit={handleReviewSubmit}
+            onCancel={() => setIsReviewDialogOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

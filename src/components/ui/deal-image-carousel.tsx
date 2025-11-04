@@ -60,14 +60,15 @@ export function DealImageCarousel({
             onClick={handleImageClick}
           />
 
-          {/* Zoom Icon Overlay */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="bg-white/90 rounded-full p-3">
-                <ZoomIn className="h-6 w-6 text-gray-800" />
-              </div>
-            </div>
-          </div>
+          {/* Zoom Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-4 top-4 z-10 bg-white/90 hover:bg-white text-gray-800 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            onClick={handleImageClick}
+          >
+            <ZoomIn className="h-5 w-5" />
+          </Button>
 
           {/* Navigation Arrows */}
           {images.length > 1 && (
