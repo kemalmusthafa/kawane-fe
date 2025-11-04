@@ -137,20 +137,20 @@ export function ImageModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 bg-black/95 border-none">
+      <DialogContent className="max-w-5xl max-h-[85vh] p-4 bg-white dark:bg-gray-900 border shadow-lg">
         <DialogTitle className="sr-only">Image Viewer</DialogTitle>
         <DialogDescription className="sr-only">
           Product image viewer with zoom, rotation, and navigation controls
         </DialogDescription>
-        <div className="relative w-full h-full flex items-center justify-center">
+        <div className="relative w-full h-full flex items-center justify-center min-h-[60vh]">
           {/* Close Button */}
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-4 right-4 z-50 bg-black/50 hover:bg-black/70 text-white"
+            className="absolute top-2 right-2 z-50 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100"
             onClick={onClose}
           >
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5" />
           </Button>
 
           {/* Navigation Buttons */}
@@ -159,25 +159,25 @@ export function ImageModal({
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-50 bg-black/50 hover:bg-black/70 text-white"
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-50 bg-white/90 hover:bg-white dark:bg-gray-800/90 dark:hover:bg-gray-800 text-gray-900 dark:text-white shadow-lg"
                 onClick={handlePrevious}
               >
-                <ChevronLeft className="h-8 w-8" />
+                <ChevronLeft className="h-6 w-6" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-50 bg-black/50 hover:bg-black/70 text-white"
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-50 bg-white/90 hover:bg-white dark:bg-gray-800/90 dark:hover:bg-gray-800 text-gray-900 dark:text-white shadow-lg"
                 onClick={handleNext}
               >
-                <ChevronRight className="h-8 w-8" />
+                <ChevronRight className="h-6 w-6" />
               </Button>
             </>
           )}
 
           {/* Image */}
           <div
-            className="relative max-w-full max-h-full overflow-hidden cursor-move"
+            className="relative w-full h-full flex items-center justify-center overflow-hidden cursor-move bg-gray-50 dark:bg-gray-800 rounded-lg"
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
@@ -186,7 +186,7 @@ export function ImageModal({
             <img
               src={currentImage}
               alt={`Product image ${currentIndex + 1}`}
-              className="max-w-full max-h-full object-contain transition-transform duration-200"
+              className="max-w-full max-h-[70vh] object-contain transition-transform duration-200"
               style={{
                 transform: `scale(${zoom}) rotate(${rotation}deg) translate(${
                   position.x / zoom
@@ -199,25 +199,25 @@ export function ImageModal({
           </div>
 
           {/* Controls */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-black/50 rounded-lg p-2">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-lg p-2 shadow-lg border border-gray-200 dark:border-gray-700">
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/20"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={handleZoomOut}
               disabled={zoom <= 0.5}
             >
               <ZoomOut className="h-4 w-4" />
             </Button>
 
-            <span className="text-white text-sm px-2">
+            <span className="text-gray-700 dark:text-gray-300 text-sm px-2 font-medium">
               {Math.round(zoom * 100)}%
             </span>
 
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/20"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={handleZoomIn}
               disabled={zoom >= 3}
             >
@@ -227,7 +227,7 @@ export function ImageModal({
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/20"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={handleRotate}
             >
               <RotateCw className="h-4 w-4" />
@@ -236,7 +236,7 @@ export function ImageModal({
             <Button
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20"
+              className="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={handleReset}
             >
               Reset
@@ -245,21 +245,21 @@ export function ImageModal({
 
           {/* Image Counter */}
           {images.length > 1 && (
-            <div className="absolute top-4 left-4 z-50 bg-black/50 text-white px-3 py-1 rounded-lg text-sm">
+            <div className="absolute top-2 left-2 z-50 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-1 rounded-lg text-sm font-medium border border-gray-200 dark:border-gray-700">
               {currentIndex + 1} / {images.length}
             </div>
           )}
 
           {/* Thumbnail Navigation */}
           {images.length > 1 && (
-            <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-50 flex gap-2 max-w-[80vw] overflow-x-auto">
+            <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-50 flex gap-2 max-w-full overflow-x-auto px-4">
               {images.map((image, index) => (
                 <button
                   key={index}
                   className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
                     index === currentIndex
-                      ? "border-white"
-                      : "border-transparent hover:border-white/50"
+                      ? "border-blue-500 ring-2 ring-blue-500/20"
+                      : "border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500"
                   }`}
                   onClick={() => onIndexChange(index)}
                 >

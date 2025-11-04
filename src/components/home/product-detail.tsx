@@ -346,21 +346,21 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
 
           {/* Product Features */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <Truck className="w-4 h-4 text-blue-500 flex-shrink-0" />
-              <span className="text-xs font-medium whitespace-nowrap">
+              <span className="text-sm font-medium whitespace-nowrap">
                 Free Shipping
               </span>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <Shield className="w-4 h-4 text-green-500 flex-shrink-0" />
-              <span className="text-xs font-medium whitespace-nowrap">
+              <span className="text-sm font-medium whitespace-nowrap">
                 Secure Payment
               </span>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <Package className="w-4 h-4 text-purple-500 flex-shrink-0" />
-              <span className="text-xs font-medium whitespace-nowrap">
+              <span className="text-sm font-medium whitespace-nowrap">
                 Quality Guarantee
               </span>
             </div>
