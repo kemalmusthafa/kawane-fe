@@ -22,7 +22,9 @@ import {
   Truck,
   AlertCircle,
   ShoppingBag,
+  Star,
 } from "lucide-react";
+import { ProductRatingInput } from "@/components/ui/product-rating-input";
 import { getWhatsAppDesktopUrl, createOrderMessage } from "@/utils/whatsapp";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -474,10 +476,23 @@ export default function OrderDetailPage() {
                               Size: {item.size}
                             </p>
                           )}
-                          <p className="text-[11px] md:text-xs text-gray-600 dark:text-gray-400">
+                          <p className="text-[11px] md:text-xs text-gray-600 dark:text-gray-400 mb-2">
                             Quantity:{" "}
                             <span className="font-medium">{item.quantity}</span>
                           </p>
+                          {/* Rating Input */}
+                          {(order.status === "COMPLETED" || order.paymentStatus === "SUCCEEDED") && (
+                            <div className="mt-2">
+                              <p className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 mb-1">
+                                Rate this product:
+                              </p>
+                              <ProductRatingInput
+                                productId={item.product.id}
+                                productName={item.product.name}
+                                initialRating={0}
+                              />
+                            </div>
+                          )}
                         </div>
                         <div className="text-right">
                           <p className="text-xs md:text-sm font-semibold text-gray-900 dark:text-gray-100">

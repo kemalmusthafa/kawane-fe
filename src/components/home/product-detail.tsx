@@ -1,7 +1,7 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useProduct, useWishlist, useOrders, useReviews } from "@/hooks/useApi";
+import { useProduct, useWishlist } from "@/hooks/useApi";
 import { Product } from "@/lib/api";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useCart } from "../../hooks/useCart";
@@ -16,13 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { ProductImageCarousel } from "@/components/ui/product-image-carousel";
-import { ReviewForm } from "@/components/ui/review-form";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   Plus,
   Minus,
@@ -32,7 +25,6 @@ import {
   Shield,
   ArrowLeft,
   CreditCard,
-  MessageSquare,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -47,23 +39,11 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
 
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string>("");
-  const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
 
   const { isAuthenticated, user } = useAuth();
   const { addItem } = useCart();
   const { requireAuth } = useAuthRedirect();
   const { product, error, isLoading } = useProduct(actualProductId);
-  const { orders, isLoading: isLoadingOrders } = useOrders({ status: "COMPLETED" });
-  const { createReview } = useReviews(actualProductId);
-
-  // Check if user has purchased this product
-  const hasPurchasedProduct = useMemo(() => {
-    if (!isAuthenticated || !product || isLoadingOrders) return false;
-    
-    return orders.some((order: any) =>
-      order.items?.some((item: any) => item.productId === product.id)
-    );
-  }, [isAuthenticated, product, orders, isLoadingOrders]);
 
   const handleBuyNow = async () => {
     if (!product) return;
@@ -91,26 +71,20 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
     requireAuth(buyNowAction);
   };
 
-  const handleReviewSubmit = async (reviewData: {
-    rating: number;
-    comment: string;
-  }) => {
-    if (!product) return;
 
-    try {
-      await createReview({
-        productId: product.id,
-        rating: reviewData.rating,
-        comment: reviewData.comment,
+  const [productRating, setProductRating] = useState({
+    avgRating: 0,
+    totalReviews: 0,
+  });
+
+  useEffect(() => {
+    if (product && (product as any).avgRating !== undefined) {
+      setProductRating({
+        avgRating: (product as any).avgRating || 0,
+        totalReviews: (product as any).totalReviews || 0,
       });
-      toast.success("Review submitted successfully!");
-      setIsReviewDialogOpen(false);
-    } catch (error: any) {
-      console.error("Error submitting review:", error);
-      toast.error(error?.message || "Failed to submit review. Please try again.");
-      throw error;
     }
-  };
+  }, [product]);
 
   const renderStars = (rating: number) => {
     return (
@@ -119,7 +93,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
           <StarIcon
             key={star}
             className={`w-4 h-4 sm:w-5 sm:h-5 ${
-              star <= rating ? "text-yellow-400 fill-current" : "text-gray-300"
+              star <= Math.round(rating) ? "text-yellow-400 fill-current" : "text-gray-300"
             }`}
           />
         ))}
@@ -194,10 +168,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
             </h1>
             <div className="flex items-center space-x-2 sm:space-x-4 mb-3 sm:mb-4">
               <div className="flex items-center space-x-1 sm:space-x-2">
-                {renderStars(0)}
-                <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400">0.0</span>
+                {renderStars(productRating.avgRating)}
+                <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+                  {productRating.avgRating.toFixed(1)}
+                </span>
                 <span className="text-sm sm:text-base text-gray-500 dark:text-gray-500">
-                  (0 reviews)
+                  ({productRating.totalReviews} review{productRating.totalReviews !== 1 ? "s" : ""})
                 </span>
               </div>
               <Badge
@@ -322,16 +298,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                 variant="outline"
                 className="flex-1 text-xs sm:text-sm h-9 sm:h-10"
               />
-              {hasPurchasedProduct && (
-                <Button
-                  variant="outline"
-                  onClick={() => setIsReviewDialogOpen(true)}
-                  className="flex-1 text-xs sm:text-sm h-9 sm:h-10"
-                >
-                  <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
-                  Review
-                </Button>
-              )}
             </div>
             <Button
               onClick={handleBuyNow}
@@ -368,19 +334,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
         </div>
       </div>
 
-      {/* Review Dialog */}
-      <Dialog open={isReviewDialogOpen} onOpenChange={setIsReviewDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Write a Review</DialogTitle>
-          </DialogHeader>
-          <ReviewForm
-            productId={actualProductId}
-            onSubmit={handleReviewSubmit}
-            onCancel={() => setIsReviewDialogOpen(false)}
-          />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

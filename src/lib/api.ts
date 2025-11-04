@@ -975,19 +975,20 @@ class ApiClient {
 
   // Review Methods
   async getReviews(productId: string) {
-    // Temporarily return empty array to avoid 404 errors
-    // TODO: Implement reviews endpoint in backend
-    return Promise.resolve([]);
+    return this.request<Review[]>(`/reviews?productId=${productId}`);
   }
 
   async createReview(reviewData: {
     productId: string;
     rating: number;
-    comment: string;
+    comment?: string;
   }) {
     return this.request<Review>("/reviews", {
       method: "POST",
-      body: JSON.stringify(reviewData),
+      body: JSON.stringify({
+        ...reviewData,
+        comment: reviewData.comment || "",
+      }),
     });
   }
 
