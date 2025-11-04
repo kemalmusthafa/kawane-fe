@@ -480,12 +480,21 @@ export default function OrderDetailPage() {
                             Quantity:{" "}
                             <span className="font-medium">{item.quantity}</span>
                           </p>
-                          {/* Rating Input */}
-                          {(order.status === "COMPLETED" || order.paymentStatus === "SUCCEEDED") && (
-                            <div className="mt-2">
-                              <p className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400 mb-1">
-                                Rate this product:
-                              </p>
+                          {/* Rating Input - Show for paid/completed orders */}
+                          {(order.status === "COMPLETED" || 
+                            order.status === "PAID" || 
+                            order.status === "SHIPPED" ||
+                            order.paymentStatus === "SUCCEEDED" ||
+                            order.paymentStatus === "PAID" ||
+                            order.paymentStatus === "succeeded" ||
+                            order.paymentStatus === "paid") && (
+                            <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Star className="w-3 h-3 md:w-4 md:h-4 text-yellow-500" />
+                                <p className="text-[10px] md:text-xs text-gray-700 dark:text-gray-300 font-medium">
+                                  Rate this product:
+                                </p>
+                              </div>
                               <ProductRatingInput
                                 productId={item.product.id}
                                 productName={item.product.name}

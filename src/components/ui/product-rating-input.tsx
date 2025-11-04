@@ -73,6 +73,8 @@ export function ProductRatingInput({
       setSubmittedRating(starRating);
       toast.success(`Rating ${starRating} stars submitted for ${productName}`);
       
+      // Refresh will happen automatically via SWR
+      
       if (onRatingSubmit) {
         onRatingSubmit(starRating);
       }

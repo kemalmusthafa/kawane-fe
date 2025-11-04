@@ -78,10 +78,22 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
   });
 
   useEffect(() => {
-    if (product && (product as any).avgRating !== undefined) {
+    if (product) {
+      // Check for avgRating and totalReviews from backend
+      const avgRating = (product as any).avgRating ?? 
+                       (product as any).data?.avgRating ?? 
+                       ((product as any).reviews?.length > 0 
+                         ? (product as any).reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / (product as any).reviews.length 
+                         : 0);
+      
+      const totalReviews = (product as any).totalReviews ?? 
+                          (product as any).data?.totalReviews ?? 
+                          (product as any)._count?.reviews ?? 
+                          ((product as any).reviews?.length ?? 0);
+      
       setProductRating({
-        avgRating: (product as any).avgRating || 0,
-        totalReviews: (product as any).totalReviews || 0,
+        avgRating: Math.round(avgRating * 10) / 10,
+        totalReviews,
       });
     }
   }, [product]);
