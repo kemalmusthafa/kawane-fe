@@ -481,13 +481,17 @@ export default function OrderDetailPage() {
                             <span className="font-medium">{item.quantity}</span>
                           </p>
                           {/* Rating Input - Show for paid/completed orders */}
-                          {(order.status === "COMPLETED" || 
-                            order.status === "PAID" || 
-                            order.status === "SHIPPED" ||
-                            order.paymentStatus === "SUCCEEDED" ||
-                            order.paymentStatus === "PAID" ||
-                            order.paymentStatus === "succeeded" ||
-                            order.paymentStatus === "paid") && (
+                          {(() => {
+                            const orderStatusLower = order.status?.toLowerCase();
+                            const paymentStatusLower = order.paymentStatus?.toLowerCase();
+                            return (
+                              orderStatusLower === "completed" ||
+                              orderStatusLower === "paid" ||
+                              orderStatusLower === "shipped" ||
+                              paymentStatusLower === "succeeded" ||
+                              paymentStatusLower === "paid"
+                            );
+                          })() && (
                             <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
                               <div className="flex items-center gap-2 mb-2">
                                 <Star className="w-3 h-3 md:w-4 md:h-4 text-yellow-500" />
