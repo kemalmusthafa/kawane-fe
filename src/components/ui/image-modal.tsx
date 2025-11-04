@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import {
   ChevronLeft,
   ChevronRight,
-  X,
   ZoomIn,
   ZoomOut,
   RotateCw,
@@ -143,15 +142,6 @@ export function ImageModal({
           Product image viewer with zoom, rotation, and navigation controls
         </DialogDescription>
         <div className="relative w-full h-full flex items-center justify-center min-h-[60vh]">
-          {/* Close Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute top-2 right-2 z-50 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100"
-            onClick={onClose}
-          >
-            <X className="h-5 w-5" />
-          </Button>
 
           {/* Navigation Buttons */}
           {images.length > 1 && (
