@@ -94,7 +94,7 @@ export function OrganizationStructuredData({
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "Customer Service",
-      email: "info@kawanestudio.com",
+      email: "kawane.studio1921@gmail.com",
     },
   };
 

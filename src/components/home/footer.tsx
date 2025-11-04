@@ -134,10 +134,10 @@ export function HomeFooter() {
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-muted-foreground flex-shrink-0" />
                 <a
-                  href="mailto:info@kawanestudio.com"
+                  href="mailto:kawane.studio1921@gmail.com"
                   className="text-xs sm:text-sm lg:text-base text-muted-foreground hover:text-primary break-all transition-colors"
                 >
-                  www.kawanestudio.com
+                  kawanestudio.com
                 </a>
               </div>
               <div className="flex items-center space-x-2">

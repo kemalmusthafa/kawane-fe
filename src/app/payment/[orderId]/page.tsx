@@ -463,7 +463,7 @@ export default function OrderPaymentPage() {
                           Email
                         </p>
                         <p className="text-sm text-gray-600">
-                          info@kawane-studio.com
+                          kawanestudio.com
                         </p>
                       </div>
                     </div>

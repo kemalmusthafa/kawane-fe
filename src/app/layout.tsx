@@ -76,7 +76,9 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "your-google-verification-code",
+    // Google verification code akan di-set via DNS TXT record
+    // atau meta tag di HTML head jika diperlukan
+    // google: "js4TRBUeGSuFflwHbhVuKryySnuPQcOK3TeLdYCx8GM",
   },
 };
 
