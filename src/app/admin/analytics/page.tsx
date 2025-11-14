@@ -159,7 +159,7 @@ export default function AdminAnalyticsPage() {
       const headerHeight = 25; // Space for title and metadata
       const contentWidth = pdfWidth - margin * 2;
       const contentHeight = pdfHeight - margin - headerHeight;
-      
+
       // Calculate image dimensions to fit content width
       const imgWidth = contentWidth;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -191,7 +191,7 @@ export default function AdminAnalyticsPage() {
         pageCanvas.width = canvas.width;
         pageCanvas.height = sourceHeight;
         const pageCtx = pageCanvas.getContext("2d");
-        
+
         if (pageCtx) {
           // Draw the portion of the original canvas to the page canvas
           pageCtx.drawImage(
@@ -205,9 +205,9 @@ export default function AdminAnalyticsPage() {
             canvas.width,
             sourceHeight
           );
-          
+
           const pageImageData = pageCanvas.toDataURL("image/png", 0.95);
-          
+
           // Add image portion to current page
           pdf.addImage(
             pageImageData,

@@ -1,7 +1,9 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { useAdminAccess } from "@/components/guards/admin-guard";
 import { useAdminDashboard } from "@/hooks/useAdminDashboard";
+import { useAdminAnalytics } from "@/hooks/useApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +16,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Users,
   Package,
   ShoppingCart,
@@ -21,11 +29,34 @@ import {
   TrendingUp,
   AlertCircle,
   MoreHorizontal,
+  BarChart3,
+  PieChart as PieChartIcon,
+  LineChart as LineChartIcon,
 } from "lucide-react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  Cell,
+} from "recharts";
 
 export default function AdminDashboard() {
   const { user, isAdmin, isStaff } = useAdminAccess();
   const { data, isLoading, error } = useAdminDashboard();
+  const [chartType, setChartType] = useState<"bar" | "line" | "pie">("bar");
+  const { analytics: analyticsData, isLoading: analyticsLoading } =
+    useAdminAnalytics({
+      period: 30,
+    });
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -90,6 +121,149 @@ export default function AdminDashboard() {
     : [];
 
   const recentOrders = data?.recentOrders || [];
+
+  const chartData = useMemo(
+    () =>
+      analyticsData?.salesData?.map((item) => ({
+        month: item.month,
+        sales: item.sales,
+      })) || [],
+    [analyticsData?.salesData]
+  );
+
+  const chartTypeOptions = [
+    { value: "bar", label: "Bar Chart", icon: BarChart3 },
+    { value: "line", label: "Line Chart", icon: LineChartIcon },
+    { value: "pie", label: "Pie Chart", icon: PieChartIcon },
+  ] as const;
+
+  const renderChart = () => {
+    if (!chartData.length) {
+      return (
+        <div className="text-center py-4 text-xs text-gray-500">
+          No sales data available.
+        </div>
+      );
+    }
+
+    const commonProps = {
+      data: chartData,
+      margin: { top: 5, right: 10, left: 0, bottom: 5 },
+    };
+
+    const axisStyle = {
+      fontSize: "10px",
+      fill: "#6b7280",
+    };
+
+    const tickStyle = {
+      fontSize: "9px",
+      fill: "#9ca3af",
+    };
+
+    switch (chartType) {
+      case "line":
+        return (
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart {...commonProps}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis
+                dataKey="month"
+                style={axisStyle}
+                tick={tickStyle}
+                tickMargin={5}
+              />
+              <YAxis
+                tickFormatter={(value) => {
+                  const formatted = formatCurrency(value);
+                  return formatted.length > 12
+                    ? formatted.replace("Rp", "Rp").substring(0, 10) + ".."
+                    : formatted.replace("Rp", "Rp");
+                }}
+                style={axisStyle}
+                tick={tickStyle}
+                width={60}
+              />
+              <Tooltip
+                formatter={(value: number) => formatCurrency(value)}
+                contentStyle={{ fontSize: "11px", padding: "6px" }}
+              />
+              <Legend wrapperStyle={{ fontSize: "10px", paddingTop: "10px" }} />
+              <Line
+                type="monotone"
+                dataKey="sales"
+                stroke="#2563eb"
+                strokeWidth={2}
+                activeDot={{ r: 4 }}
+                dot={{ r: 2 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        );
+      case "pie":
+        return (
+          <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <Tooltip
+                formatter={(value: number) => formatCurrency(value)}
+                contentStyle={{ fontSize: "11px", padding: "6px" }}
+              />
+              <Legend wrapperStyle={{ fontSize: "10px", paddingTop: "10px" }} />
+              <Pie
+                data={chartData}
+                dataKey="sales"
+                nameKey="month"
+                innerRadius={30}
+                outerRadius={60}
+                paddingAngle={2}
+                label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+                labelLine={false}
+              >
+                {chartData.map((entry, index) => (
+                  <Cell
+                    key={entry.month}
+                    fill={
+                      ["#6366f1", "#22c55e", "#f97316", "#14b8a6"][index % 4]
+                    }
+                  />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        );
+      default:
+        return (
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart {...commonProps}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis
+                dataKey="month"
+                style={axisStyle}
+                tick={tickStyle}
+                tickMargin={5}
+              />
+              <YAxis
+                tickFormatter={(value) => {
+                  const formatted = formatCurrency(value);
+                  return formatted.length > 12
+                    ? formatted.replace("Rp", "Rp").substring(0, 10) + ".."
+                    : formatted.replace("Rp", "Rp");
+                }}
+                style={axisStyle}
+                tick={tickStyle}
+                width={60}
+              />
+              <Tooltip
+                formatter={(value: number) => formatCurrency(value)}
+                contentStyle={{ fontSize: "11px", padding: "6px" }}
+              />
+              <Legend wrapperStyle={{ fontSize: "10px", paddingTop: "10px" }} />
+              <Bar dataKey="sales" fill="#2563eb" radius={[3, 3, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        );
+    }
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -304,6 +478,110 @@ export default function AdminDashboard() {
           )}
         </CardContent>
       </Card>
+
+      {/* Analytics Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Sales Trend Chart */}
+        <Card className="bg-white shadow-sm border">
+          <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-3">
+            <CardTitle className="flex items-center text-xs sm:text-sm">
+              <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5" />
+              Sales Trend
+            </CardTitle>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-[10px] sm:text-xs h-7"
+                >
+                  {
+                    chartTypeOptions.find(
+                      (option) => option.value === chartType
+                    )?.label
+                  }
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-36">
+                {chartTypeOptions.map((option) => (
+                  <DropdownMenuItem
+                    key={option.value}
+                    onClick={() => setChartType(option.value)}
+                    className={
+                      chartType === option.value ? "bg-accent" : undefined
+                    }
+                  >
+                    <option.icon className="w-3 h-3 mr-2" />
+                    <span className="text-xs">{option.label}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </CardHeader>
+          <CardContent className="pt-0">
+            {analyticsLoading ? (
+              <div className="flex items-center justify-center py-6">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
+                <span className="ml-2 text-[10px] sm:text-xs">
+                  Loading sales data...
+                </span>
+              </div>
+            ) : (
+              renderChart()
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Top Products */}
+        <Card className="bg-white shadow-sm border">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center text-xs sm:text-sm">
+              <Package className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5" />
+              Top Products
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            {analyticsLoading ? (
+              <div className="flex items-center justify-center py-6">
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
+                <span className="ml-2 text-[10px] sm:text-xs">
+                  Loading products...
+                </span>
+              </div>
+            ) : analyticsData?.topProducts && analyticsData.topProducts.length > 0 ? (
+              <div className="space-y-3">
+                {analyticsData.topProducts.map((product, index) => (
+                  <div
+                    key={product.name}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-[10px] font-bold">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <p className="text-[10px] sm:text-xs font-medium truncate max-w-[120px] sm:max-w-none">
+                          {product.name}
+                        </p>
+                        <p className="text-[9px] sm:text-[10px] text-gray-500">
+                          {product.sales} sales
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-[10px] sm:text-xs font-semibold text-green-600">
+                      {formatCurrency(product.revenue)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-4 text-xs text-gray-500">
+                No top products data available.
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
