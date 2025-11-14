@@ -20,6 +20,14 @@ interface RecentOrder {
   paymentStatus: string;
   date: string;
   imageUrl?: string;
+  items?: Array<{
+    id: string;
+    quantity: number;
+    product?: {
+      id: string;
+      name: string;
+    };
+  }>;
 }
 
 interface DashboardData {
@@ -125,6 +133,18 @@ const transformBackendData = (backendData: any): DashboardData => {
                 ? new Date(order.createdAt).toLocaleDateString("id-ID")
                 : new Date().toLocaleDateString("id-ID"),
               imageUrl,
+              items: Array.isArray(order.items)
+                ? order.items.map((item: any) => ({
+                    id: String(item.id || ""),
+                    quantity: Number(item.quantity || 0),
+                    product: item.product
+                      ? {
+                          id: String(item.product.id || ""),
+                          name: String(item.product.name || "Unknown Product"),
+                        }
+                      : undefined,
+                  }))
+                : [],
             };
           })
         : [],

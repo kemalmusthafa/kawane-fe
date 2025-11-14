@@ -259,7 +259,12 @@ export default function AdminDashboard() {
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell text-xs sm:text-sm">
-                      1 items
+                      {order.items && order.items.length > 0
+                        ? `${order.items.reduce(
+                            (sum, item) => sum + (item.quantity || 0),
+                            0
+                          )} items`
+                        : "0 items"}
                     </TableCell>
                     <TableCell className="text-xs sm:text-sm">
                       {formatCurrency(order.amount)}
