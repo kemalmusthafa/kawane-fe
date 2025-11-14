@@ -118,8 +118,8 @@ export function LookbookCarousel() {
   }
 
   return (
-    <Card className="rounded-2xl border border-white/30 bg-white/10 shadow-lg backdrop-blur-sm md:border-none md:bg-transparent md:shadow-none md:rounded-none">
-      <CardContent className="p-2 sm:p-4 md:p-0">
+    <Card className="rounded-none border-0 bg-transparent shadow-none backdrop-blur-none">
+      <CardContent className="p-0">
         <div
           className="relative w-full aspect-[16/9] sm:aspect-[5/3] md:aspect-auto md:h-[500px] lg:h-[600px] xl:h-[700px] overflow-hidden group rounded-xl md:rounded-none"
           onTouchStart={onTouchStart}
