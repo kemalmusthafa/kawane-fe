@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiClient } from "@/lib/api";
 import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface LookbookPhoto {
   id: string;
@@ -155,18 +156,38 @@ export function LookbookCarousel() {
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2, duration: 0.5, ease: "easeOut" }}
-                  className="text-white"
                 >
-                  {photos[currentIndex].title && (
-                    <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 sm:mb-3 md:mb-4 leading-tight">
-                      {photos[currentIndex].title}
-                    </h3>
-                  )}
-                  {photos[currentIndex].description && (
-                    <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl opacity-90 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl leading-relaxed">
-                      {photos[currentIndex].description}
-                    </p>
-                  )}
+                  {/* Desktop/Text overlay */}
+                  <div className="hidden md:block text-white">
+                    {photos[currentIndex].title && (
+                      <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 sm:mb-3 md:mb-4 leading-tight">
+                        {photos[currentIndex].title}
+                      </h3>
+                    )}
+                    {photos[currentIndex].description && (
+                      <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl opacity-90 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl leading-relaxed">
+                        {photos[currentIndex].description}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Mobile card overlay */}
+                  <div className="md:hidden">
+                    <Card className="bg-white/95 border border-white/60 shadow-lg">
+                      <CardContent className="p-4">
+                        {photos[currentIndex].title && (
+                          <h3 className="text-lg font-semibold text-primary mb-1">
+                            {photos[currentIndex].title}
+                          </h3>
+                        )}
+                        {photos[currentIndex].description && (
+                          <p className="text-xs text-muted-foreground leading-relaxed">
+                            {photos[currentIndex].description}
+                          </p>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
                 </motion.div>
               </div>
             </div>
