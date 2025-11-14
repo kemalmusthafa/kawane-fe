@@ -55,7 +55,7 @@ export default function AdminDashboard() {
   const [chartType, setChartType] = useState<"bar" | "line" | "pie">("bar");
   const { analytics: analyticsData, isLoading: analyticsLoading } =
     useAdminAnalytics({
-      period: 30,
+      period: "30",
     });
 
   const formatCurrency = (amount: number) => {
