@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { AdminPageSkeleton } from "@/components/admin/skeleton-loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +14,12 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   BarChart3,
   TrendingUp,
   TrendingDown,
@@ -25,12 +31,31 @@ import {
   Download,
   Calendar,
   Loader2,
+  PieChart as PieChartIcon,
+  LineChart as LineChartIcon,
 } from "lucide-react";
 import { useAdminAnalytics } from "@/hooks/useApi";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  Cell,
+} from "recharts";
 
 export default function AdminAnalyticsPage() {
   const [period, setPeriod] = useState("30");
   const [isExporting, setIsExporting] = useState(false);
+  const [chartType, setChartType] = useState<"bar" | "line" | "pie">("bar");
+  const exportRef = useRef<HTMLDivElement>(null);
 
   const { analytics, isLoading, error, mutate } = useAdminAnalytics({
     period: period,
@@ -56,8 +81,23 @@ export default function AdminAnalyticsPage() {
     }
   };
 
-  const handleExport = () => {
-    if (!analytics) {
+  const chartData = useMemo(
+    () =>
+      analytics?.salesData?.map((item) => ({
+        month: item.month,
+        sales: item.sales,
+      })) || [],
+    [analytics?.salesData]
+  );
+
+  const chartTypeOptions = [
+    { value: "bar", label: "Bar Chart", icon: BarChart3 },
+    { value: "line", label: "Line Chart", icon: LineChartIcon },
+    { value: "pie", label: "Pie Chart", icon: PieChartIcon },
+  ] as const;
+
+  const handleExport = async () => {
+    if (!analytics || !exportRef.current) {
       alert("No analytics data available to export");
       return;
     }
@@ -65,77 +105,36 @@ export default function AdminAnalyticsPage() {
     setIsExporting(true);
 
     try {
-      // Create CSV content for analytics data
-      const headers = ["Metric", "Value", "Growth %", "Period"];
+      const html2canvas = (await import("html2canvas")).default;
+      const { default: JsPDF } = await import("jspdf");
 
-      const csvData = [
-        [
-          "Total Revenue",
-          formatCurrency(analytics.overview.totalRevenue),
-          `${analytics.overview.revenueGrowth}%`,
-          `${period} days`,
-        ],
-        [
-          "Total Orders",
-          analytics.overview.totalOrders.toString(),
-          `${analytics.overview.ordersGrowth}%`,
-          `${period} days`,
-        ],
-        [
-          "Total Customers",
-          analytics.overview.totalCustomers.toString(),
-          `${analytics.overview.customersGrowth}%`,
-          `${period} days`,
-        ],
-        [
-          "Total Products",
-          analytics.overview.totalProducts.toString(),
-          "0%",
-          `${period} days`,
-        ],
-      ];
+      const canvas = await html2canvas(exportRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+      });
+      const imageData = canvas.toDataURL("image/png");
 
-      // Add sales data
-      const salesData = analytics.salesData.map((item) => [
-        `Sales - ${item.month}`,
-        formatCurrency(item.sales),
-        "0%",
-        `${period} days`,
-      ]);
+      const pdf = new JsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
 
-      // Add top products data
-      const topProductsData = analytics.topProducts.map((product, index) => [
-        `Top Product ${index + 1} - ${product.name}`,
-        formatCurrency(product.revenue),
-        `${product.sales} units sold`,
-        `${period} days`,
-      ]);
+      pdf.addImage(imageData, "PNG", 0, position, pdfWidth, imgHeight);
+      heightLeft -= pdfHeight;
 
-      const csvContent = [
-        headers.join(","),
-        ...csvData.map((row) => row.map((cell) => `"${cell}"`).join(",")),
-        ...salesData.map((row) => row.map((cell) => `"${cell}"`).join(",")),
-        ...topProductsData.map((row) =>
-          row.map((cell) => `"${cell}"`).join(",")
-        ),
-      ].join("\n");
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imageData, "PNG", 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight;
+      }
 
-      // Create and download file
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      const url = URL.createObjectURL(blob);
-      link.setAttribute("href", url);
-      link.setAttribute(
-        "download",
-        `analytics_${period}days_${new Date().toISOString().split("T")[0]}.csv`
+      pdf.save(
+        `analytics_${period}days_${new Date().toISOString().split("T")[0]}.pdf`
       );
-      link.style.visibility = "hidden";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-
-      alert("Analytics data exported successfully!");
     } catch (error) {
       console.error("Error exporting analytics:", error);
       alert("Failed to export analytics data. Please try again.");
@@ -159,6 +158,96 @@ export default function AdminAnalyticsPage() {
     visible: { opacity: 1 },
   };
 
+  const renderChart = () => {
+    if (!chartData.length) {
+      return (
+        <div className="text-center py-8 text-sm text-gray-500">
+          No sales data available for this period.
+        </div>
+      );
+    }
+
+    const commonProps = {
+      data: chartData,
+      margin: { top: 10, right: 20, left: 0, bottom: 0 },
+    };
+
+    switch (chartType) {
+      case "line":
+        return (
+          <ResponsiveContainer width="100%" height={320}>
+            <LineChart {...commonProps}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis
+                tickFormatter={(value) =>
+                  formatCurrency(value).replace("Rp", "Rp ")
+                }
+              />
+              <Tooltip
+                formatter={(value: number) => formatCurrency(value)}
+                labelFormatter={(label) => `Month: ${label}`}
+              />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="sales"
+                stroke="#2563eb"
+                strokeWidth={3}
+                activeDot={{ r: 6 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        );
+      case "pie":
+        return (
+          <ResponsiveContainer width="100%" height={320}>
+            <PieChart>
+              <Tooltip formatter={(value: number) => formatCurrency(value)} />
+              <Legend />
+              <Pie
+                data={chartData}
+                dataKey="sales"
+                nameKey="month"
+                innerRadius={60}
+                outerRadius={120}
+                paddingAngle={4}
+              >
+                {chartData.map((entry, index) => (
+                  <Cell
+                    key={entry.month}
+                    fill={
+                      ["#6366f1", "#22c55e", "#f97316", "#14b8a6"][index % 4]
+                    }
+                  />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        );
+      default:
+        return (
+          <ResponsiveContainer width="100%" height={320}>
+            <BarChart {...commonProps}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis
+                tickFormatter={(value) =>
+                  formatCurrency(value).replace("Rp", "Rp ")
+                }
+              />
+              <Tooltip
+                formatter={(value: number) => formatCurrency(value)}
+                labelFormatter={(label) => `Month: ${label}`}
+              />
+              <Legend />
+              <Bar dataKey="sales" fill="#2563eb" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        );
+    }
+  };
+
   if (isLoading) {
     return <AdminPageSkeleton />;
   }
@@ -170,22 +259,23 @@ export default function AdminAnalyticsPage() {
       initial="hidden"
       animate="visible"
       transition={{ duration: 0.6, ease: "easeOut" }}
+      ref={exportRef}
     >
       <motion.div
         className="mb-6"
         variants={headerVariants}
         transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
       >
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
               Analytics
             </h1>
             <p className="text-sm sm:text-base text-gray-600 mt-2">
-              Dashboard analitik dan laporan performa bisnis
+              Analytics dashboard and business performance insights
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
             <Select value={period} onValueChange={setPeriod}>
               <SelectTrigger className="w-32 text-xs sm:text-sm">
                 <SelectValue placeholder="Period" />
@@ -210,8 +300,9 @@ export default function AdminAnalyticsPage() {
                 <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
               )}
               <span className="hidden sm:inline">
-                {isExporting ? "Exporting..." : "Export"}
+                {isExporting ? "Exporting..." : "Export PDF"}
               </span>
+              <span className="sm:hidden">PDF</span>
             </Button>
           </div>
         </div>
@@ -318,11 +409,40 @@ export default function AdminAnalyticsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Sales Chart */}
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <CardTitle className="flex items-center text-sm sm:text-base">
                 <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                 Sales Trend
               </CardTitle>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs sm:text-sm"
+                  >
+                    {
+                      chartTypeOptions.find(
+                        (option) => option.value === chartType
+                      )?.label
+                    }
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                  {chartTypeOptions.map((option) => (
+                    <DropdownMenuItem
+                      key={option.value}
+                      onClick={() => setChartType(option.value)}
+                      className={
+                        chartType === option.value ? "bg-accent" : undefined
+                      }
+                    >
+                      <option.icon className="w-4 h-4 mr-2" />
+                      {option.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </CardHeader>
             <CardContent>
               {isLoading ? (
@@ -346,39 +466,7 @@ export default function AdminAnalyticsPage() {
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {analytics?.salesData?.map((data, index) => (
-                    <div
-                      key={`${data.month}-${index}`}
-                      className="flex items-center justify-between"
-                    >
-                      <span className="text-xs sm:text-sm font-medium">
-                        {data.month}
-                      </span>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-32 bg-gray-200 rounded-full h-2">
-                          <div
-                            className="bg-blue-600 h-2 rounded-full"
-                            style={{
-                              width: `${
-                                (data.sales /
-                                  Math.max(
-                                    ...(analytics.salesData?.map(
-                                      (d) => d.sales
-                                    ) || [0])
-                                  )) *
-                                100
-                              }%`,
-                            }}
-                          ></div>
-                        </div>
-                        <span className="text-xs sm:text-sm text-gray-600 w-20 text-right">
-                          {formatCurrency(data.sales)}
-                        </span>
-                      </div>
-                    </div>
-                  )) || []}
-                </div>
+                renderChart()
               )}
             </CardContent>
           </Card>

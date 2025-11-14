@@ -27,13 +27,10 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Package,
-  Plus,
   Search,
-  Filter,
   Eye,
   TrendingUp,
   TrendingDown,
@@ -132,27 +129,6 @@ export default function AdminInventoryPage() {
             Manage product stock and monitor inventory
           </p>
         </div>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="text-sm" size="sm">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Stock
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add Stock</DialogTitle>
-              <DialogDescription>
-                Add or adjust stock for a product.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Stock adjustment form will be implemented here.
-              </p>
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
 
       <div className="space-y-4 sm:space-y-6">
@@ -346,8 +322,8 @@ export default function AdminInventoryPage() {
                           </div>
                         </TableCell>
                         <TableCell className="hidden sm:table-cell">
-                          <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">
-                            {item.sku}
+                          <span className="text-xs font-semibold uppercase tracking-wide">
+                            {item.size ? item.size : "—"}
                           </span>
                         </TableCell>
                         <TableCell className="hidden lg:table-cell">
