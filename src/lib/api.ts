@@ -220,6 +220,7 @@ export interface InventoryItem {
   productId: string;
   productName: string;
   sku: string;
+  size?: string;
   currentStock: number;
   minStock: number;
   maxStock: number;
