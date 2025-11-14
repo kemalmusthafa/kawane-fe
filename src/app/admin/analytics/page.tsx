@@ -138,11 +138,13 @@ export default function AdminAnalyticsPage() {
       });
 
       const canvas = await html2canvas(exportRef.current, {
-        scale: 1.5,
+        scale: 2,
         useCORS: true,
         backgroundColor: "#ffffff",
         logging: false,
         removeContainer: true,
+        windowWidth: exportRef.current.scrollWidth,
+        windowHeight: exportRef.current.scrollHeight,
       });
 
       // Restore original styles
@@ -150,20 +152,19 @@ export default function AdminAnalyticsPage() {
         element.style.display = display;
       });
 
-      const imageData = canvas.toDataURL("image/png", 0.95);
-
       const pdf = new JsPDF("p", "mm", "a4");
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       const margin = 10;
+      const headerHeight = 25; // Space for title and metadata
       const contentWidth = pdfWidth - margin * 2;
+      const contentHeight = pdfHeight - margin - headerHeight;
+      
+      // Calculate image dimensions to fit content width
       const imgWidth = contentWidth;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      let heightLeft = imgHeight;
-      let position = margin;
-
-      // Add title
+      // Add title on first page
       pdf.setFontSize(18);
       pdf.setFont("helvetica", "bold");
       pdf.text("Analytics Report", margin, 15);
@@ -175,31 +176,57 @@ export default function AdminAnalyticsPage() {
         22
       );
 
-      position = 28;
+      // Split image into pages if needed
+      let yPosition = headerHeight;
+      let sourceY = 0;
+      let remainingImageHeight = imgHeight;
+      const pageHeight = contentHeight;
 
-      // Add image
-      pdf.addImage(imageData, "PNG", margin, position, imgWidth, imgHeight);
-      heightLeft -= pdfHeight - position - margin;
+      while (remainingImageHeight > 0) {
+        const heightToAdd = Math.min(pageHeight, remainingImageHeight);
+        const sourceHeight = (heightToAdd / imgHeight) * canvas.height;
 
-      // Handle multiple pages
-      while (heightLeft > 0) {
-        pdf.addPage();
-        position = margin;
-        const remainingHeight = Math.min(
-          imgHeight + heightLeft,
-          pdfHeight - margin * 2
-        );
-        pdf.addImage(
-          imageData,
-          "PNG",
-          margin,
-          position,
-          imgWidth,
-          remainingHeight,
-          undefined,
-          "FAST"
-        );
-        heightLeft -= pdfHeight - margin * 2;
+        // Create a temporary canvas for this page section
+        const pageCanvas = document.createElement("canvas");
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = sourceHeight;
+        const pageCtx = pageCanvas.getContext("2d");
+        
+        if (pageCtx) {
+          // Draw the portion of the original canvas to the page canvas
+          pageCtx.drawImage(
+            canvas,
+            0,
+            sourceY,
+            canvas.width,
+            sourceHeight,
+            0,
+            0,
+            canvas.width,
+            sourceHeight
+          );
+          
+          const pageImageData = pageCanvas.toDataURL("image/png", 0.95);
+          
+          // Add image portion to current page
+          pdf.addImage(
+            pageImageData,
+            "PNG",
+            margin,
+            yPosition,
+            imgWidth,
+            heightToAdd
+          );
+        }
+
+        remainingImageHeight -= heightToAdd;
+        sourceY += sourceHeight;
+
+        // If there's more content, add a new page
+        if (remainingImageHeight > 0) {
+          pdf.addPage();
+          yPosition = margin; // Start from top on new page
+        }
       }
 
       pdf.save(
