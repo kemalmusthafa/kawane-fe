@@ -121,7 +121,7 @@ export function LookbookCarousel() {
     <Card className="rounded-none border-0 bg-transparent shadow-none backdrop-blur-none">
       <CardContent className="p-0">
         <div
-          className="relative w-full aspect-[16/9] sm:aspect-[5/3] md:aspect-auto md:h-[500px] lg:h-[600px] xl:h-[700px] overflow-hidden group rounded-xl md:rounded-none"
+          className="relative w-full aspect-[16/9] sm:aspect-[5/3] md:aspect-auto md:h-[500px] lg:h-[600px] xl:h-[700px] overflow-hidden group rounded-none"
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
@@ -152,7 +152,7 @@ export function LookbookCarousel() {
                 />
 
                 {/* Overlay with content */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent hidden md:block">
                   <div className="absolute bottom-4 sm:bottom-6 md:bottom-12 lg:bottom-16 left-4 sm:left-6 md:left-8 lg:left-12 right-4 sm:right-6 md:right-8 lg:right-12">
                     <motion.div
                       initial={{ y: 30, opacity: 0 }}
