@@ -121,7 +121,7 @@ export function LookbookCarousel() {
     <Card className="rounded-2xl border border-white/30 bg-white/10 shadow-lg backdrop-blur-sm md:border-none md:bg-transparent md:shadow-none md:rounded-none">
       <CardContent className="p-2 sm:p-4 md:p-0">
         <div
-          className="relative w-full aspect-[3/4] sm:aspect-[4/5] md:aspect-auto md:h-[500px] lg:h-[600px] xl:h-[700px] overflow-hidden group rounded-xl md:rounded-none"
+          className="relative w-full aspect-[16/9] sm:aspect-[5/3] md:aspect-auto md:h-[500px] lg:h-[600px] xl:h-[700px] overflow-hidden group rounded-xl md:rounded-none"
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
@@ -145,7 +145,7 @@ export function LookbookCarousel() {
                   src={photos[currentIndex].imageUrl}
                   alt={photos[currentIndex].title || "Lookbook photo"}
                   fill
-                  className="object-contain md:object-cover bg-black"
+                  className="object-contain md:object-cover"
                   priority={currentIndex === 0}
                   quality={85}
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
