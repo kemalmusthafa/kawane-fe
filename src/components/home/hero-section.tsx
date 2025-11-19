@@ -23,11 +23,11 @@ export function HeroSection() {
           transition={{ duration: 0.8 }}
           className="max-w-6xl mx-auto"
         >
-          <h1 className="font-pragmatica font-[700] tracking-[-0.02em] leading-[0.95] uppercase text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-2 sm:mb-3 md:mb-4 bg-gradient-to-r from-foreground to-muted-foreground dark:from-foreground dark:to-primary bg-clip-text text-transparent">
+          <h1 className="font-pragmatica font-[700] tracking-[-0.02em] leading-[0.95] uppercase text-lg sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-2 sm:mb-3 md:mb-4 bg-gradient-to-r from-foreground to-muted-foreground dark:from-foreground dark:to-primary bg-clip-text text-transparent">
             Discover Premium Quality
           </h1>
 
-          <p className="font-pragmatica tracking-[0.02em] text-sm sm:text-base md:text-base lg:text-lg text-muted-foreground dark:text-muted-foreground mb-3 sm:mb-4 md:mb-5 max-w-2xl mx-auto leading-relaxed px-4 sm:px-0">
+          <p className="font-pragmatica tracking-[0.02em] text-xs sm:text-base md:text-base lg:text-lg text-muted-foreground dark:text-muted-foreground mb-3 sm:mb-4 md:mb-5 max-w-2xl mx-auto leading-relaxed px-4 sm:px-0">
             Experience exceptional craftsmanship and timeless design. Shop our
             curated collection of premium products that elevate your lifestyle.
           </p>
@@ -36,9 +36,9 @@ export function HeroSection() {
             <Link href="/products">
               <Button
                 size="lg"
-                className="text-base sm:text-lg px-5 sm:px-6 py-3.5 sm:py-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 dark:from-primary dark:to-primary/80 dark:hover:from-primary/90 dark:hover:to-primary/70 shadow-lg dark:shadow-primary/25 w-full sm:w-auto"
+                className="text-sm sm:text-lg px-4 sm:px-6 py-2.5 sm:py-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 dark:from-primary dark:to-primary/80 dark:hover:from-primary/90 dark:hover:to-primary/70 shadow-lg dark:shadow-primary/25 w-full sm:w-auto"
               >
-                <ShoppingBag className="mr-2 h-5 w-5" />
+                <ShoppingBag className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                 Shop Now
               </Button>
             </Link>
@@ -47,23 +47,23 @@ export function HeroSection() {
               <Button
                 variant="ghost"
                 size="lg"
-                className="text-base sm:text-lg px-5 sm:px-6 py-3.5 sm:py-4 bg-background/50 dark:bg-card/50 backdrop-blur-sm hover:bg-background/70 dark:hover:bg-card/70 text-foreground hover:text-primary transition-all duration-300 w-full sm:w-auto"
+                className="text-sm sm:text-lg px-4 sm:px-6 py-2.5 sm:py-4 bg-background/50 dark:bg-card/50 backdrop-blur-sm hover:bg-background/70 dark:hover:bg-card/70 text-foreground hover:text-primary transition-all duration-300 w-full sm:w-auto"
               >
                 View Deals
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </Link>
           </div>
 
           {/* Trust Indicators */}
-          <div className="mt-4 sm:mt-5 md:mt-6 flex flex-wrap justify-center items-center gap-4 sm:gap-6 md:gap-8 text-sm sm:text-base md:text-lg text-muted-foreground dark:text-muted-foreground">
-            <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-background/50 dark:bg-card/30 backdrop-blur-sm border border-border/20 dark:border-border/30">
-              <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
+          <div className="mt-4 sm:mt-5 md:mt-6 flex flex-wrap justify-center items-center gap-3 sm:gap-6 md:gap-8 text-xs sm:text-base md:text-lg text-muted-foreground dark:text-muted-foreground">
+            <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1 sm:py-2 rounded-full bg-background/50 dark:bg-card/30 backdrop-blur-sm border border-border/20 dark:border-border/30">
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-success rounded-full animate-pulse" />
               <span>Kawane Studio</span>
             </div>
 
-            <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-background/50 dark:bg-card/30 backdrop-blur-sm border border-border/20 dark:border-border/30">
-              <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
+            <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1 sm:py-2 rounded-full bg-background/50 dark:bg-card/30 backdrop-blur-sm border border-border/20 dark:border-border/30">
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-success rounded-full animate-pulse" />
               <span>1921</span>
             </div>
           </div>

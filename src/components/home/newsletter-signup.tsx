@@ -29,11 +29,11 @@ export function NewsletterSignup() {
         >
           <Mail className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-4 sm:mb-6 text-primary-foreground/80" />
 
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4">
+          <h2 className="text-base sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4">
             Stay Updated
           </h2>
 
-          <p className="text-sm sm:text-base lg:text-lg text-primary-foreground/80 mb-6 sm:mb-8">
+          <p className="text-xs sm:text-base lg:text-lg text-primary-foreground/80 mb-4 sm:mb-8">
             Subscribe to our newsletter for exclusive deals, new product alerts,
             and insider tips.
           </p>
@@ -74,7 +74,7 @@ export function NewsletterSignup() {
             </motion.div>
           )}
 
-          <p className="text-sm sm:text-base text-primary-foreground/60 mt-4">
+          <p className="text-xs sm:text-base text-primary-foreground/60 mt-4">
             No spam, unsubscribe at any time. We respect your privacy.
           </p>
         </motion.div>

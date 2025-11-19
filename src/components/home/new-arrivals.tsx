@@ -57,10 +57,10 @@ export function NewArrivals() {
       <section className="py-4 sm:py-6 lg:py-8">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+            <h2 className="text-lg sm:text-4xl font-bold mb-2 sm:mb-4">
               New Arrivals
             </h2>
-            <p className="text-muted-foreground text-lg sm:text-xl">
+            <p className="text-muted-foreground text-xs sm:text-xl">
               Fresh products just added to our collection
             </p>
           </div>
@@ -107,10 +107,10 @@ export function NewArrivals() {
     <section className="py-8 sm:py-12 lg:py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-4 sm:mb-6 lg:mb-8">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">
+          <h2 className="text-lg sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-4">
             New Arrivals
           </h2>
-          <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
+          <p className="text-xs sm:text-base lg:text-lg text-muted-foreground">
             Fresh products just added to our collection
           </p>
         </div>

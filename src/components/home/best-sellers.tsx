@@ -69,10 +69,10 @@ export function BestSellers() {
       <section className="py-4 sm:py-6 lg:py-8 bg-muted/30">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-4 sm:mb-6 lg:mb-8">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">
+            <h2 className="text-lg sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-4">
               Best Sellers
             </h2>
-            <p className="text-muted-foreground text-base sm:text-lg lg:text-xl max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-xs sm:text-lg lg:text-xl max-w-2xl mx-auto">
               Our most popular products loved by customers
             </p>
           </div>
@@ -120,10 +120,10 @@ export function BestSellers() {
     <section className="py-8 sm:py-12 lg:py-16 bg-muted/30">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-10 lg:mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">
+          <h2 className="text-lg sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-4">
             Best Sellers
           </h2>
-          <p className="text-muted-foreground text-base sm:text-lg lg:text-xl max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-xs sm:text-lg lg:text-xl max-w-2xl mx-auto">
             Our most popular products loved by customers
           </p>
         </div>
