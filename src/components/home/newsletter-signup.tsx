@@ -41,7 +41,7 @@ export function NewsletterSignup() {
           {!isSubscribed ? (
             <form
               onSubmit={handleSubmit}
-              className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"
+              className="flex flex-row gap-2 sm:gap-4 max-w-md mx-auto"
             >
               <Input
                 type="email"
@@ -49,14 +49,14 @@ export function NewsletterSignup() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60 text-xs sm:text-sm h-9 sm:h-10 px-3 sm:px-4"
               />
               <Button
                 type="submit"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 dark:hover:text-primary-foreground transition-colors duration-200 font-semibold shadow-lg"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 dark:hover:text-primary-foreground transition-colors duration-200 font-semibold shadow-lg text-xs sm:text-sm h-9 sm:h-10 px-3 sm:px-4 whitespace-nowrap"
               >
                 Subscribe
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             </form>
           ) : (
