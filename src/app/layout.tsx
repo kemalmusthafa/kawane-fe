@@ -21,11 +21,11 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Kawane Studio - Premium E-commerce Platform | Fashion & Lifestyle",
+  title: "Kawane - Premium E-commerce Platform | Fashion & Lifestyle | Kawane Studio",
   description:
-    "Kawane Studio - Discover premium products with exceptional quality and service. Shop fashion, lifestyle products, and trending items with confidence. Kawane Studio offers the best quality products for your needs.",
+    "Kawane - Discover premium products with exceptional quality and service. Shop fashion, lifestyle products, and trending items with confidence. Kawane offers the best quality products for your needs. Kawane Studio premium e-commerce.",
   keywords:
-    "kawane, kawane studio, kawanestudio, kawane fashion, kawane lifestyle, premium products, e-commerce, online shopping, fashion indonesia, lifestyle brand, kawane store, kawane products",
+    "kawane, kawane studio, kawanestudio, kawane fashion, kawane lifestyle, kawane products, kawane store, kawane brand, kawane indonesia, kawane online, kawane shop, premium products, e-commerce, online shopping, fashion indonesia, lifestyle brand",
   authors: [{ name: "Kawane Studio" }],
   creator: "Kawane Studio",
   publisher: "Kawane Studio",

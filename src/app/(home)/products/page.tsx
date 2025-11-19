@@ -6,6 +6,15 @@ import { motion } from "framer-motion";
 import { ProductGrid } from "@/components/home/product-grid";
 import { ProductFilters } from "@/components/home/product-filters";
 import { ProductSort } from "@/components/home/product-sort";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { BreadcrumbStructuredData } from "@/components/seo/structured-data";
 
 // Disable static generation untuk halaman yang menggunakan cart
 export const dynamic = "force-dynamic";
@@ -79,9 +88,37 @@ function ProductsContent() {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         <motion.div
-          className="mb-6 sm:mb-8"
+          className="mb-4 sm:mb-6"
           variants={headerVariants}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+        >
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/" className="text-xs sm:text-sm">
+                  Home
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-xs sm:text-sm">
+                  Products
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          <BreadcrumbStructuredData
+            items={[
+              { name: "Home", url: "https://kawanestudio.com" },
+              { name: "Products", url: "https://kawanestudio.com/products" },
+            ]}
+          />
+        </motion.div>
+
+        <motion.div
+          className="mb-6 sm:mb-8"
+          variants={headerVariants}
+          transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
         >
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-foreground mb-2 sm:mb-4">
             All Products

@@ -10,6 +10,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { BreadcrumbStructuredData } from "@/components/seo/structured-data";
 
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -56,6 +57,12 @@ export default function DealsPage() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+          <BreadcrumbStructuredData
+            items={[
+              { name: "Home", url: "https://kawanestudio.com" },
+              { name: "Deals", url: "https://kawanestudio.com/deals" },
+            ]}
+          />
         </motion.div>
 
         <motion.div

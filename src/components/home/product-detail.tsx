@@ -27,6 +27,15 @@ import {
   CreditCard,
 } from "lucide-react";
 import Link from "next/link";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { BreadcrumbStructuredData } from "@/components/seo/structured-data";
 
 interface ProductDetailProps {
   productId?: string;
@@ -153,14 +162,34 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Breadcrumb */}
       <div className="mb-4 sm:mb-6">
-        <Link
-          href="/products"
-          className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400"
-        >
-          Products
-        </Link>
-        <span className="mx-2 text-xs sm:text-sm text-gray-400">/</span>
-        <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{product.name}</span>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/" className="text-xs sm:text-sm">
+                Home
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/products" className="text-xs sm:text-sm">
+                Products
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-xs sm:text-sm line-clamp-1">
+                {product.name}
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <BreadcrumbStructuredData
+          items={[
+            { name: "Home", url: "https://kawanestudio.com" },
+            { name: "Products", url: "https://kawanestudio.com/products" },
+            { name: product.name, url: `https://kawanestudio.com/products/${product.id}` },
+          ]}
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">

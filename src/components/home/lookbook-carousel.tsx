@@ -120,43 +120,43 @@ export function LookbookCarousel() {
   return (
     <Card className="rounded-none border-0 bg-transparent shadow-none backdrop-blur-none">
       <CardContent className="p-0">
-        <div
+    <div
           className="relative w-full aspect-[16/9] sm:aspect-[5/3] md:aspect-auto md:h-[500px] lg:h-[600px] xl:h-[700px] overflow-hidden group rounded-none"
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
-        >
-          {/* Main Carousel */}
-          <div className="relative w-full h-full overflow-hidden">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentIndex}
-                className="w-full h-full flex-shrink-0 relative"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
+      {/* Main Carousel */}
+      <div className="relative w-full h-full overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentIndex}
+            className="w-full h-full flex-shrink-0 relative"
                 initial={{ opacity: 0, scale: 1.02 }}
-                animate={{ opacity: 1, scale: 1 }}
+            animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
-                transition={{
-                  duration: 0.6,
+            transition={{
+              duration: 0.6,
                   ease: [0.25, 0.46, 0.45, 0.94],
-                  opacity: { duration: 0.4 },
-                }}
-              >
-                <Image
-                  src={photos[currentIndex].imageUrl}
-                  alt={photos[currentIndex].title || "Lookbook photo"}
-                  fill
+              opacity: { duration: 0.4 },
+            }}
+          >
+            <Image
+              src={photos[currentIndex].imageUrl}
+              alt={photos[currentIndex].title || "Lookbook photo"}
+              fill
                   className="object-contain md:object-cover"
-                  priority={currentIndex === 0}
-                  quality={85}
-                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
-                />
+              priority={currentIndex === 0}
+              quality={85}
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
+            />
 
                 {/* Overlay with content */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent hidden md:block">
                   <div className="absolute bottom-4 sm:bottom-6 md:bottom-12 lg:bottom-16 left-4 sm:left-6 md:left-8 lg:left-12 right-4 sm:right-6 md:right-8 lg:right-12">
-                    <motion.div
-                      initial={{ y: 30, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
+                <motion.div
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
                       transition={{
                         delay: 0.2,
                         duration: 0.5,
@@ -164,42 +164,42 @@ export function LookbookCarousel() {
                       }}
                     >
                       <div className="hidden md:block text-white">
-                        {photos[currentIndex].title && (
-                          <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 sm:mb-3 md:mb-4 leading-tight">
-                            {photos[currentIndex].title}
-                          </h3>
-                        )}
-                        {photos[currentIndex].description && (
-                          <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl opacity-90 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl leading-relaxed">
-                            {photos[currentIndex].description}
-                          </p>
-                        )}
+                  {photos[currentIndex].title && (
+                    <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 sm:mb-3 md:mb-4 leading-tight">
+                      {photos[currentIndex].title}
+                    </h3>
+                  )}
+                  {photos[currentIndex].description && (
+                    <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl opacity-90 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl leading-relaxed">
+                      {photos[currentIndex].description}
+                    </p>
+                  )}
                       </div>
-                    </motion.div>
-                  </div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Navigation Dots */}
-          {photos.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-              {photos.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentIndex(index)}
-                  className={`w-3 h-3 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
-                    index === currentIndex
-                      ? "bg-white scale-110"
-                      : "bg-white/50 hover:bg-white/75"
-                  }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
+                </motion.div>
+              </div>
             </div>
-          )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Navigation Dots */}
+      {photos.length > 1 && (
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+          {photos.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-3 h-3 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
+                index === currentIndex
+                  ? "bg-white scale-110"
+                  : "bg-white/50 hover:bg-white/75"
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
+      )}
+    </div>
       </CardContent>
     </Card>
   );

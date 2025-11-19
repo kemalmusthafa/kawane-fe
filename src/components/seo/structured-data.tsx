@@ -84,9 +84,11 @@ export function OrganizationStructuredData({
     "@context": "https://schema.org",
     "@type": "Organization",
     name: name,
+    alternateName: ["Kawane", "Kawané", "Kawane Studio"],
     url: url,
     logo: logo,
     description: description,
+    keywords: "kawane, kawane studio, kawanestudio, kawane fashion, kawane lifestyle, kawane products",
     sameAs: [
       "https://www.facebook.com/kawanestudio",
       "https://www.instagram.com/kawanestudio",
@@ -121,8 +123,10 @@ export function WebsiteStructuredData({
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: name,
+    alternateName: ["Kawane", "Kawané", "Kawane Studio"],
     url: url,
     description: description,
+    keywords: "kawane, kawane studio, kawanestudio, kawane fashion, kawane lifestyle, kawane products, kawane store, kawane brand",
     potentialAction: {
       "@type": "SearchAction",
       target: {
