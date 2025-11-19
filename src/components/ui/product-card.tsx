@@ -97,7 +97,7 @@ export function ProductCard({
           )}
         </div>
 
-        <div className="p-2 sm:p-3 md:p-4 lg:p-6">
+        <div className="p-2 sm:p-2.5 md:p-4 lg:p-6">
           <div className="mb-1 sm:mb-2">
             <ProductRating
               rating={product.rating || 0}

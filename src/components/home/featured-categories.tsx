@@ -114,10 +114,10 @@ export function FeaturedCategories() {
   }
 
   return (
-    <section className="py-6 sm:py-6 lg:py-8">
-      <div className="container mx-auto px-6 sm:px-6 lg:px-8">
+    <section className="py-6 sm:py-8 lg:py-10">
+      <div className="container mx-auto px-3 sm:px-6 lg:px-8">
         <div className="text-center mb-4 sm:mb-6 lg:mb-8">
-          <h2 className="text-base sm:text-2xl lg:text-3xl font-semibold mb-2 sm:mb-4">
+          <h2 className="text-base sm:text-2xl lg:text-3xl font-semibold mb-1.5 sm:mb-3 lg:mb-4">
             Shop by Collections
           </h2>
           <p className="text-xs sm:text-base text-muted-foreground max-w-2xl mx-auto">
@@ -125,7 +125,7 @@ export function FeaturedCategories() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-4 lg:gap-6">
           {categories?.slice(0, 6).map((category: Category, index: number) => (
             <motion.div
               key={category.id}
