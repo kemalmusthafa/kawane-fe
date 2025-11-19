@@ -42,10 +42,10 @@ export function ConfigurableBanner() {
 
   const bannerContent = (
     <div
-      className={`${bannerConfig.backgroundColor} ${bannerConfig.textColor} py-1 sm:py-1.5 lg:py-2`}
+      className={`${bannerConfig.backgroundColor} ${bannerConfig.textColor} py-1 sm:py-1.5 lg:py-2 min-h-[24px] sm:min-h-[28px] lg:min-h-[32px]`}
     >
       <div className="container mx-auto px-2 sm:px-3 lg:px-4 text-center text-[10px] sm:text-xs lg:text-sm">
-        <p className="font-medium leading-tight">
+        <p className="font-medium leading-tight min-h-[16px] sm:min-h-[18px] lg:min-h-[20px]">
           {bannerConfig.text}
           {bannerConfig.linkUrl && bannerConfig.linkText && (
             <Link

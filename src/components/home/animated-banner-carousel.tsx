@@ -69,10 +69,10 @@ export function AnimatedBannerCarousel({
     const banner = activeBanners[0];
     return (
       <div
-        className={`${banner.backgroundColor} ${banner.textColor} py-1.5 sm:py-2`}
+        className={`${banner.backgroundColor} ${banner.textColor} py-1.5 sm:py-2 min-h-[28px] sm:min-h-[32px]`}
       >
         <div className="container mx-auto px-3 sm:px-4 text-center text-xs sm:text-sm">
-          <p className="font-medium leading-tight">
+          <p className="font-medium leading-tight min-h-[18px] sm:min-h-[20px]">
             {banner.text}
             {banner.linkUrl && banner.linkText && (
               <Link
@@ -93,10 +93,10 @@ export function AnimatedBannerCarousel({
     const banner = activeBanners[currentIndex];
     return (
       <div
-        className={`${banner.backgroundColor} ${banner.textColor} py-1.5 sm:py-2`}
+        className={`${banner.backgroundColor} ${banner.textColor} py-1.5 sm:py-2 min-h-[28px] sm:min-h-[32px]`}
       >
         <div className="container mx-auto px-3 sm:px-4 text-center text-xs sm:text-sm">
-          <p className="font-medium leading-tight">
+          <p className="font-medium leading-tight min-h-[18px] sm:min-h-[20px]">
             {banner.text}
             {banner.linkUrl && banner.linkText && (
               <Link
@@ -118,10 +118,10 @@ export function AnimatedBannerCarousel({
     <div className="relative overflow-hidden">
       {/* Main Banner Display */}
       <div
-        className={`${currentBanner.backgroundColor} ${currentBanner.textColor} py-1 sm:py-1.5 lg:py-2`}
+        className={`${currentBanner.backgroundColor} ${currentBanner.textColor} py-1 sm:py-1.5 lg:py-2 min-h-[24px] sm:min-h-[28px] lg:min-h-[32px]`}
       >
         <div className="container mx-auto px-2 sm:px-3 lg:px-4 text-center text-[10px] sm:text-xs lg:text-sm relative">
-          <p className="font-medium leading-tight">
+          <p className="font-medium leading-tight min-h-[16px] sm:min-h-[18px] lg:min-h-[20px]">
             {currentBanner.text}
             {currentBanner.linkUrl && currentBanner.linkText && (
               <Link
