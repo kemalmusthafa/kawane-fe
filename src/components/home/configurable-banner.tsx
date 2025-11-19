@@ -15,7 +15,7 @@ interface BannerConfig {
 
 export function ConfigurableBanner() {
   const [bannerConfig, setBannerConfig] = useState<BannerConfig>({
-    text: "🚚 Free shipping on orders over $50! Limited time offer.",
+    text: "",
     isActive: true,
     backgroundColor: "bg-primary",
     textColor: "text-primary-foreground",

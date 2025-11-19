@@ -36,7 +36,7 @@ export function useBanners() {
         setBanners([
           {
             id: "1",
-            text: "🚚 Free shipping on orders over $50! Limited time offer.",
+            text: "",
             isActive: true,
             backgroundColor: "bg-primary",
             textColor: "text-primary-foreground",
@@ -50,7 +50,7 @@ export function useBanners() {
       setBanners([
         {
           id: "1",
-          text: "🚚 Free shipping on orders over $50! Limited time offer.",
+          text: "",
           isActive: true,
           backgroundColor: "bg-primary",
           textColor: "text-primary-foreground",
