@@ -39,28 +39,26 @@ export function NewsletterSignup() {
           </p>
 
           {!isSubscribed ? (
-            <div className="flex justify-center w-full">
-              <form
-                onSubmit={handleSubmit}
-                className="flex flex-row gap-1.5 sm:gap-2 md:gap-4 max-w-sm sm:max-w-md w-full"
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-row gap-1.5 sm:gap-2 md:gap-4 max-w-sm sm:max-w-md mx-auto justify-center items-center"
+            >
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60 text-[10px] sm:text-xs md:text-sm h-8 sm:h-9 md:h-10 px-2 sm:px-3 md:px-4"
+              />
+              <Button
+                type="submit"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 dark:hover:text-primary-foreground transition-colors duration-200 font-semibold shadow-lg text-[10px] sm:text-xs md:text-sm h-8 sm:h-9 md:h-10 px-2 sm:px-3 md:px-4 whitespace-nowrap"
               >
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60 text-[10px] sm:text-xs md:text-sm h-8 sm:h-9 md:h-10 px-2 sm:px-3 md:px-4"
-                />
-                <Button
-                  type="submit"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 dark:hover:text-primary-foreground transition-colors duration-200 font-semibold shadow-lg text-[10px] sm:text-xs md:text-sm h-8 sm:h-9 md:h-10 px-2 sm:px-3 md:px-4 whitespace-nowrap"
-                >
-                  Subscribe
-                  <ArrowRight className="ml-0.5 sm:ml-1 md:ml-2 h-2.5 w-2.5 sm:h-3 sm:w-3 md:h-4 md:w-4" />
-                </Button>
-              </form>
-            </div>
+                Subscribe
+                <ArrowRight className="ml-0.5 sm:ml-1 md:ml-2 h-2.5 w-2.5 sm:h-3 sm:w-3 md:h-4 md:w-4" />
+              </Button>
+            </form>
           ) : (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
