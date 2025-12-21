@@ -181,7 +181,7 @@ export function CartDrawer() {
                         {item.product?.name || "Unknown Product"}
                       </h4>
                       <p className="text-xs text-muted-foreground">
-                        Rp {item.price?.toLocaleString() || "0"}
+                        Rp {item.price?.toLocaleString("id-ID") || "0"}
                       </p>
                     </div>
                     <div className="flex items-center space-x-1 sm:space-x-2">
@@ -226,7 +226,7 @@ export function CartDrawer() {
               <div className="border-t pt-3 sm:pt-4 space-y-3 sm:space-y-4">
                 <div className="flex justify-between text-sm sm:text-base font-semibold">
                   <span>Total:</span>
-                  <span>Rp {totalAmount?.toLocaleString() || "0"}</span>
+                  <span>Rp {totalAmount?.toLocaleString("id-ID") || "0"}</span>
                 </div>
                 <Button
                   className="w-full text-xs sm:text-sm"

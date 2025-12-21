@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Package, User, MapPin, Calendar } from "lucide-react";
+import { Loader2, Package, User as UserIcon, MapPin, Calendar, Phone } from "lucide-react";
 import { toast } from "sonner";
 
 interface OrderDetailsProps {
@@ -38,6 +38,7 @@ interface OrderDetailsProps {
       id: string;
       name: string;
       email: string;
+      phone?: string;
     };
     items: Array<{
       id: string;
@@ -57,6 +58,7 @@ interface OrderDetailsProps {
       city: string;
       postalCode: string;
       country: string;
+      phone?: string;
     };
     createdAt: string;
     updatedAt: string;
@@ -203,12 +205,18 @@ export function OrderDetails({
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <div className="bg-gray-50 p-3 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
-                <User className="h-4 w-4 text-gray-600" />
+                <UserIcon className="h-4 w-4 text-gray-600" />
                 <span className="font-medium text-sm">Customer</span>
               </div>
               <div className="text-sm">
                 <div className="font-medium">{order.user.name}</div>
                 <div className="text-gray-600">{order.user.email}</div>
+                {order.user?.phone && (
+                  <div className="text-gray-600 mt-1">
+                    <span className="font-medium">Phone: </span>
+                    {order.user.phone}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -325,6 +333,12 @@ export function OrderDetails({
                   {order.shippingAddress.postalCode}
                 </div>
                 <div>{order.shippingAddress.country}</div>
+                {(order.shippingAddress.phone || order.user?.phone) && (
+                  <div className="mt-2 pt-2 border-t border-gray-200">
+                    <span className="font-medium">Phone: </span>
+                    {order.shippingAddress.phone || order.user?.phone || "N/A"}
+                  </div>
+                )}
               </div>
             </div>
           )}

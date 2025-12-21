@@ -77,7 +77,7 @@ export default function AdminProducts() {
     minPrice: filters.minPrice ? parseInt(filters.minPrice) : undefined,
     maxPrice: filters.maxPrice ? parseInt(filters.maxPrice) : undefined,
     page: currentPage,
-    limit: 5,
+    limit: 10,
     sortBy: "createdAt",
     sortOrder: "desc",
   });
@@ -242,7 +242,7 @@ export default function AdminProducts() {
 
   return (
     <motion.div
-      className="space-y-4 sm:space-y-6 px-4 sm:px-6 lg:px-8"
+      className="space-y-4 sm:space-y-6"
       variants={pageVariants}
       initial="hidden"
       animate="visible"
@@ -546,7 +546,7 @@ export default function AdminProducts() {
                 totalPages={data.totalPages || 1}
                 onPageChange={setCurrentPage}
                 totalItems={data.totalItems || 0}
-                itemsPerPage={5}
+                itemsPerPage={10}
               />
             </CardContent>
           </Card>

@@ -343,7 +343,7 @@ export function DealsContent() {
                     <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                       {deal.type === "PERCENTAGE" || deal.type === "FLASH_SALE"
                         ? `${deal.value}% discount`
-                        : `Rp ${deal.value.toLocaleString()} off`}
+                        : `Rp ${deal.value.toLocaleString("id-ID")} off`}
                     </span>
                   </div>
 

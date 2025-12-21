@@ -78,8 +78,8 @@ const values = [
 
 const features = [
   {
-    title: "Free Shipping",
-    description: "On orders over IDR 1000K",
+    title: "Shipping",
+    description: "Fast and reliable delivery",
     icon: Truck,
   },
   {

@@ -225,7 +225,7 @@ export function AlmzvSearchBar() {
                             {product.description}
                           </p>
                           <p className="text-xs font-semibold text-primary">
-                            Rp {product.price.toLocaleString()}
+                            Rp {product.price.toLocaleString("id-ID")}
                           </p>
                         </div>
                       </button>

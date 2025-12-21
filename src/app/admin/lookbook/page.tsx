@@ -41,6 +41,7 @@ import {
 } from "lucide-react";
 import { apiClient } from "@/lib/api";
 import { LookbookImageUpload } from "@/components/admin/lookbook-image-upload";
+import { LookbookSkeleton } from "@/components/admin/lookbook-skeleton";
 
 interface LookbookPhoto {
   id: string;
@@ -221,6 +222,10 @@ export default function LookbookManagement() {
 
   if (!hasAccess) {
     return null; // AdminGuard will handle this
+  }
+
+  if (loading) {
+    return <LookbookSkeleton />;
   }
 
   return (

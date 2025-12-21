@@ -63,7 +63,7 @@ export function MultipleBannerManagement({
   const [banners, setBanners] = useState<BannerConfig[]>([
     {
       id: "1",
-      text: "🚚 Free shipping on orders over $50! Limited time offer.",
+      text: "🚚 Limited time offer!",
       isActive: true,
       backgroundColor: "bg-primary",
       textColor: "text-primary-foreground",

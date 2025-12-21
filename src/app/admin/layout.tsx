@@ -21,24 +21,22 @@ export default function AdminLayout({
 
   return (
     <AdminGuard>
-      <div className="min-h-screen bg-white text-foreground flex flex-col lg:flex-row">
-        {/* Sidebar */}
+      <div className="min-h-screen bg-background flex">
+        {/* Sidebar - Fixed on desktop, overlay on mobile */}
         <AdminSidebar
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
         />
 
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col min-h-screen lg:ml-0">
-          {/* Header */}
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col min-h-screen lg:ml-64">
+          {/* Header - Sticky */}
           <AdminHeader onMenuClick={() => setSidebarOpen(true)} />
 
           {/* Page Content */}
-          <main className="flex-1 bg-white overflow-x-hidden">
-            <div className="py-3 sm:py-4 lg:py-6">
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 xl:px-12">
-                {children}
-              </div>
+          <main className="flex-1 bg-background">
+            <div className="h-full p-4 sm:p-6 lg:p-8">
+              {children}
             </div>
           </main>
         </div>

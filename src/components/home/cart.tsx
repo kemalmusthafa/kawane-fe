@@ -393,16 +393,6 @@ export const Cart: React.FC = () => {
                   <span>Rp {totalAmount.toLocaleString("id-ID")}</span>
                 </div>
 
-                <div className="flex justify-between text-xs sm:text-sm">
-                  <span>Shipping</span>
-                  <span className="text-green-600">Free</span>
-                </div>
-
-                <div className="flex justify-between text-xs sm:text-sm">
-                  <span>Tax</span>
-                  <span>Rp 0</span>
-                </div>
-
                 <Separator />
 
                 <div className="flex justify-between text-sm font-semibold">

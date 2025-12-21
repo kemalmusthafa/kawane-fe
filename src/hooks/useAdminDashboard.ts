@@ -15,6 +15,7 @@ interface DashboardStats {
 interface RecentOrder {
   id: string;
   customer: string;
+  email?: string;
   amount: number;
   status: string;
   paymentStatus: string;
@@ -125,6 +126,9 @@ const transformBackendData = (backendData: any): DashboardData => {
               id: String(order.id || ""),
               customer: String(
                 order.user?.name || order.customer?.name || "Unknown"
+              ),
+              email: String(
+                order.user?.email || order.customer?.email || ""
               ),
               amount: Number(order.totalAmount || order.amount || 0),
               status: String(order.status || "PENDING"),

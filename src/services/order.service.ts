@@ -71,7 +71,6 @@ export class OrderService {
       const response = await apiClient.createAddress(addressData);
       return response.data || null;
     } catch (error: any) {
-      console.error("OrderService.createAddress - Error:", error);
       throw new Error(error.message || "Failed to create address");
     }
   }
@@ -91,12 +90,6 @@ export class OrderService {
         }
       );
     } catch (error: any) {
-      console.error("OrderService.createOrder - Error:", error);
-      console.error("OrderService.createOrder - Error message:", error.message);
-      console.error(
-        "OrderService.createOrder - Error response:",
-        error.response
-      );
       throw new Error(error.message || "Failed to create order");
     }
   }

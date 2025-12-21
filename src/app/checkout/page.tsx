@@ -17,11 +17,12 @@ import { ShoppingCart, MapPin, Loader2, Package, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { apiClient } from "@/lib/api";
 // Removed Next.js Image import to avoid blob issues
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, refreshUser } = useAuth();
   const { items: cartItems, totalAmount: total, clearCart } = useCart();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -177,6 +178,26 @@ export default function CheckoutPage() {
     setIsLoading(true);
 
     try {
+      // Update user phone if provided
+      if (shippingAddress.phone && shippingAddress.phone.trim() && user) {
+        const phoneToSave = shippingAddress.phone.trim();
+        
+        try {
+          const response = await apiClient.updateProfile({ phone: phoneToSave });
+          
+          if (response.success) {
+            // Refresh user data to get updated phone
+            if (refreshUser) {
+              await refreshUser();
+            }
+          } else {
+            toast.error(response.message || "Failed to update phone number");
+          }
+        } catch (error: any) {
+          // Continue with order creation even if phone update fails
+        }
+      }
+
       // Add timeout to prevent hanging requests
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 25000); // 25 second timeout
@@ -184,9 +205,6 @@ export default function CheckoutPage() {
       try {
         const order = await OrderService.createOrder(orderData);
         clearTimeout(timeoutId);
-
-        // Debug logging
-        console.log("Order created:", order);
 
         toast.success("Order created successfully!");
 
@@ -210,8 +228,6 @@ export default function CheckoutPage() {
         throw error;
       }
     } catch (error: any) {
-      console.error("Order creation error:", error);
-      console.error("Error details:", error.response || error.message);
       toast.error(error.message || "Failed to create order");
     } finally {
       setIsLoading(false);
@@ -419,10 +435,6 @@ export default function CheckoutPage() {
                   <div className="flex justify-between text-xs sm:text-sm lg:text-base">
                     <span>Subtotal</span>
                     <span>Rp {total.toLocaleString("id-ID")}</span>
-                  </div>
-                  <div className="flex justify-between text-xs sm:text-sm lg:text-base">
-                    <span>Shipping</span>
-                    <span className="text-green-600">Free</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between text-sm sm:text-base lg:text-lg font-bold">

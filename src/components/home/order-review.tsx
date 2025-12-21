@@ -26,7 +26,7 @@ export function OrderReview() {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  const shipping: number = 0; // Free shipping
+  const shipping: number = 0;
   const tax: number = subtotal * 0.1; // 10% tax
   const total = subtotal + shipping + tax;
 
@@ -64,9 +64,7 @@ export function OrderReview() {
           </div>
           <div className="flex justify-between">
             <span>Shipping</span>
-            <span className={shipping === 0 ? "text-success" : ""}>
-              {shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`}
-            </span>
+            <span>${shipping.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>Tax</span>
@@ -86,7 +84,7 @@ export function OrderReview() {
         <div className="p-3 bg-muted rounded-lg">
           <p className="text-sm font-medium mb-1">Estimated Delivery</p>
           <p className="text-sm text-muted-foreground">
-            3-5 business days • Free shipping on orders over $50
+            3-5 business days
           </p>
         </div>
 

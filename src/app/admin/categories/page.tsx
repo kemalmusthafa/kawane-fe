@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { adminToast } from "@/utils/admin-toast";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { CategoriesSkeleton } from "@/components/admin/categories-skeleton";
 
 export default function AdminCategoriesPage() {
   const { categories, isLoading, error, mutateCategories } = useCategories();
@@ -83,25 +84,17 @@ export default function AdminCategoriesPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white p-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          </div>
-        </div>
-      </div>
-    );
+    return <CategoriesSkeleton />;
   }
 
   return (
     <motion.div
-      className="min-h-screen bg-white px-4 sm:px-6 lg:px-8 py-6"
+      className="w-full h-full space-y-4 sm:space-y-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="w-full">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2">

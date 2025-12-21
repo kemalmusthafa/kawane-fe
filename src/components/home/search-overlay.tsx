@@ -188,7 +188,7 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                             {product.description}
                           </p>
                           <p className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-100">
-                            Rp {product.price.toLocaleString()}
+                            Rp {product.price.toLocaleString("id-ID")}
                           </p>
                         </div>
                       </Link>

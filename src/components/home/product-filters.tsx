@@ -100,8 +100,8 @@ export function ProductFilters({
             className="mb-2"
           />
           <div className="flex justify-between text-xs sm:text-sm text-muted-foreground">
-            <span>Rp {priceRange[0].toLocaleString()}</span>
-            <span>Rp {priceRange[1].toLocaleString()}</span>
+            <span>Rp {priceRange[0].toLocaleString("id-ID")}</span>
+            <span>Rp {priceRange[1].toLocaleString("id-ID")}</span>
           </div>
         </div>
 

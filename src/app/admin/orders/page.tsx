@@ -80,7 +80,7 @@ export default function AdminOrders() {
       statusFilter === "all" ? undefined : mapStatusToBackend(statusFilter),
     paymentStatus: undefined,
     page: currentPage,
-    limit: 5,
+    limit: 10,
     sortBy: "createdAt",
     sortOrder: "desc",
   });
@@ -566,7 +566,7 @@ export default function AdminOrders() {
                 totalPages={data.totalPages || 1}
                 onPageChange={setCurrentPage}
                 totalItems={data.totalItems || 0}
-                itemsPerPage={5}
+                itemsPerPage={10}
               />
             </CardContent>
           </Card>

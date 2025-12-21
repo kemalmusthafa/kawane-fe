@@ -400,7 +400,7 @@ export default function AdminAnalyticsPage() {
 
   return (
     <motion.div
-      className="container mx-auto px-4 py-8"
+      className="w-full h-full space-y-4 sm:space-y-6"
       variants={pageVariants}
       initial="hidden"
       animate="visible"

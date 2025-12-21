@@ -46,7 +46,6 @@ export function ProductRatingInput({
         }
       } catch (error) {
         // Silently fail - user might not have rated yet
-        console.log("No existing rating found");
       }
     };
 

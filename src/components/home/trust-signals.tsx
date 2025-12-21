@@ -11,8 +11,8 @@ const signals = [
   },
   {
     icon: Truck,
-    title: "Free Shipping",
-    description: "Free shipping on orders over $50 with tracking",
+    title: "Shipping",
+    description: "Fast and reliable shipping with tracking",
   },
   {
     icon: RotateCcw,

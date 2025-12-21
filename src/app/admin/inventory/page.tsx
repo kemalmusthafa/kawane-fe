@@ -119,7 +119,7 @@ export default function AdminInventoryPage() {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
         <div className="space-y-1">
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">

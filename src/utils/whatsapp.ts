@@ -128,8 +128,8 @@ export const createOrderMessage = (orderData: {
     message += `${firstProductLink}\n\n`;
   }
 
-  message += `🧾 *PEMBAYARAN ORDER KAWANE STUDIO*\n\n`;
-  message += `📋 *Detail Order:*\n`;
+  message += `*PEMBAYARAN ORDER KAWANE STUDIO*\n\n`;
+  message += `*Detail Order:*\n`;
   message += `• Order ID: ${orderData.orderNumber}\n`;
   message += `• Total: Rp ${orderData.totalAmount.toLocaleString("id-ID")}\n`;
   message += `• Status: ${orderData.status}`;
@@ -151,7 +151,7 @@ export const createOrderMessage = (orderData: {
   }
 
   if (orderData.items && orderData.items.length > 0) {
-    message += `\n\n📦 *Items yang dipesan:*`;
+    message += `\n\n*Items yang dipesan:*`;
     orderData.items.forEach((item, index) => {
       message += `\n\n${index + 1}. *${item.product.name}*`;
 
@@ -168,11 +168,11 @@ export const createOrderMessage = (orderData: {
       if ((item.product as any).id && !firstProductLink) {
         // Check if this item has deal information
         if (item.product.deal && item.product.deal.id) {
-          message += `\n   🔗 Lihat deal: ${
+          message += `\n   Lihat deal: ${
             process.env.NEXT_PUBLIC_APP_URL || "https://www.kawanestudio.com"
           }/deals/${item.product.deal.id}`;
         } else {
-          message += `\n   🔗 Lihat produk: ${
+          message += `\n   Lihat produk: ${
             process.env.NEXT_PUBLIC_APP_URL || "https://www.kawanestudio.com"
           }/products/${(item.product as any).id}`;
         }
@@ -182,7 +182,7 @@ export const createOrderMessage = (orderData: {
 
   // Add shipping address if available
   if (orderData.address) {
-    message += `\n\n📍 *Alamat Pengiriman:*`;
+    message += `\n\n*Alamat Pengiriman:*`;
     message += `\n${orderData.address.detail}`;
     
     // Try to get phone from address, user, or notes
@@ -198,7 +198,7 @@ export const createOrderMessage = (orderData: {
       }
     }
     if (addressPhone) {
-      message += `\n📞 ${addressPhone}`;
+      message += `\nPhone: ${addressPhone}`;
     }
     
     message += `\n${orderData.address.city}, ${orderData.address.postalCode}`;
@@ -221,10 +221,10 @@ export const createOrderMessage = (orderData: {
     }
   }
 
-  message += `\n\n💬 *Mohon bantuan untuk menyelesaikan pembayaran.*`;
-  message += `\n🏪 *Kawane Studio* - Premium E-commerce`;
-  message += `\n\n📞 *Kontak:* +${getWhatsAppNumber()}`;
-  message += `\n\nTerima kasih! 🙏`;
+  message += `\n\n*Mohon bantuan untuk menyelesaikan pembayaran.*`;
+  message += `\n*Kawane Studio* - Premium E-commerce`;
+  message += `\n\n*Kontak:* +${getWhatsAppNumber()}`;
+  message += `\n\nTerima kasih!`;
 
   return message;
 };
@@ -279,11 +279,11 @@ export const createCheckoutMessage = (cartData: {
   if (firstProductLink) {
     message += `${firstProductLink}\n\n`;
   }
-  message += `🛒 *CHECKOUT ORDER KAWANE STUDIO* 🛒\n\n`;
-  message += `💰 Total: Rp ${cartData.totalAmount.toLocaleString("id-ID")}`;
+  message += `*CHECKOUT ORDER KAWANE STUDIO*\n\n`;
+  message += `Total: Rp ${cartData.totalAmount.toLocaleString("id-ID")}`;
 
   if (cartData.items && cartData.items.length > 0) {
-    message += `\n\n📦 *Items yang akan dibeli:*`;
+    message += `\n\n*Items yang akan dibeli:*`;
     cartData.items.forEach((item, index) => {
       message += `\n\n${index + 1}. *${item.product.name}*`;
 
@@ -301,11 +301,11 @@ export const createCheckoutMessage = (cartData: {
       if ((item as any).product?.id && !firstProductLink) {
         // Check if this item has deal information
         if ((item as any).product?.deal && (item as any).product?.deal?.id) {
-          message += `\n   🔗 Lihat deal: ${appUrl}/deals/${
+          message += `\n   Lihat deal: ${appUrl}/deals/${
             (item as any).product.deal.id
           }`;
         } else {
-          message += `\n   🔗 Lihat produk: ${appUrl}/products/${
+          message += `\n   Lihat produk: ${appUrl}/products/${
             (item as any).product.id
           }`;
         }
@@ -314,11 +314,11 @@ export const createCheckoutMessage = (cartData: {
   }
 
   if (cartData.shippingAddress) {
-    message += `\n\n📍 *Alamat Pengiriman:* ${cartData.shippingAddress}`;
+    message += `\n\n*Alamat Pengiriman:* ${cartData.shippingAddress}`;
   }
 
-  message += `\n\n💬 *Mohon bantuan untuk menyelesaikan checkout.*`;
-  message += `\n\nTerima kasih! 🙏`;
+  message += `\n\n*Mohon bantuan untuk menyelesaikan checkout.*`;
+  message += `\n\nTerima kasih!`;
 
   return message;
 };

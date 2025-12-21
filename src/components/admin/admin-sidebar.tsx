@@ -53,11 +53,11 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         </div>
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Fixed on desktop, overlay on mobile */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 sm:w-72 transform bg-card text-card-foreground border-r border-border shadow-lg transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:w-64 dark:bg-gradient-to-b dark:from-card dark:to-muted/20 dark:border-border/50 dark:shadow-2xl",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed inset-y-0 left-0 z-50 w-64 bg-card text-card-foreground border-r border-border shadow-lg transition-transform duration-300 ease-in-out lg:shadow-none dark:bg-gradient-to-b dark:from-card dark:to-muted/20 dark:border-border/50",
+          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
         <div className="flex h-full flex-col overflow-hidden">

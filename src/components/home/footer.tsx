@@ -1,12 +1,11 @@
 import Link from "next/link";
 import {
-  Facebook,
-  Twitter,
   Instagram,
-  Youtube,
   Mail,
   Phone,
   MapPin,
+  ShoppingBag,
+  Store,
 } from "lucide-react";
 
 export function HomeFooter() {
@@ -25,36 +24,31 @@ export function HomeFooter() {
             </p>
             <div className="flex gap-2 sm:gap-3 lg:gap-4">
               <Link
-                href="https://www.facebook.com/kawane.studio"
+                href="https://www.tokopedia.com/kawane-studio"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-muted-foreground hover:text-green-600 transition-colors"
+                title="Tokopedia"
               >
-                <Facebook className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
+                <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
               </Link>
               <Link
-                href="https://www.twitter.com/kawane_studio"
+                href="https://shopee.co.id/kawanestudio"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-muted-foreground hover:text-orange-500 transition-colors"
+                title="Shopee"
               >
-                <Twitter className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
+                <Store className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
               </Link>
               <Link
                 href="https://www.instagram.com/kawane.studio/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-pink-500 transition-colors"
+                title="Instagram"
               >
                 <Instagram className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
-              </Link>
-              <Link
-                href="https://www.youtube.com/@kawanestudio"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Youtube className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
               </Link>
             </div>
           </div>

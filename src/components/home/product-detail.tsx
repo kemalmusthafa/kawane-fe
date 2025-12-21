@@ -356,7 +356,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
             <div className="flex items-center space-x-1">
               <Truck className="w-4 h-4 text-blue-500 flex-shrink-0" />
               <span className="text-sm font-medium whitespace-nowrap">
-                Free Shipping
+                Shipping
               </span>
             </div>
             <div className="flex items-center space-x-1">

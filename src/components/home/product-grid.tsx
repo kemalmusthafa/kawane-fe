@@ -98,9 +98,9 @@ export function ProductGrid({
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading products...</span>
+      <div className="flex flex-col justify-center items-center py-8 sm:py-12">
+        <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 animate-spin text-muted-foreground" />
+        <span className="mt-2 text-xs sm:text-sm text-muted-foreground">Loading products...</span>
       </div>
     );
   }

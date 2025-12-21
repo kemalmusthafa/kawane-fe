@@ -3,10 +3,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export function DealsSkeleton() {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full h-full space-y-4 sm:space-y-6">
       {/* Header Skeleton */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
+      <div className="mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <Skeleton className="h-8 w-64 mb-2" />
             <Skeleton className="h-4 w-96" />
@@ -104,7 +104,7 @@ export function DealsSkeleton() {
 
 export function DealDetailSkeleton() {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full h-full space-y-4 sm:space-y-6">
       {/* Header Skeleton */}
       <div className="mb-8">
         <div className="flex items-center justify-between">

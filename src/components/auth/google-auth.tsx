@@ -40,14 +40,7 @@ export default function GoogleAuth({
     onSuccess: async (response) => {
       setIsLoading(true);
       try {
-        console.log(
-          "Google OAuth Success - Code received:",
-          response.code.substring(0, 20) + "..."
-        );
-        console.log("Sending code to backend...");
-
         const result = await googleLogin(response.code);
-        console.log("Backend response:", result);
 
         if (result.success) {
           toast.success("Login berhasil! Selamat datang! ✅");

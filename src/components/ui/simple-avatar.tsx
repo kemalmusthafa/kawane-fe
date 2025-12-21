@@ -52,12 +52,12 @@ export function SimpleAvatar({
     }
   };
 
-  // Generate default avatar URL
+  // Default avatar URL from backend
+  const DEFAULT_AVATAR_URL = 'https://res.cloudinary.com/dkpn9aqne/image/upload/v1757101008/default-avatar_fkunn0.jpg';
+
+  // Generate default avatar URL (fallback to backend default)
   const getDefaultAvatarUrl = (name?: string) => {
-    const initials = getInitials(name);
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(
-      initials
-    )}&background=6366f1&color=ffffff&size=128&bold=true`;
+    return DEFAULT_AVATAR_URL;
   };
 
   // Show loading state
@@ -87,25 +87,26 @@ export function SimpleAvatar({
     );
   }
 
-  // Determine avatar source with proper key for re-rendering
-  const avatarSrc = user?.avatar?.trim() || getDefaultAvatarUrl(user?.name);
+  // Determine avatar source - use user avatar if valid, otherwise use default
+  const userAvatar = user?.avatar?.trim();
+  const avatarSrc = userAvatar && userAvatar !== '' && userAvatar !== 'null' 
+    ? userAvatar 
+    : DEFAULT_AVATAR_URL;
   const userInitials = getInitials(user?.name);
-
-  // Create unique key that includes avatar URL to force re-render when avatar changes
-  const avatarKey = `${user.id}-${avatarSrc}-${Date.now()}`;
 
   return (
     <Avatar className={`${getSizeClasses()} ${className}`}>
       <AvatarImage
-        key={avatarKey}
         src={avatarSrc}
         alt={user?.name || "User"}
         onError={(e) => {
+          // If user avatar fails, try default avatar
           const target = e.currentTarget as HTMLImageElement;
-          target.style.display = "none";
-        }}
-        onLoad={() => {
-          // Force re-render when image loads
+          if (target.src !== DEFAULT_AVATAR_URL) {
+            target.src = DEFAULT_AVATAR_URL;
+          } else {
+            target.style.display = "none";
+          }
         }}
       />
       <AvatarFallback

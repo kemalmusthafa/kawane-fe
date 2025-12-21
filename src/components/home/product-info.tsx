@@ -119,7 +119,7 @@ export function ProductInfo() {
         <div className="flex items-center space-x-2">
           <Truck className="h-5 w-5 text-muted-foreground" />
           <div>
-            <p className="font-medium text-sm">Free Shipping</p>
+            <p className="font-medium text-sm">Shipping</p>
             <p className="text-xs text-muted-foreground">On orders over $50</p>
           </div>
         </div>

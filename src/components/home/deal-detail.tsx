@@ -242,9 +242,9 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
                 <span className="text-xs sm:text-sm lg:text-base font-medium">
                   {deal.type === "PERCENTAGE" && `${deal.value}%`}
                   {deal.type === "FIXED_AMOUNT" &&
-                    `Rp ${deal.value.toLocaleString()}`}
+                    `Rp ${deal.value.toLocaleString("id-ID")}`}
                   {deal.type === "FLASH_SALE" &&
-                    `Rp ${deal.value.toLocaleString()}`}
+                    `Rp ${deal.value.toLocaleString("id-ID")}`}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -385,7 +385,7 @@ export const DealDetail: React.FC<DealDetailProps> = ({ dealId }) => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
             <div className="flex items-center space-x-1">
               <Truck className="w-4 h-4 text-green-600 flex-shrink-0" />
-              <span className="text-sm font-medium whitespace-nowrap">Free Shipping</span>
+              <span className="text-sm font-medium whitespace-nowrap">Shipping</span>
             </div>
             <div className="flex items-center space-x-1">
               <Shield className="w-4 h-4 text-blue-600 flex-shrink-0" />

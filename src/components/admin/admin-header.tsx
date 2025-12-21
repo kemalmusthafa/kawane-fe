@@ -34,7 +34,7 @@ export function AdminHeader({ onMenuClick }: AdminHeaderProps) {
 
   return (
     <header className="bg-card text-card-foreground shadow-sm border-b border-border dark:bg-gradient-to-r dark:from-card dark:to-muted/10 dark:border-border/50 dark:shadow-lg sticky top-0 z-20">
-      <div className="flex h-14 sm:h-16 items-center justify-between mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 xl:px-12">
+      <div className="flex h-14 sm:h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left side */}
         <div className="flex items-center flex-1">
           <Button
@@ -74,73 +74,67 @@ export function AdminHeader({ onMenuClick }: AdminHeaderProps) {
           <ThemeToggle />
 
           {/* User menu */}
-          <div className="admin-header-dropdown">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="relative h-8 w-8 rounded-full"
-                >
-                  <SimpleAvatar user={user} isLoading={isLoading} size="md" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-64 p-2 dropdown-enhanced dropdown-positioned"
-                align="start"
-                sideOffset={4}
-                forceMount
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="relative h-8 w-8 rounded-full p-0"
               >
-                <DropdownMenuLabel className="font-normal px-3 py-2">
-                  <div className="flex items-center gap-3">
-                    <SimpleAvatar user={user} isLoading={isLoading} size="md" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold leading-none text-foreground truncate">
-                        {user?.name}
-                      </p>
-                      <p className="text-xs leading-none text-muted-foreground truncate mt-1">
-                        {user?.email}
-                      </p>
-                      <div className="mt-2">
-                        <Badge
-                          variant="secondary"
-                          className="w-fit text-xs role-badge"
-                        >
-                          {user?.role}
-                        </Badge>
-                      </div>
-                    </div>
+                <SimpleAvatar user={user} isLoading={isLoading} size="md" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="w-64 !z-[100]"
+              align="end"
+              sideOffset={8}
+            >
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex items-center gap-3">
+                  <SimpleAvatar user={user} isLoading={isLoading} size="md" />
+                  <div className="flex flex-col space-y-1 flex-1 min-w-0">
+                    <p className="text-sm font-semibold leading-none text-foreground truncate">
+                      {user?.name || "User"}
+                    </p>
+                    <p className="text-xs leading-none text-muted-foreground truncate">
+                      {user?.email || ""}
+                    </p>
+                    {user?.role && (
+                      <Badge variant="secondary" className="w-fit text-xs mt-1">
+                        {user.role}
+                      </Badge>
+                    )}
                   </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator className="my-2" />
-                <DropdownMenuItem asChild className="px-3 py-2.5 dropdown-item">
-                  <Link href="/account/profile" className="flex items-center">
-                    <User className="mr-3 h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">Profile</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="px-3 py-2.5 dropdown-item">
-                  <Link href="/home" className="flex items-center">
-                    <Home className="mr-3 h-4 w-4 text-primary" />
-                    <span className="font-medium">Kembali ke Website</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator className="my-2" />
-                <DropdownMenuItem
-                  className="px-3 py-2.5 dropdown-item text-destructive focus:text-destructive hover:bg-destructive/10 dark:hover:bg-destructive/20 focus:bg-destructive/10 dark:focus:bg-destructive/20"
-                  onClick={handleLogout}
-                >
-                  <LogOut className="mr-3 h-4 w-4" />
-                  <span className="font-medium">Logout</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/account/profile" className="flex items-center cursor-pointer">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/home" className="flex items-center cursor-pointer">
+                  <Home className="mr-2 h-4 w-4" />
+                  <span>Kembali ke Website</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive cursor-pointer"
+                onClick={handleLogout}
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
       {/* Mobile Search Bar */}
       {isMobileSearchOpen && (
-        <div className="lg:hidden border-t border-border bg-card mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 xl:px-12 py-3">
+        <div className="lg:hidden border-t border-border bg-card px-4 sm:px-6 py-3">
           <AdminSearchBar />
         </div>
       )}

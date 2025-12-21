@@ -236,7 +236,7 @@ export function SearchBar({ className }: SearchBarProps) {
                                 {product.name}
                               </div>
                               <div className="text-xs text-muted-foreground">
-                                Rp {product.price.toLocaleString()}
+                                Rp {product.price.toLocaleString("id-ID")}
                               </div>
                             </div>
                           </button>

@@ -139,7 +139,7 @@ export function ProductTabs() {
                 <div>
                   <h4 className="font-semibold">Shipping Information</h4>
                   <p className="text-sm text-muted-foreground">
-                    Free shipping on orders over $50. Standard delivery takes
+                    Standard delivery takes
                     3-5 business days. Express shipping available for additional
                     cost.
                   </p>

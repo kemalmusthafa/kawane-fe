@@ -8,6 +8,7 @@ interface AdminOrder {
     id: string;
     name: string;
     email: string;
+    phone?: string;
   };
   items: Array<{
     id: string;
@@ -90,6 +91,7 @@ export const useAdminOrders = (params: AdminOrdersParams = {}) => {
               id: order.user?.id || "",
               name: order.user?.name || "Unknown Customer",
               email: order.user?.email || "",
+              phone: order.user?.phone || null,
             },
             items:
               order.items?.map((item: any) => ({

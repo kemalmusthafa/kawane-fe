@@ -27,7 +27,6 @@ import {
   DollarSign,
   TrendingUp,
   AlertCircle,
-  MoreHorizontal,
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -159,22 +158,25 @@ export default function AdminDashboard() {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       {/* Page Header */}
-      <motion.div
-        className="bg-white rounded-lg shadow-sm border p-3 sm:p-4 lg:p-6"
-        variants={headerVariants}
-        transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-      >
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold truncate">
-              Welcome back, {user?.name}!
-            </h1>
-            <p className="text-muted-foreground mt-1 text-xs sm:text-sm">
-              Here's what's happening with your store today.
-            </p>
-          </div>
-        </div>
-      </motion.div>
+      <Card className="mb-4 sm:mb-6">
+        <CardHeader>
+          <motion.div
+            variants={headerVariants}
+            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+              <div className="flex-1 min-w-0">
+                <h1 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold truncate">
+                  Welcome back, {user?.name}!
+                </h1>
+                <p className="text-muted-foreground mt-1 text-xs sm:text-sm">
+                  Here's what's happening with your store today.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </CardHeader>
+      </Card>
 
       <motion.div
         variants={contentVariants}
@@ -190,9 +192,9 @@ export default function AdminDashboard() {
         )}
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {stats.map((stat) => (
-            <Card key={stat.title} className="bg-white shadow-sm border">
+            <Card key={stat.title}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-4">
                 <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
                   {stat.title}
@@ -200,14 +202,10 @@ export default function AdminDashboard() {
                 <stat.icon className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
               </CardHeader>
               <CardContent className="p-3 sm:p-4 pt-0">
-                <div className="text-sm sm:text-base lg:text-lg font-bold">
-                  {stat.value}
-                </div>
+                <div className="text-base sm:text-lg lg:text-2xl font-bold">{stat.value}</div>
                 <p className="text-xs text-muted-foreground flex items-center mt-1">
                   <TrendingUp className="h-3 w-3 mr-1 flex-shrink-0" />
-                  <span className="truncate">
-                    {stat.change} from last month
-                  </span>
+                  <span className="truncate">{stat.change} from last month</span>
                 </p>
               </CardContent>
             </Card>
@@ -215,14 +213,14 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Orders */}
-        <Card className="bg-white shadow-sm border">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center text-base sm:text-lg font-semibold">
-              <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <ShoppingCart className="h-5 w-5 mr-2" />
               Recent Orders ({recentOrders.length})
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-0 sm:p-6">
+          <CardContent>
             {recentOrders.length > 0 ? (
               <div className="overflow-x-auto -mx-2 sm:mx-0">
                 <div className="min-w-full px-2 sm:px-0">
@@ -250,7 +248,6 @@ export default function AdminDashboard() {
                         <TableHead className="text-xs sm:text-sm hidden lg:table-cell">
                           Date
                         </TableHead>
-                        <TableHead className="w-[50px]"></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -293,7 +290,7 @@ export default function AdminDashboard() {
                                 {order.customer || "Unknown"}
                               </div>
                               <div className="text-xs text-muted-foreground hidden sm:block">
-                                {order.customer || "Unknown"}@example.com
+                                {order.email || "N/A"}
                               </div>
                             </div>
                           </TableCell>
@@ -313,11 +310,6 @@ export default function AdminDashboard() {
                           </TableCell>
                           <TableCell className="text-xs sm:text-sm hidden lg:table-cell">
                             {order.date || "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            <Button variant="ghost" size="icon">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
                           </TableCell>
                         </TableRow>
                       ))}

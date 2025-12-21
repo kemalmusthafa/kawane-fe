@@ -23,7 +23,7 @@ export function CartSummary() {
           </div>
           <div className="flex justify-between">
             <span>Shipping</span>
-            <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+            <span>${shipping.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>Tax</span>
@@ -42,9 +42,6 @@ export function CartSummary() {
           Proceed to Checkout
         </Button>
 
-        <p className="text-xs text-muted-foreground text-center">
-          Free shipping on orders over $50
-        </p>
       </CardContent>
     </Card>
   );
