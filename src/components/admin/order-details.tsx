@@ -1,0 +1,389 @@
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Loader2, Package, User as UserIcon, MapPin, Calendar, Phone } from "lucide-react";
+import { toast } from "sonner";
+
+interface OrderDetailsProps {
+  isOpen: boolean;
+  onClose: () => void;
+  order: {
+    id: string;
+    orderNumber: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      phone?: string;
+    };
+    items: Array<{
+      id: string;
+      product: {
+        id: string;
+        name: string;
+        price: number;
+      };
+      quantity: number;
+      subtotal: number;
+    }>;
+    totalAmount: number;
+    status: string;
+    paymentStatus: string;
+    shippingAddress: {
+      street: string;
+      city: string;
+      postalCode: string;
+      country: string;
+      phone?: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+  onUpdateStatus: (
+    orderId: string,
+    status: string
+  ) => Promise<{ success: boolean; error?: string }>;
+  onUpdatePaymentStatus: (
+    orderId: string,
+    status: string
+  ) => Promise<{ success: boolean; error?: string }>;
+  onRefetch?: () => void;
+}
+
+export function OrderDetails({
+  isOpen,
+  onClose,
+  order,
+  onUpdateStatus,
+  onUpdatePaymentStatus,
+  onRefetch,
+}: OrderDetailsProps) {
+  const [isUpdatingOrderStatus, setIsUpdatingOrderStatus] = useState(false);
+  const [isUpdatingPaymentStatus, setIsUpdatingPaymentStatus] = useState(false);
+  const [newOrderStatus, setNewOrderStatus] = useState("");
+  const [newPaymentStatus, setNewPaymentStatus] = useState("");
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "CHECKOUT":
+        return <Badge className="bg-blue-100 text-blue-800">Checkout</Badge>;
+      case "PAID":
+        return <Badge className="bg-green-100 text-green-800">Paid</Badge>;
+      case "PENDING":
+        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
+      case "SHIPPED":
+        return <Badge className="bg-purple-100 text-purple-800">Shipped</Badge>;
+      case "COMPLETED":
+        return <Badge className="bg-green-100 text-green-800">Completed</Badge>;
+      case "CANCELLED":
+        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>;
+      case "WHATSAPP_PENDING":
+        return (
+          <Badge className="bg-orange-100 text-orange-800">
+            WhatsApp Pending
+          </Badge>
+        );
+      case "WHATSAPP_CONFIRMED":
+        return (
+          <Badge className="bg-teal-100 text-teal-800">
+            WhatsApp Confirmed
+          </Badge>
+        );
+      default:
+        return <Badge variant="secondary">{status}</Badge>;
+    }
+  };
+
+  const getPaymentStatusBadge = (status: string) => {
+    switch (status) {
+      case "paid":
+        return <Badge className="bg-green-100 text-green-800">Paid</Badge>;
+      case "pending":
+        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
+      case "failed":
+        return <Badge className="bg-red-100 text-red-800">Failed</Badge>;
+      case "refunded":
+        return <Badge className="bg-gray-100 text-gray-800">Refunded</Badge>;
+      default:
+        return <Badge variant="secondary">{status}</Badge>;
+    }
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(price);
+  };
+
+  const handleUpdateOrderStatus = async () => {
+    if (!order || !newOrderStatus) return;
+
+    setIsUpdatingOrderStatus(true);
+    try {
+      const result = await onUpdateStatus(order.id, newOrderStatus);
+      if (result.success) {
+        toast.success(`Order status updated to ${newOrderStatus} successfully`);
+        setNewOrderStatus("");
+        // Trigger real-time update without page refresh
+        if (onRefetch) {
+          onRefetch();
+        }
+      } else {
+        toast.error(result.error || "Failed to update order status");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+    } finally {
+      setIsUpdatingOrderStatus(false);
+    }
+  };
+
+  const handleUpdatePaymentStatus = async () => {
+    if (!order || !newPaymentStatus) return;
+
+    setIsUpdatingPaymentStatus(true);
+    try {
+      const result = await onUpdatePaymentStatus(order.id, newPaymentStatus);
+      if (result.success) {
+        toast.success(
+          `Payment status updated to ${newPaymentStatus.toUpperCase()} successfully`
+        );
+        setNewPaymentStatus("");
+        // Trigger real-time update without page refresh
+        if (onRefetch) {
+          onRefetch();
+        }
+      } else {
+        toast.error(result.error || "Failed to update payment status");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+    } finally {
+      setIsUpdatingPaymentStatus(false);
+    }
+  };
+
+  if (!order) return null;
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Package className="h-5 w-5" />
+            Order Details - {order.orderNumber}
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          {/* Order Summary */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <UserIcon className="h-4 w-4 text-gray-600" />
+                <span className="font-medium text-sm">Customer</span>
+              </div>
+              <div className="text-sm">
+                <div className="font-medium">{order.user.name}</div>
+                <div className="text-gray-600">{order.user.email}</div>
+                {order.user?.phone && (
+                  <div className="text-gray-600 mt-1">
+                    <span className="font-medium">Phone: </span>
+                    {order.user.phone}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Calendar className="h-4 w-4 text-gray-600" />
+                <span className="font-medium text-sm">Order Date</span>
+              </div>
+              <div className="text-sm">
+                {new Date(order.createdAt).toLocaleDateString("id-ID", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </div>
+            </div>
+
+            <div className="bg-gray-50 p-3 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Package className="h-4 w-4 text-gray-600" />
+                <span className="font-medium text-sm">Total Amount</span>
+              </div>
+              <div className="text-sm font-semibold text-green-600">
+                {formatPrice(order.totalAmount)}
+              </div>
+            </div>
+          </div>
+
+          {/* Status Management */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-sm">Order Status</span>
+                {getStatusBadge(order.status)}
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Select
+                  value={newOrderStatus}
+                  onValueChange={setNewOrderStatus}
+                >
+                  <SelectTrigger className="w-full sm:w-auto">
+                    <SelectValue placeholder="Update order status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="PENDING">Pending</SelectItem>
+                    <SelectItem value="PAID">Paid</SelectItem>
+                    <SelectItem value="SHIPPED">Shipped</SelectItem>
+                    <SelectItem value="COMPLETED">Completed</SelectItem>
+                    <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button
+                  size="sm"
+                  onClick={handleUpdateOrderStatus}
+                  disabled={!newOrderStatus || isUpdatingOrderStatus}
+                  className="w-full sm:w-auto"
+                >
+                  {isUpdatingOrderStatus && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Update
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-sm">Payment Status</span>
+                {getPaymentStatusBadge(order.paymentStatus)}
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Select
+                  value={newPaymentStatus}
+                  onValueChange={setNewPaymentStatus}
+                >
+                  <SelectTrigger className="w-full sm:w-auto">
+                    <SelectValue placeholder="Update payment status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="PENDING">Pending</SelectItem>
+                    <SelectItem value="SUCCEEDED">Succeeded</SelectItem>
+                    <SelectItem value="FAILED">Failed</SelectItem>
+                    <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button
+                  size="sm"
+                  onClick={handleUpdatePaymentStatus}
+                  disabled={!newPaymentStatus || isUpdatingPaymentStatus}
+                  className="w-full sm:w-auto"
+                >
+                  {isUpdatingPaymentStatus && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Update
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Shipping Address */}
+          {order.shippingAddress && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-gray-600" />
+                <span className="font-medium text-sm">Shipping Address</span>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg text-sm">
+                <div>{order.shippingAddress.street}</div>
+                <div>
+                  {order.shippingAddress.city},{" "}
+                  {order.shippingAddress.postalCode}
+                </div>
+                <div>{order.shippingAddress.country}</div>
+                {(order.shippingAddress.phone || order.user?.phone) && (
+                  <div className="mt-2 pt-2 border-t border-gray-200">
+                    <span className="font-medium">Phone: </span>
+                    {order.shippingAddress.phone || order.user?.phone || "N/A"}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Order Items */}
+          <div className="space-y-1">
+            <span className="font-medium text-sm">Order Items</span>
+            <Table className="text-sm">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Product</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead>Quantity</TableHead>
+                  <TableHead>Subtotal</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {order.items.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{item.product.name}</div>
+                        <div className="text-sm text-gray-600">
+                          ID: {item.product.id}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>{formatPrice(item.product.price)}</TableCell>
+                    <TableCell>{item.quantity}</TableCell>
+                    <TableCell className="font-medium">
+                      {formatPrice(item.subtotal)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
+            Close
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
