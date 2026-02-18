@@ -49,6 +49,12 @@ import { AnimatedBannerCarousel } from "@/components/home/animated-banner-carous
 import { useBanners } from "@/hooks/useBanners";
 import { cn } from "@/lib/utils";
 
+/** Nama depan saja untuk tampilan profil customer */
+function getFirstName(fullName: string | undefined): string {
+  if (!fullName?.trim()) return fullName || "";
+  return fullName.trim().split(/\s+/)[0] ?? fullName;
+}
+
 export function HomeNavigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -219,7 +225,7 @@ export function HomeNavigation() {
                     />
                     <div className="hidden sm:flex flex-col items-start text-left">
                       <span className="text-sm font-semibold leading-tight text-foreground">
-                        {currentUser.name}
+                        {getFirstName(currentUser.name)}
                       </span>
                     </div>
                   </Button>
@@ -237,7 +243,7 @@ export function HomeNavigation() {
                 >
                   <div className="px-4 py-3 border-b border-border">
                     <p className="text-sm font-semibold leading-tight text-foreground">
-                      {currentUser.name}
+                      {getFirstName(currentUser.name)}
                     </p>
                     <p className="text-xs leading-tight text-muted-foreground truncate mt-0.5">
                       {currentUser.email || ""}
@@ -343,7 +349,7 @@ export function HomeNavigation() {
                           />
                           <div className="flex-1 min-w-0">
                             <p className="text-xs sm:text-sm font-medium text-foreground truncate">
-                              {currentUser.name}
+                              {getFirstName(currentUser.name)}
                             </p>
                             <p className="text-[10px] sm:text-xs text-muted-foreground truncate">
                               {currentUser.email}
