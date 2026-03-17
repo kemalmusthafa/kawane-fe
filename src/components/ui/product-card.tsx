@@ -99,12 +99,29 @@ export function ProductCard({
 
         <div className="p-2 sm:p-2.5 md:p-4 lg:p-6">
           <div className="mb-1 sm:mb-2">
+            {/*
+              Rating di card mengikuti override dari API jika ada:
+              - displayRating (nullable, seperti soldCount)
+              - jumlah review selalu dari data asli (_count.reviews)
+            */}
+            {(() => {
+              const ratingToShow =
+                (product as any).displayRating ??
+                product.rating ??
+                0;
+              const reviewCountToShow =
+                product._count?.reviews ??
+                0;
+
+              return (
             <ProductRating
-              rating={product.rating || 0}
-              reviewCount={product._count?.reviews || 0}
+              rating={ratingToShow}
+              reviewCount={reviewCountToShow}
               size="sm"
               showCount={true}
             />
+              );
+            })()}
           </div>
 
           <Link href={`/products/${product.id}`}>

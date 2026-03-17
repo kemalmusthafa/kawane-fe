@@ -7,6 +7,14 @@ export interface Product {
   stock: number;
   categoryId?: string;
   size?: string; // Ukuran produk (XL, L, M, S, 32, 34, 36, etc.)
+  soldCount?: number | null;
+  displayRating?: number | null;
+  displayReviewCount?: number | null;
+  rating?: number;
+  _count?: {
+    reviews: number;
+    wishlist: number;
+  };
   createdAt: Date;
   updatedAt: Date;
 
@@ -36,6 +44,9 @@ export interface ProductCreatePayload {
   categoryId?: string;
   size?: string; // Ukuran produk (XL, L, M, S, 32, 34, 36, etc.)
   images?: string[]; // URLs
+  soldCount?: number | null;
+  displayRating?: number | null;
+  displayReviewCount?: number | null;
 }
 
 export interface ProductUpdatePayload {
@@ -46,6 +57,9 @@ export interface ProductUpdatePayload {
   stock?: number;
   categoryId?: string;
   size?: string; // Ukuran produk (XL, L, M, S, 32, 34, 36, etc.)
+  soldCount?: number | null;
+  displayRating?: number | null;
+  displayReviewCount?: number | null;
 }
 
 export interface ProductFilter {

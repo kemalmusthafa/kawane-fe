@@ -3,6 +3,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "@/lib/api";
 
+const DEFAULT_AVATAR_URL =
+  "https://res.cloudinary.com/dkpn9aqne/image/upload/v1773769892/download_4_plhii4.jpg";
+
 interface AdminAvatarProps {
   user: User | null;
   isLoading: boolean;
@@ -52,17 +55,6 @@ export function AdminAvatar({
     }
   };
 
-  // Generate default avatar URL based on user initials
-  const getDefaultAvatarUrl = (name?: string) => {
-    if (!name || name.trim() === "") {
-      return `https://ui-avatars.com/api/?name=U&background=6366f1&color=ffffff&size=128&bold=true`;
-    }
-    const initials = getInitials(name);
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(
-      initials
-    )}&background=6366f1&color=ffffff&size=128&bold=true`;
-  };
-
   // Show loading state
   if (isLoading) {
     return (
@@ -77,24 +69,28 @@ export function AdminAvatar({
     return (
       <Avatar className={`${getSizeClasses()} ${className}`}>
         <AvatarImage
-          src={getDefaultAvatarUrl("User")}
+          src={DEFAULT_AVATAR_URL}
           alt="User"
           key="default-avatar"
         />
         <AvatarFallback
-          className={`bg-primary text-primary-foreground ${getTextSize()} font-medium`}
+        className="bg-transparent"
         >
-          U
+        <img
+          src={DEFAULT_AVATAR_URL}
+          alt="Default avatar"
+          className="h-full w-full object-cover rounded-full"
+        />
         </AvatarFallback>
       </Avatar>
     );
   }
 
   // Determine avatar source with proper key for re-rendering
-  const avatarUrl = user?.avatar?.trim() || getDefaultAvatarUrl(user?.name);
+  const avatarUrl = user?.avatar?.trim() || DEFAULT_AVATAR_URL;
 
-  // Create unique key that includes avatar URL to force re-render when avatar changes
-  const avatarKey = `${user.id}-${avatarUrl}-${Date.now()}`;
+  // Stable key for hydration; changes when user or avatar URL change (no Date.now() to avoid server/client mismatch)
+  const avatarKey = `${user.id}-${avatarUrl}`;
 
   return (
     <Avatar className={`${getSizeClasses()} ${className}`}>
@@ -104,16 +100,24 @@ export function AdminAvatar({
         alt={user?.name || "User"}
         onError={(e) => {
           const target = e.currentTarget as HTMLImageElement;
-          target.style.display = "none";
+          if (target.src !== DEFAULT_AVATAR_URL) {
+            target.src = DEFAULT_AVATAR_URL;
+          } else {
+            target.style.display = "none";
+          }
         }}
         onLoad={() => {
           // Force re-render when image loads
         }}
       />
       <AvatarFallback
-        className={`bg-primary text-primary-foreground ${getTextSize()} font-medium`}
+        className="bg-transparent"
       >
-        {getInitials(user?.name)}
+        <img
+          src={DEFAULT_AVATAR_URL}
+          alt="Default avatar"
+          className="h-full w-full object-cover rounded-full"
+        />
       </AvatarFallback>
     </Avatar>
   );

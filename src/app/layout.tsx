@@ -88,10 +88,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  const isDev = process.env.NODE_ENV === "development";
 
   return (
     <html lang="id" suppressHydrationWarning>
-      <body className={`font-pragmatica`}>
+      <body
+        className={`font-pragmatica`}
+        {...(isDev ? { suppressHydrationWarning: true } : {})}
+      >
         <OrganizationStructuredData />
         <WebsiteStructuredData />
         <ThemeProvider

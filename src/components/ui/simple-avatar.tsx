@@ -39,21 +39,8 @@ export function SimpleAvatar({
     }
   };
 
-  const getTextSize = () => {
-    switch (size) {
-      case "sm":
-        return "text-xs";
-      case "md":
-        return "text-xs";
-      case "lg":
-        return "text-sm";
-      default:
-        return "text-xs";
-    }
-  };
-
   // Default avatar URL from backend
-  const DEFAULT_AVATAR_URL = 'https://res.cloudinary.com/dkpn9aqne/image/upload/v1757101008/default-avatar_fkunn0.jpg';
+  const DEFAULT_AVATAR_URL = "https://res.cloudinary.com/dkpn9aqne/image/upload/v1773769892/download_4_plhii4.jpg";
 
   // Generate default avatar URL (fallback to backend default)
   const getDefaultAvatarUrl = (name?: string) => {
@@ -78,10 +65,12 @@ export function SimpleAvatar({
           alt="User"
           key="default-avatar"
         />
-        <AvatarFallback
-          className={`bg-primary text-primary-foreground ${getTextSize()} font-medium`}
-        >
-          U
+        <AvatarFallback className="bg-transparent">
+          <img
+            src={DEFAULT_AVATAR_URL}
+            alt="Default avatar"
+            className="h-full w-full object-cover rounded-full"
+          />
         </AvatarFallback>
       </Avatar>
     );
@@ -92,8 +81,6 @@ export function SimpleAvatar({
   const avatarSrc = userAvatar && userAvatar !== '' && userAvatar !== 'null' 
     ? userAvatar 
     : DEFAULT_AVATAR_URL;
-  const userInitials = getInitials(user?.name);
-
   return (
     <Avatar className={`${getSizeClasses()} ${className}`}>
       <AvatarImage
@@ -109,10 +96,12 @@ export function SimpleAvatar({
           }
         }}
       />
-      <AvatarFallback
-        className={`bg-primary text-primary-foreground ${getTextSize()} font-medium`}
-      >
-        {userInitials}
+      <AvatarFallback className="bg-transparent">
+        <img
+          src={DEFAULT_AVATAR_URL}
+          alt="Default avatar"
+          className="h-full w-full object-cover rounded-full"
+        />
       </AvatarFallback>
     </Avatar>
   );

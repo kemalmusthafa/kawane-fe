@@ -216,6 +216,9 @@ export const useProducts = (params?: {
     price: number;
     categoryId?: string;
     stock: number;
+    soldCount?: number | null;
+    displayRating?: number | null;
+    displayReviewCount?: number | null;
     sku?: string;
     sizes?: Array<{
       size: string;

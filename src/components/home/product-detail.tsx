@@ -88,21 +88,35 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
 
   useEffect(() => {
     if (product) {
-      // Check for avgRating and totalReviews from backend
-      const avgRating = (product as any).avgRating ?? 
-                       (product as any).data?.avgRating ?? 
-                       ((product as any).reviews?.length > 0 
-                         ? (product as any).reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / (product as any).reviews.length 
-                         : 0);
-      
-      const totalReviews = (product as any).totalReviews ?? 
-                          (product as any).data?.totalReviews ?? 
-                          (product as any)._count?.reviews ?? 
-                          ((product as any).reviews?.length ?? 0);
-      
+      // Override rating dari API jika disediakan (nullable seperti soldCount)
+      const overrideRating =
+        (product as any).displayRating ??
+        (product as any).data?.displayRating ??
+        null;
+
+      // Check for avgRating and totalReviews from backend (jumlah review tidak dimanipulasi)
+      const avgRatingBase =
+        (product as any).avgRating ??
+        (product as any).data?.avgRating ??
+        ((product as any).reviews?.length > 0
+          ? (product as any).reviews.reduce(
+              (sum: number, r: any) => sum + r.rating,
+              0
+            ) / (product as any).reviews.length
+          : 0);
+
+      const totalReviewsBase =
+        (product as any).totalReviews ??
+        (product as any).data?.totalReviews ??
+        (product as any)._count?.reviews ??
+        ((product as any).reviews?.length ?? 0);
+
+      const finalAvgRating =
+        overrideRating != null ? overrideRating : avgRatingBase;
+
       setProductRating({
-        avgRating: Math.round(avgRating * 10) / 10,
-        totalReviews,
+        avgRating: Math.round(finalAvgRating * 10) / 10,
+        totalReviews: totalReviewsBase,
       });
     }
   }, [product]);
@@ -110,14 +124,20 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
   const renderStars = (rating: number) => {
     return (
       <div className="flex items-center space-x-1">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <StarIcon
-            key={star}
-            className={`w-4 h-4 sm:w-5 sm:h-5 ${
-              star <= Math.round(rating) ? "text-yellow-400 fill-current" : "text-gray-300"
-            }`}
-          />
-        ))}
+        {[1, 2, 3, 4, 5].map((star) => {
+          const fillPercent = Math.max(0, Math.min(1, rating - (star - 1))) * 100;
+          return (
+            <div key={star} className="relative w-4 h-4 sm:w-5 sm:h-5">
+              <StarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300" />
+              <div
+                className="absolute inset-0 overflow-hidden"
+                style={{ width: `${fillPercent}%` }}
+              >
+                <StarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" />
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   };
@@ -212,9 +232,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                 {renderStars(productRating.avgRating)}
                 <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
                   {productRating.avgRating.toFixed(1)}
-                </span>
-                <span className="text-sm sm:text-base text-gray-500 dark:text-gray-500">
-                  ({productRating.totalReviews} review{productRating.totalReviews !== 1 ? "s" : ""})
                 </span>
               </div>
               <Badge

@@ -1,6 +1,7 @@
 import { ProductDetail } from "@/components/home/product-detail";
 import { Metadata } from "next";
 import { ProductStructuredDataWrapper } from "@/components/seo/product-structured-data-wrapper";
+import { ClientOnly } from "@/components/common/ClientOnly";
 
 interface ProductDetailPageProps {
   params: {
@@ -115,10 +116,14 @@ export async function generateMetadata({
 export default function ProductDetailPage({ params }: ProductDetailPageProps) {
   return (
     <>
+      {/* Structured data tetap server-side */}
       <ProductStructuredDataWrapper productId={params.id} />
-      <div className="min-h-screen bg-gray-50">
-        <ProductDetail productId={params.id} />
-      </div>
+      {/* Konten utama hanya dirender di client untuk menghindari error hydration dev */}
+      <ClientOnly>
+        <div className="min-h-screen bg-gray-50">
+          <ProductDetail productId={params.id} />
+        </div>
+      </ClientOnly>
     </>
   );
 }

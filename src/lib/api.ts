@@ -119,6 +119,9 @@ export interface Product {
   price: number;
   stock: number;
   soldCount?: number | null;
+  // Optional display overrides for rating info (nullable like soldCount)
+  displayRating?: number | null;
+  displayReviewCount?: number | null;
   categoryId?: string;
   sku?: string;
   sizes?: ProductSize[];
@@ -620,7 +623,9 @@ class ApiClient {
     price: number;
     categoryId?: string;
     stock: number;
-    soldCount?: number;
+    soldCount?: number | null;
+    displayRating?: number | null;
+    displayReviewCount?: number | null;
     sku?: string;
     sizes?: Array<{
       size: string;

@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { Product } from "@/lib/api";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Star } from "lucide-react";
 import { ImageUpload } from "@/components/ui/image-upload";
 
 interface ProductFormProps {
@@ -39,6 +39,7 @@ interface ProductFormProps {
     categoryId?: string;
     stock: number;
     soldCount?: number | null;
+    displayRating?: number | null;
     sizes?: Array<{
       size: string;
       stock: number;
@@ -63,6 +64,7 @@ export function ProductForm({
     price: "",
     stock: "",
     soldCount: "",
+    displayRating: "",
     categoryId: "none",
   });
   const [sizes, setSizes] = useState<Array<{ size: string; stock: number }>>(
@@ -84,6 +86,8 @@ export function ProductForm({
         price: product.price?.toString() || "",
         stock: product.stock?.toString() || "",
         soldCount: product.soldCount != null ? String(product.soldCount) : "",
+        displayRating:
+          product.displayRating != null ? String(product.displayRating) : "",
         categoryId: product.categoryId || "none",
       });
       setSizes(
@@ -97,6 +101,7 @@ export function ProductForm({
         price: "",
         stock: "",
         soldCount: "",
+        displayRating: "",
         categoryId: "none",
       });
       setSizes([]);
@@ -163,6 +168,25 @@ export function ProductForm({
       return;
     }
 
+    // Optional rating override (nullable, with basic validation)
+    const displayRatingTrimmed = formData.displayRating.trim();
+
+    const displayRatingValue =
+      displayRatingTrimmed === ""
+        ? null
+        : (() => {
+            const n = parseFloat(displayRatingTrimmed);
+            return Number.isNaN(n) || n < 0 || n > 5 ? undefined : n;
+          })();
+
+    if (
+      displayRatingTrimmed !== "" &&
+      (displayRatingValue === undefined || displayRatingValue == null)
+    ) {
+      toast.error("Rating tampilan harus angka 0–5");
+      return;
+    }
+
     try {
       const submitData = {
         name: formData.name.trim(),
@@ -171,6 +195,8 @@ export function ProductForm({
         sizes: sizes.length > 0 ? sizes : undefined,
         stock: parseInt(formData.stock),
         soldCount: soldCountValue === undefined ? undefined : soldCountValue,
+        displayRating:
+          displayRatingValue === undefined ? undefined : displayRatingValue,
         categoryId:
           formData.categoryId === "none" || !formData.categoryId
             ? undefined
@@ -465,6 +491,77 @@ export function ProductForm({
               Nilai ini akan ditampilkan di card produk (mis. &quot;X sold&quot;). Kosongkan agar memakai jumlah terjual dari order.
             </p>
           </div>
+
+        {/* Rating override (nullable) */}
+        <div className="space-y-2">
+          <Label>Manipulasi Rating (Tampilan)</Label>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
+              {[1, 2, 3, 4, 5].map((star) => {
+                const current =
+                  formData.displayRating.trim() === ""
+                    ? 0
+                    : parseFloat(formData.displayRating) || 0;
+                const fillPercent =
+                  Math.max(0, Math.min(1, current - (star - 1))) * 100;
+                return (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() =>
+                      handleInputChange("displayRating", String(star))
+                    }
+                    className="p-0.5"
+                  >
+                    <div className="relative w-4 h-4">
+                      <Star className="w-4 h-4 text-gray-300" />
+                      <div
+                        className="absolute inset-0 overflow-hidden"
+                        style={{ width: `${fillPercent}%` }}
+                      >
+                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Input angka (support desimal, contoh 4.6 / 4,6) */}
+            <Input
+              type="number"
+              min="0"
+              max="5"
+              step="0.1"
+              inputMode="decimal"
+              className="w-20 text-xs"
+              value={formData.displayRating}
+              onChange={(e) =>
+                handleInputChange(
+                  "displayRating",
+                  e.target.value.replace(",", ".")
+                )
+              }
+              placeholder="4.6"
+            />
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span>
+                {formData.displayRating.trim() === ""
+                  ? "Kosongkan = pakai rating asli"
+                  : `${formData.displayRating} / 5`}
+              </span>
+              {formData.displayRating.trim() !== "" && (
+                <button
+                  type="button"
+                  onClick={() => handleInputChange("displayRating", "")}
+                  className="underline underline-offset-2"
+                >
+                  Reset
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
 
           {/* Image Upload Section */}
           <div className="space-y-2">

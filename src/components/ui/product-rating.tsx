@@ -46,14 +46,20 @@ export function ProductRating({
   const renderStars = () => {
     return (
       <div className="flex items-center space-x-0.5">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <StarIcon
-            key={star}
-            className={`${getStarSize()} ${
-              star <= rating ? "text-yellow-400 fill-current" : "text-gray-300"
-            }`}
-          />
-        ))}
+        {[1, 2, 3, 4, 5].map((star) => {
+          const fillPercent = Math.max(0, Math.min(1, rating - (star - 1))) * 100;
+          return (
+            <div key={star} className={`relative ${getStarSize()}`}>
+              <StarIcon className={`${getStarSize()} text-gray-300`} />
+              <div
+                className="absolute inset-0 overflow-hidden"
+                style={{ width: `${fillPercent}%` }}
+              >
+                <StarIcon className={`${getStarSize()} text-yellow-400 fill-current`} />
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   };

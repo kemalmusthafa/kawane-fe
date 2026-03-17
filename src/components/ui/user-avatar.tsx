@@ -3,6 +3,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CheckCircle } from "lucide-react";
 
+const DEFAULT_AVATAR_URL =
+  "https://res.cloudinary.com/dkpn9aqne/image/upload/v1773769892/download_4_plhii4.jpg";
+
 interface UserAvatarProps {
   avatar?: string;
   name: string;
@@ -59,24 +62,33 @@ export function UserAvatar({
     }
   };
 
-  // Create unique key to force re-render when avatar changes
-  const avatarKey = `${name}-${avatar}-${Date.now()}`;
+  const avatarSrc = avatar?.trim() || DEFAULT_AVATAR_URL;
+  // Stable key for hydration; re-render when avatar URL or name changes
+  const avatarKey = `${name}-${avatarSrc}`;
 
   return (
     <div className={`relative ${className}`}>
       <Avatar className={getSizeClasses()}>
         <AvatarImage
           key={avatarKey}
-          src={avatar}
+          src={avatarSrc}
           alt={name}
           onError={(e) => {
             const target = e.currentTarget as HTMLImageElement;
-            target.style.display = "none";
+            if (target.src !== DEFAULT_AVATAR_URL) {
+              target.src = DEFAULT_AVATAR_URL;
+            } else {
+              target.style.display = "none";
+            }
           }}
           onLoad={() => {}}
         />
-        <AvatarFallback className="text-xs font-medium">
-          {getInitials(name)}
+        <AvatarFallback className="bg-transparent">
+          <img
+            src={DEFAULT_AVATAR_URL}
+            alt="Default avatar"
+            className="h-full w-full object-cover rounded-full"
+          />
         </AvatarFallback>
       </Avatar>
 
